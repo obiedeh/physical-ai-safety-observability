@@ -1,0 +1,2 @@
+"""Structured safety event models."""
+

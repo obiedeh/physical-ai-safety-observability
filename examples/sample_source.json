@@ -1,0 +1,49 @@
+{
+  "camera_id": "cell-a-camera-1",
+  "name": "Cell A overview",
+  "source_uri": "file://examples/sample_source.json",
+  "frame_count": 2,
+  "sample_interval_ms": 0,
+  "zones": [
+    {
+      "zone_id": "robot-cell-a",
+      "type": "restricted",
+      "polygon": [[120, 60], [260, 60], [260, 260], [120, 260]]
+    }
+  ],
+  "frames": [
+    {
+      "frame_id": "sample-0001",
+      "detections": [
+        {
+          "label": "person",
+          "confidence": 0.93,
+          "bbox": [130, 85, 185, 235],
+          "ppe": {"hard_hat": false, "vest": true}
+        },
+        {
+          "label": "robot",
+          "confidence": 0.91,
+          "bbox": [180, 90, 250, 240]
+        }
+      ]
+    },
+    {
+      "frame_id": "sample-0002",
+      "detections": [
+        {
+          "label": "pallet",
+          "confidence": 0.86,
+          "bbox": [15, 265, 180, 330],
+          "blocking_emergency_path": true
+        },
+        {
+          "label": "unsafe_event",
+          "confidence": 0.74,
+          "summary": "Worker posture and material placement require review."
+        }
+      ]
+    }
+  ]
+}
+
