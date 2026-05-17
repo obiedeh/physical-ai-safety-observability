@@ -125,6 +125,8 @@ python -m edge.worker \
 
 ## Runtime Paths
 
+Primary target today: Linux local development with the deterministic/mock model path. Jetson is a deployment target once a real local or endpoint-backed VLM adapter is configured and benchmarked.
+
 Demo path:
 
 ```bash
@@ -138,6 +140,8 @@ Jetson path:
 PHYSICAL_AI_CONFIG=configs/jetson.json uvicorn api.main:app --host 0.0.0.0 --port 8080
 python -m edge.worker --config configs/jetson.json --source examples/sample_source.json
 ```
+
+The Jetson path is a deployment shape, not yet hardware performance evidence. Commit latency, memory, and sustained-runtime artifacts before claiming measured Jetson readiness.
 
 Real VLM path:
 
