@@ -1,0 +1,42 @@
+{
+  "incident_id": "cell-a-camera-1:PPE_MISSING",
+  "camera_id": "cell-a-camera-1",
+  "opened_at": "2026-01-01T00:00:00Z",
+  "updated_at": "2026-01-01T00:00:00Z",
+  "highest_severity": "high",
+  "status": "open",
+  "event_ids": ["sample-event-1"],
+  "timeline": [
+    {
+      "event_id": "sample-event-1",
+      "camera_id": "cell-a-camera-1",
+      "timestamp": "2026-01-01T00:00:00Z",
+      "rule_id": "PPE_MISSING",
+      "severity": "high",
+      "confidence": 0.91,
+      "human_review_required": true,
+      "runtime_context": {
+        "frames_processed": 1,
+        "latency_ms": 42.0,
+        "queue_depth": 1,
+        "dropped_frames": 0,
+        "gpu_memory_pressure": 0.2,
+        "thermal_pressure": 0.1,
+        "runtime_status": "nominal",
+        "notes": []
+      },
+      "evidence": {
+        "frame_hash": "b2f2f13c8fcb5ab2db73d985420b82ed05d91b5314f97731b2626f94685f8f3d",
+        "source_uri": "file://examples/sample_source.json",
+        "adapter_name": "mock_vlm",
+        "model_version": "mock-vlm-structured-v1",
+        "rule_version": "safety-policy-v1",
+        "captured_at": "2026-01-01T00:00:00Z",
+        "telemetry_snapshot": {},
+        "detections": []
+      },
+      "summary": "Person detected without required PPE.",
+      "incident_id": "cell-a-camera-1:PPE_MISSING"
+    }
+  ]
+}
