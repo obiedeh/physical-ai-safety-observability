@@ -47,7 +47,8 @@ tests/        Unit tests for API and safety logic
 ## Quick Start
 
 ```bash
-cd projects/physical-ai-safety-observability
+git clone https://github.com/obiedeh/physical-ai-safety-observability.git
+cd physical-ai-safety-observability
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .[dev]
@@ -74,6 +75,15 @@ Apply migrations manually when needed:
 ```bash
 PHYSICAL_AI_CONFIG=configs/local.json alembic upgrade head
 ```
+
+For the Linux validation path used by CI:
+
+```bash
+make install-dev
+make verify
+```
+
+The current CI gate runs Ruff linting and tests on Ubuntu.
 
 ## Docker
 
