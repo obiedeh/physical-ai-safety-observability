@@ -1,0 +1,16 @@
+flowchart LR
+    start["Start API and edge worker"]
+    source["Load sample source or frame context"]
+    model["Run mock VLM adapter\nreal adapter planned"]
+    policy["Evaluate safety policies"]
+    events["Create SafetyEvent records"]
+    incidents["Group/update incidents"]
+    metrics["Update telemetry metrics"]
+    outputs["Persist JSON/events and expose API"]
+    report["Generate demo evidence report"]
+
+    start --> source --> model --> policy --> events --> incidents
+    events --> metrics
+    incidents --> outputs
+    metrics --> outputs
+    outputs --> report

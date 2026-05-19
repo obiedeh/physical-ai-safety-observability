@@ -1,0 +1,39 @@
+flowchart TB
+    subgraph Inputs["Implemented and planned inputs"]
+        sample["Sample source JSON\nimplemented"]
+        synthetic["Synthetic frames\nimplemented"]
+        rtsp["RTSP / video source\nplanned"]
+    end
+
+    subgraph Edge["Edge safety runtime"]
+        worker["edge.worker"]
+        adapter["VLM adapter\nmock implemented, real endpoint planned"]
+        rules["Safety policy engine\nrules/"]
+        telemetry["Telemetry hooks\nlatency, counts, queue, pressure"]
+    end
+
+    subgraph Backend["Observability backend"]
+        api["FastAPI API"]
+        store["SQLite store"]
+        incidents["Incident lifecycle"]
+        evidence["Evidence chain helpers"]
+    end
+
+    subgraph Review["Human review and reports"]
+        metrics["Metrics endpoints"]
+        report["Demo evidence reports"]
+        operator["Operator review\nplanned dashboard"]
+    end
+
+    sample --> worker
+    synthetic --> worker
+    rtsp -. planned .-> worker
+    worker --> adapter --> rules
+    rules --> api
+    telemetry --> api
+    api --> store
+    store --> incidents
+    evidence --> incidents
+    api --> metrics
+    incidents --> report
+    metrics --> operator

@@ -1,0 +1,15 @@
+flowchart LR
+    frames["Frame metadata and source config"]
+    detections["Structured detections\nmock today"]
+    rules["Policy results\nPPE, zones, proximity"]
+    events["Safety events"]
+    incidents["Incidents"]
+    telemetry["Runtime metrics\np95, p99, counts, queue"]
+    artifacts["Evidence artifacts\nreports/demo and artifacts/"]
+    review["Operator / reviewer"]
+
+    frames --> detections --> rules --> events --> incidents
+    events --> telemetry
+    incidents --> artifacts
+    telemetry --> artifacts
+    artifacts --> review

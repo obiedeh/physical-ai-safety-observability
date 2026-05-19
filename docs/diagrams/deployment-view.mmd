@@ -1,0 +1,30 @@
+flowchart TB
+    subgraph Local["Implemented local mode"]
+        api["FastAPI"]
+        sqlite["SQLite"]
+        mock["Mock VLM adapter"]
+        tests["pytest / make verify"]
+    end
+
+    subgraph Compose["Runnable Docker/Compose path"]
+        service["API container"]
+        worker["Edge worker"]
+        volume["Local data volume"]
+    end
+
+    subgraph Jetson["Planned Jetson deployment"]
+        camera["Camera / RTSP source"]
+        vlm["Cosmos or VLM endpoint"]
+        metrics["Jetson runtime metrics"]
+        sustained["Sustained-run artifacts"]
+    end
+
+    subgraph Review["Future operator review"]
+        dashboard["Operator dashboard"]
+        screenshots["Review screenshots"]
+        report["Evidence report"]
+    end
+
+    Local --> Compose
+    Compose --> Jetson
+    Jetson --> Review
