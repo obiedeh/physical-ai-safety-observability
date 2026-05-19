@@ -32,6 +32,12 @@ This project turns camera/video input, safety rules, runtime telemetry, and mult
 - [Logs](artifacts/logs/)
 - [Reports](artifacts/reports/)
 
+## Recommended GitHub About
+
+- **Suggested short description:** Safety observability layer for Physical AI systems with telemetry ingestion, threshold monitoring, event review, and runtime evidence.
+- **Suggested topics/tags:** `physical-ai`, `safety`, `observability`, `telemetry`, `edge-ai`, `human-in-the-loop`, `runtime-monitoring`
+- **Positioning category:** Flagship
+
 ## What Works Now
 
 This repository now includes a runnable engineering scaffold:
