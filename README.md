@@ -4,9 +4,26 @@ Edge-first safety observability platform for robotics, industrial workcells, and
 
 This project turns camera/video input, safety rules, runtime telemetry, and multimodal model outputs into structured safety events that an operator can review. The goal is not demo object detection. The goal is operational awareness that can survive real edge deployment.
 
+## Core Stack
+
+**Implemented:** Python · FastAPI · SQLite · Pydantic · Pytest · Docker/Compose · structured safety events
+
+**Planned / integration path:** NVIDIA Cosmos/VLM endpoint · RTSP/video sources · Jetson runtime metrics · operator dashboard
+
+<p>
+  <img src="https://img.shields.io/badge/Python-3.x-blue" alt="Python" />
+  <img src="https://img.shields.io/badge/FastAPI-API-009688" alt="FastAPI" />
+  <img src="https://img.shields.io/badge/SQLite-persistence-003B57" alt="SQLite" />
+  <img src="https://img.shields.io/badge/Pydantic-schemas-E92063" alt="Pydantic" />
+  <img src="https://img.shields.io/badge/Pytest-tested-brightgreen" alt="Pytest" />
+  <img src="https://img.shields.io/badge/Docker-Compose-2496ED" alt="Docker Compose" />
+  <img src="https://img.shields.io/badge/OpenAPI-docs-6BA539" alt="OpenAPI" />
+  <img src="https://img.shields.io/badge/Jetson-integration%20path-76B900" alt="NVIDIA Jetson integration path" />
+</p>
+
 ## What Works Now
 
-This repository now includes a runnable production-grade skeleton:
+This repository now includes a runnable engineering scaffold:
 
 - FastAPI backend for health, camera registration, event ingestion, incident timelines, and metrics
 - SQLite-backed event, camera, and incident persistence
