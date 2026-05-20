@@ -6,13 +6,15 @@ from threading import Lock
 from api.models.camera import Camera, CameraRegistration
 from api.services.migrations import run_migrations
 from events.lifecycle import can_group_event, merge_event_into_incident
-from events.schemas import Incident, SafetyEvent
+from events.schemas import Incident, PersonPPEFeedback, SafetyEvent
 from runtime_settings import load_settings
 from telemetry.metrics import metrics
 
 
 class SQLiteStore:
-    def __init__(self, database_path: str | None = None, incident_window_seconds: int | None = None) -> None:
+    def __init__(
+        self, database_path: str | None = None, incident_window_seconds: int | None = None
+    ) -> None:
         settings = load_settings()
         self.database_path = database_path or settings.app.database_path
         self.incident_window_seconds = (
@@ -62,6 +64,15 @@ class SQLiteStore:
                 );
                 CREATE INDEX IF NOT EXISTS idx_incidents_grouping
                     ON incidents(camera_id, rule_id, grouping_severity, updated_at);
+                CREATE TABLE IF NOT EXISTS feedback (
+                    feedback_id TEXT PRIMARY KEY,
+                    camera_id TEXT NOT NULL,
+                    frame_id TEXT NOT NULL,
+                    message TEXT NOT NULL,
+                    timestamp TEXT NOT NULL,
+                    payload TEXT NOT NULL
+                );
+                CREATE INDEX IF NOT EXISTS idx_feedback_timestamp ON feedback(timestamp);
                 """
             )
 
@@ -71,6 +82,7 @@ class SQLiteStore:
                 connection.execute("DELETE FROM events")
                 connection.execute("DELETE FROM incidents")
                 connection.execute("DELETE FROM cameras")
+                connection.execute("DELETE FROM feedback")
 
     def register_camera(self, registration: CameraRegistration) -> Camera:
         camera = Camera(**registration.model_dump())
@@ -95,8 +107,40 @@ class SQLiteStore:
     def list_cameras(self) -> list[Camera]:
         with self._lock:
             with self._connect() as connection:
-                rows = connection.execute("SELECT payload FROM cameras ORDER BY registered_at").fetchall()
+                rows = connection.execute(
+                    "SELECT payload FROM cameras ORDER BY registered_at"
+                ).fetchall()
             return [Camera.model_validate_json(row["payload"]) for row in rows]
+
+    def add_feedback(self, feedback: PersonPPEFeedback) -> PersonPPEFeedback:
+        with self._lock:
+            with self._connect() as connection:
+                connection.execute(
+                    """
+                    INSERT INTO feedback(feedback_id, camera_id, frame_id, message, timestamp, payload)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                    ON CONFLICT(feedback_id) DO UPDATE SET
+                        message=excluded.message,
+                        payload=excluded.payload
+                    """,
+                    (
+                        feedback.feedback_id,
+                        feedback.camera_id,
+                        feedback.frame_id,
+                        feedback.message,
+                        feedback.timestamp.isoformat(),
+                        feedback.model_dump_json(),
+                    ),
+                )
+        return feedback
+
+    def list_feedback(self) -> list[PersonPPEFeedback]:
+        with self._lock:
+            with self._connect() as connection:
+                rows = connection.execute(
+                    "SELECT payload FROM feedback ORDER BY timestamp"
+                ).fetchall()
+            return [PersonPPEFeedback.model_validate_json(row["payload"]) for row in rows]
 
     def add_event(self, event: SafetyEvent) -> SafetyEvent:
         with self._lock:
@@ -148,7 +192,9 @@ class SQLiteStore:
     def list_events(self) -> list[SafetyEvent]:
         with self._lock:
             with self._connect() as connection:
-                rows = connection.execute("SELECT payload FROM events ORDER BY timestamp").fetchall()
+                rows = connection.execute(
+                    "SELECT payload FROM events ORDER BY timestamp"
+                ).fetchall()
             return [SafetyEvent.model_validate_json(row["payload"]) for row in rows]
 
     def list_incidents(self) -> list[Incident]:

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from fastapi.responses import PlainTextResponse
 
 from api.services.store import store
-from events.schemas import Incident, SafetyEvent
+from events.schemas import Incident, PersonPPEFeedback, SafetyEvent
 from telemetry.metrics import metrics
 
 router = APIRouter()
@@ -31,7 +31,16 @@ def get_incident(incident_id: str) -> Incident:
     return incident
 
 
+@router.post("/feedback", response_model=PersonPPEFeedback)
+def ingest_feedback(feedback: PersonPPEFeedback) -> PersonPPEFeedback:
+    return store.add_feedback(feedback)
+
+
+@router.get("/feedback", response_model=list[PersonPPEFeedback])
+def list_feedback() -> list[PersonPPEFeedback]:
+    return store.list_feedback()
+
+
 @router.get("/metrics", response_class=PlainTextResponse)
 def get_metrics() -> str:
     return metrics.render_prometheus()
-

@@ -1,0 +1,16 @@
+{
+  "camera_id": "front-door-tapo",
+  "name": "Front Door Tapo RTSP",
+  "source_uri": "rtsp://CAMERA_USER:CAMERA_PASSWORD@192.168.1.146:554/stream1",
+  "source_type": "rtsp",
+  "frame_count": 3,
+  "sample_interval_ms": 0,
+  "frame_stride": 30,
+  "zones": [
+    {
+      "zone_id": "front-door-entry",
+      "type": "restricted",
+      "polygon": [[0, 0], [2304, 0], [2304, 1296], [0, 1296]]
+    }
+  ]
+}

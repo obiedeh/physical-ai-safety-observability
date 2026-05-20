@@ -72,6 +72,22 @@ class SafetyEvent(BaseModel):
         return value
 
 
+class PersonPPEFeedback(BaseModel):
+    feedback_id: str = Field(default_factory=lambda: str(uuid4()))
+    camera_id: str
+    frame_id: str
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    message: str
+    detections: list[dict[str, Any]] = Field(default_factory=list)
+
+    @field_validator("timestamp", mode="before")
+    @classmethod
+    def ensure_utc(cls, value: Any) -> Any:
+        if isinstance(value, datetime) and value.tzinfo is None:
+            return value.replace(tzinfo=UTC)
+        return value
+
+
 class Incident(BaseModel):
     incident_id: str
     camera_id: str

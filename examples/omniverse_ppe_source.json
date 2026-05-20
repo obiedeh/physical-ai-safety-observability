@@ -1,0 +1,9 @@
+{
+  "camera_id": "omniverse-test-camera",
+  "name": "Omniverse PPE Test",
+  "source_type": "video_file",
+  "source_uri": "artifacts/omniverse/ppe_test.mp4",
+  "frame_count": 1,
+  "frame_stride": 30,
+  "sample_interval_ms": 0
+}
