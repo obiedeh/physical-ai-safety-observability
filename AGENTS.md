@@ -38,11 +38,11 @@ python -m edge.worker --source examples/sample_source.json --no-post
 # Full demo (Docker)
 docker compose --profile demo up
 
-# Tests
-pytest
+# Tests  (PYTEST_DISABLE_PLUGIN_AUTOLOAD isolates from system pytest plugins)
+make test
 
 # Lint
-ruff check .
+make lint
 ```
 
 Config is loaded from `PHYSICAL_AI_CONFIG` env var (JSON file). Falls back to built-in
