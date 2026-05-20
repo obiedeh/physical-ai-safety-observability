@@ -25,6 +25,9 @@ class WorkerSettings(BaseModel):
     post_events: bool = True
     queue_depth_warning: int = 5
     inference_timeout_seconds: float = 60.0
+    continuous: bool = True
+    feedback_interval_seconds: float = Field(default=2.0, gt=0.0)
+    clean_feedback_terminal: bool = True
 
 
 class RuntimeSettings(BaseModel):
@@ -37,4 +40,3 @@ def load_settings(path: str | Path | None = None) -> RuntimeSettings:
     if not config_path:
         return RuntimeSettings()
     return RuntimeSettings.model_validate(load_json(config_path))
-
