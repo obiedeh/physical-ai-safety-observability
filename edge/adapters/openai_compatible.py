@@ -11,7 +11,9 @@ from edge.adapters.base import VLMAdapter
 class OpenAICompatibleAdapter(VLMAdapter):
     adapter_name = "openai_compatible"
 
-    def __init__(self, endpoint: str, model: str, api_key: str | None = None, timeout: float = 20.0) -> None:
+    def __init__(
+        self, endpoint: str, model: str, api_key: str | None = None, timeout: float = 20.0
+    ) -> None:
         self.endpoint = endpoint.rstrip("/")
         self.model_version = model
         self.api_key = api_key
@@ -28,14 +30,7 @@ class OpenAICompatibleAdapter(VLMAdapter):
             '"confidence":0.0,"bbox":[x1,y1,x2,y2],"ppe":{"hard_hat":true,"vest":true},'
             '"blocking_emergency_path":false}]}'
         )
-        content: list[dict[str, Any]] = []
-        frame_bytes = frame_context.get("frame_bytes")
-        media_url = frame_context.get("media_url") or frame_context.get("image_url")
-        if frame_bytes:
-            b64 = base64.b64encode(frame_bytes).decode("ascii")
-            content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
-        elif media_url:
-            content.append({"type": "image_url", "image_url": {"url": media_url}})
+        content = _media_content_from_frame(frame_context)
         content.append({"type": "text", "text": text_prompt})
         payload = {
             "model": self.model_version,
@@ -76,14 +71,7 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
         if self.api_key:
             headers["Authorization"] = f"Bearer {self.api_key}"
 
-        content: list[dict[str, Any]] = []
-        media_url = frame_context.get("media_url") or frame_context.get("image_url")
-        video_url = frame_context.get("video_url")
-        if video_url:
-            content.append({"type": "video_url", "video_url": {"url": video_url}})
-        elif media_url:
-            content.append({"type": "image_url", "image_url": {"url": media_url}})
-
+        content = _media_content_from_frame(frame_context)
         content.append(
             {
                 "type": "text",
@@ -135,6 +123,21 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
         }
 
 
+def _media_content_from_frame(frame_context: dict[str, Any]) -> list[dict[str, Any]]:
+    content: list[dict[str, Any]] = []
+    frame_bytes = frame_context.get("frame_bytes")
+    media_url = frame_context.get("media_url") or frame_context.get("image_url")
+    video_url = frame_context.get("video_url")
+    if frame_bytes:
+        b64 = base64.b64encode(frame_bytes).decode("ascii")
+        content.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
+    elif video_url:
+        content.append({"type": "video_url", "video_url": {"url": video_url}})
+    elif media_url:
+        content.append({"type": "image_url", "image_url": {"url": media_url}})
+    return content
+
+
 def _extract_assistant_text(raw: dict[str, Any]) -> str:
     choices = raw.get("choices") or []
     if not choices:
@@ -164,16 +167,14 @@ def _parse_answer_json(text: str) -> dict[str, Any]:
     detections = parsed.get("detections", [])
     if not isinstance(detections, list):
         parsed["detections"] = []
-    parsed["detections"] = [
-        detection for detection in detections if isinstance(detection, dict)
-    ]
+    parsed["detections"] = normalize_detections(detections)
     return parsed
 
 
 def parse_adapter_response(raw: dict[str, Any]) -> dict[str, Any]:
     direct = raw.get("detections")
     if isinstance(direct, list):
-        return {"detections": [item for item in direct if isinstance(item, dict)]}
+        return {"detections": normalize_detections(direct)}
 
     assistant_text = _extract_assistant_text(raw)
     if assistant_text:
@@ -183,7 +184,7 @@ def parse_adapter_response(raw: dict[str, Any]) -> dict[str, Any]:
     if isinstance(output, dict):
         detections = output.get("detections", [])
         if isinstance(detections, list):
-            return {"detections": [item for item in detections if isinstance(item, dict)]}
+            return {"detections": normalize_detections(detections)}
     return {"detections": []}
 
 
@@ -192,3 +193,138 @@ def _strip_code_fence(text: str) -> str:
     if fence_match:
         return fence_match.group(1)
     return text
+
+
+def normalize_detections(detections: list[Any]) -> list[dict[str, Any]]:
+    return [_normalize_detection(item) for item in detections if isinstance(item, dict)]
+
+
+def _normalize_detection(detection: dict[str, Any]) -> dict[str, Any]:
+    normalized = dict(detection)
+    label = _normalize_token(str(normalized.get("label", "")))
+    normalized["label"] = _canonical_label(label)
+
+    if normalized["label"] == "person":
+        ppe = _normalize_ppe(normalized, label)
+        if ppe:
+            normalized["ppe"] = ppe
+    return normalized
+
+
+def _canonical_label(label: str) -> str:
+    if (
+        "ppe" in label and any(token in label for token in ("missing", "no", "without"))
+    ) or label in {
+        "human",
+        "worker",
+        "operator",
+        "employee",
+        "person_without_ppe",
+        "no_ppe",
+        "missing_ppe",
+        "ppe_missing",
+        "person_no_ppe",
+        "person_missing_ppe",
+        "no_hard_hat",
+        "missing_hard_hat",
+        "no_helmet",
+        "missing_helmet",
+        "no_vest",
+        "missing_vest",
+    }:
+        return "person"
+    return label
+
+
+def _normalize_ppe(detection: dict[str, Any], label: str) -> dict[str, bool]:
+    ppe = detection.get("ppe")
+    source = ppe if isinstance(ppe, dict) else {}
+    status = _normalize_token(str(detection.get("ppe_status", detection.get("ppe_compliance", ""))))
+
+    hard_hat = _first_bool(
+        source,
+        detection,
+        keys=(
+            "hard_hat",
+            "hardhat",
+            "helmet",
+            "safety_helmet",
+            "hard_hat_present",
+            "helmet_present",
+            "wearing_hard_hat",
+            "wearing_helmet",
+        ),
+    )
+    vest = _first_bool(
+        source,
+        detection,
+        keys=(
+            "vest",
+            "safety_vest",
+            "hi_vis_vest",
+            "high_visibility_vest",
+            "reflective_vest",
+            "vest_present",
+            "wearing_vest",
+            "wearing_safety_vest",
+        ),
+    )
+
+    if hard_hat is None and any(
+        token in label
+        for token in ("no_hard_hat", "missing_hard_hat", "no_helmet", "missing_helmet")
+    ):
+        hard_hat = False
+    if vest is None and any(
+        token in label for token in ("no_vest", "missing_vest", "without_vest")
+    ):
+        vest = False
+    if (
+        "ppe" in label and any(token in label for token in ("missing", "no", "without"))
+    ) or status in {
+        "missing",
+        "missing_ppe",
+        "no_ppe",
+        "non_compliant",
+        "noncompliant",
+        "unsafe",
+    }:
+        hard_hat = False if hard_hat is None else hard_hat
+        vest = False if vest is None else vest
+    if status in {"present", "compliant", "safe", "ppe_present", "wearing_ppe"}:
+        hard_hat = True if hard_hat is None else hard_hat
+        vest = True if vest is None else vest
+
+    normalized: dict[str, bool] = {}
+    if hard_hat is not None:
+        normalized["hard_hat"] = hard_hat
+    if vest is not None:
+        normalized["vest"] = vest
+    return normalized
+
+
+def _first_bool(*sources: dict[str, Any], keys: tuple[str, ...]) -> bool | None:
+    for source in sources:
+        for key in keys:
+            if key in source:
+                value = source[key]
+                if isinstance(value, bool):
+                    return value
+                if isinstance(value, str):
+                    token = _normalize_token(value)
+                    if token in {"true", "yes", "present", "wearing", "detected", "compliant"}:
+                        return True
+                    if token in {
+                        "false",
+                        "no",
+                        "missing",
+                        "absent",
+                        "not_wearing",
+                        "non_compliant",
+                    }:
+                        return False
+    return None
+
+
+def _normalize_token(value: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")

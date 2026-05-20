@@ -76,3 +76,24 @@ def test_incident_grouping_uses_camera_rule_severity_and_window() -> None:
     event_counts = sorted(len(incident["event_ids"]) for incident in incidents)
     assert len(incidents) == 2
     assert event_counts == [1, 2]
+
+
+def test_feedback_ingestion_and_listing() -> None:
+    store.reset()
+    client = TestClient(app)
+    payload = {
+        "camera_id": "cell-a-camera-1",
+        "frame_id": "frame-1",
+        "timestamp": "2026-01-01T00:00:00Z",
+        "message": "Person Detected with PPE",
+        "detections": [
+            {"label": "person", "ppe": {"hard_hat": True, "vest": True}},
+        ],
+    }
+
+    response = client.post("/feedback", json=payload)
+    listed = client.get("/feedback")
+
+    assert response.status_code == 200
+    assert listed.status_code == 200
+    assert listed.json()[0]["message"] == "Person Detected with PPE"

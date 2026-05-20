@@ -1,5 +1,6 @@
 from datetime import UTC, datetime
 from typing import Any
+from urllib.parse import urlsplit, urlunsplit
 
 from events.schemas import Evidence, RuntimeContext
 from evidence.hashing import hash_text
@@ -18,7 +19,7 @@ def build_evidence(
     payload = f"{frame_context.get('camera_id')}:{captured_at}:{frame_context.get('frame_id')}"
     return Evidence(
         frame_hash=frame_context.get("frame_hash") or hash_text(payload),
-        source_uri=frame_context["source_uri"],
+        source_uri=redact_uri_credentials(frame_context["source_uri"]),
         adapter_name=adapter_name,
         model_version=model_version,
         rule_version=rule_version,
@@ -27,3 +28,12 @@ def build_evidence(
         detections=detections,
     )
 
+
+def redact_uri_credentials(uri: str) -> str:
+    parts = urlsplit(uri)
+    if not parts.username and not parts.password:
+        return uri
+    host = parts.hostname or ""
+    if parts.port is not None:
+        host = f"{host}:{parts.port}"
+    return urlunsplit((parts.scheme, host, parts.path, parts.query, parts.fragment))
