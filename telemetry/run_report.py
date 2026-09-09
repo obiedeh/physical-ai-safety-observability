@@ -181,6 +181,8 @@ class RunRecorder:
     frames: list[dict[str, Any]] = field(default_factory=list)
     events_by_rule: dict[str, int] = field(default_factory=dict)
     events_by_severity: dict[str, int] = field(default_factory=dict)
+    detections_by_label: dict[str, int] = field(default_factory=dict)
+    error: str | None = None
     started_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     tegrastats: TegrastatsSampler | None = None
     _mono_start: float = field(default_factory=time.monotonic)
@@ -200,7 +202,13 @@ class RunRecorder:
         rule_ms: float,
         post_ms: float | None,
         events: list[dict[str, Any]],
+        detections: int | None = None,
+        usage: dict[str, Any] | None = None,
+        labels: list[str] | None = None,
     ) -> None:
+        usage = usage or {}
+        for label in labels or []:
+            self.detections_by_label[label] = self.detections_by_label.get(label, 0) + 1
         self.frames.append(
             {
                 "frame_id": frame_id,
@@ -209,6 +217,9 @@ class RunRecorder:
                 "rule_ms": round(rule_ms, 4),
                 "post_ms": round(post_ms, 4) if post_ms is not None else None,
                 "events": len(events),
+                "detections": detections,
+                "prompt_tokens": usage.get("prompt_tokens"),
+                "completion_tokens": usage.get("completion_tokens"),
             }
         )
         for event in events:
@@ -221,14 +232,16 @@ class RunRecorder:
         values = [f[key] for f in self.frames if f.get(key) is not None]
         if not values:
             return {"n": 0}
+        unit = "ms" if key.endswith("_ms") else "count"
         return {
             "n": len(values),
-            "p50_ms": _percentile(values, 50),
-            "p95_ms": _percentile(values, 95),
-            "p99_ms": _percentile(values, 99),
-            "min_ms": min(values),
-            "max_ms": max(values),
-            "mean_ms": round(sum(values) / len(values), 4),
+            "unit": unit,
+            "p50": _percentile(values, 50),
+            "p95": _percentile(values, 95),
+            "p99": _percentile(values, 99),
+            "min": min(values),
+            "max": max(values),
+            "mean": round(sum(values) / len(values), 4),
         }
 
     def report(self, repo_root: Path | None = None) -> dict[str, Any]:
@@ -241,6 +254,8 @@ class RunRecorder:
             source_hash = hash_file(self.source_path)
         return {
             "schema": SCHEMA_VERSION,
+            "status": "failed" if self.error else "complete",
+            "error": self.error,
             "note": (
                 "Measured runtime overhead of the edge worker on the named device. Detections come "
                 "from the named adapter; a mock adapter produces fixed detections and this artifact "
@@ -260,6 +275,13 @@ class RunRecorder:
                 "rule_eval": self._stats("rule_ms"),
                 "backend_post": self._stats("post_ms"),
             },
+            "model_tokens": {
+                "prompt": self._stats("prompt_tokens"),
+                "completion": self._stats("completion_tokens"),
+                "note": "Present only when the adapter returns an OpenAI-style usage block.",
+            },
+            "detections_per_frame": self._stats("detections"),
+            "detections_by_label": dict(sorted(self.detections_by_label.items())),
             "events": {
                 "total": sum(self.events_by_rule.values()),
                 "by_rule": dict(sorted(self.events_by_rule.items())),
