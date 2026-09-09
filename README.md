@@ -30,10 +30,11 @@ The mock adapter returns fixed detections at microsecond cost, so these figures 
 |---|---|---|---|---|---|---|
 | 30 fps pacing, no posting | 1800 | **28.588 frames/s** | 0.8587 / 0.9877 / 1.2001 ms | n/a | 24604 mW | [`reports/thor/mock_30fps_no_post.json`](reports/thor/mock_30fps_no_post.json) |
 | 30 fps pacing, posting to local FastAPI + SQLite | 400 | **4.357 frames/s** | 0.6036 / 0.7123 / 0.8267 ms | **160.9 / 180.4 ms** (four events per frame) | 25570 mW | [`reports/thor/mock_30fps_backend.json`](reports/thor/mock_30fps_backend.json) |
+| 30 fps pacing, posting one batch per frame to `/events/batch` | 400 | **7.075 frames/s** | 0.6818 / 0.8565 / 0.9099 ms | **68.2 / 89.0 ms** (one request for four events) | 25158 mW | [`reports/thor/mock_30fps_backend_batched.json`](reports/thor/mock_30fps_backend_batched.json) |
 | unpaced, no posting | 500 | 3078 frames/s | 0.1648 / 0.2257 / 0.2874 ms | n/a | run too short to sample | [`reports/thor/mock_no_post.json`](reports/thor/mock_no_post.json) |
 
 - At camera-rate pacing the worker keeps up: 28.588 frames/s against a 30 frames/s source, rule evaluation under 1.2 ms p99, board power at the device's idle level (about 24 W).
-- The synchronous per-event POST to the backend is the bottleneck: four events per frame cost 161 ms p50 per frame and cap end-to-end throughput at 4.357 frames/s. Batching events per frame or posting asynchronously is the first runtime fix this points at.
+- The synchronous POST to the backend is the bottleneck. Per-event posting costs 161 ms p50 per frame for four events and caps throughput at 4.357 frames/s. Batching the frame's events into one `/events/batch` request (one transaction) cuts that to 68 ms p50 and lifts throughput to 7.075 frames/s, still far from the 30 frames/s source: the remaining cost is per-event incident grouping inside SQLite. Asynchronous posting off the capture thread is the next runtime fix.
 - Peak process RSS 0.061 GB; junction temperature peak 40.8 C. These are 60 to 90 second runs, not sustained validation.
 - Event counts are exactly four per frame because the mock detections trip every rule on every frame.
 
@@ -58,6 +59,18 @@ What these numbers say, and do not say:
 - The model does not hold the label vocabulary: 12 of the detections are a literal echo of the schema string and 46 use labels outside the schema (sphere, cube, ball, square) for the game pieces. The parser accepted them; the policy engine ignored them because none is a person. This is recorded, not hidden, and it is why no accuracy is claimed.
 - Board power under a real model is 67 W p50 against about 24 W idle for the mock path. The first attempt at this run failed on a 60 s adapter timeout at frame 26 ([log](reports/thor/cosmos2b_video_60_attempt1_timeout.log)); the timeout is now a command-line option and a failed run writes a partial artifact with the error.
 - No ground truth exists for this footage, so nothing here is precision or recall. That measurement needs the authored simulation scenes with known PPE and zone states; see Next Work.
+
+Second run, same 60 frames, `--no-think --max-tokens 512` ([`reports/thor/cosmos2b_video_60_nothink.json`](reports/thor/cosmos2b_video_60_nothink.json)):
+
+| | think block, 4096 cap | no think, 512 cap |
+|---|---|---|
+| Inference p50 / p95 / max per frame | 4.35 / 12.85 / 15.41 s | **3.57 / 6.58 / 9.35 s** |
+| Completion tokens p50 / max | 260 / 977 | 157 / 415 |
+| Throughput | 0.154 frames/s | 0.241 frames/s |
+| Board power VIN p50 / peak | 66.6 / 107.1 W | 60.3 / 105.2 W |
+| Schema-echo detections | 12 of 97 | 11 of 106 |
+
+Dropping the think block halves the p95 and removes the 13 to 15 s tail; the median moves less because about 2 s of every frame is prompt prefill and image encoding, not generation. Label compliance does not improve, so the vocabulary problem is prompt and model, not reasoning length.
 
 Reproduce (server, then worker), on a Jetson with the weights under `~/models/cosmos-reason2-2b`:
 
@@ -179,8 +192,8 @@ Video or RTSP input needs the optional OpenCV dependency (`pip install -e .[open
 
 1. Done 2026-09-09: mock path on Jetson AGX Thor with run artifacts under `reports/thor/`.
 2. Done 2026-09-09: Cosmos-Reason2-2B through a local vLLM server on Thor, inference cost and power measured on simulation footage.
-2b. Batch or async event posting, then re-measure the backend path.
-2c. Re-measure the Cosmos adapter with a capped `max_tokens` and without the think block; compare latency and label compliance.
+2b. Done 2026-09-09: batched posting measured at 7.1 frames/s (from 4.4); asynchronous posting is next.
+2c. Done 2026-09-09: no-think, 512-token run halves p95 latency; label compliance unchanged. Next: a constrained-output prompt or grammar (JSON schema mode) and a larger model, measured the same way.
 3. RTSP camera source and calibration-derived zones.
 4. Operator dashboard and human-in-the-loop review workflow.
 5. Incident export and audit trails through the evidence chain.

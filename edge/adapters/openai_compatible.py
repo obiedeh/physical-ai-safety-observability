@@ -63,8 +63,12 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
         model: str = "nvidia/cosmos-reason2-2b",
         api_key: str | None = None,
         timeout: float = 60.0,
+        max_tokens: int = 4096,
+        think: bool = True,
     ) -> None:
         super().__init__(endpoint=endpoint, model=model, api_key=api_key, timeout=timeout)
+        self.max_tokens = max_tokens
+        self.think = think
 
     def analyze_frame(self, frame_context: dict[str, Any]) -> dict[str, Any]:
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -84,8 +88,12 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
                     "Use normalized pixel coordinates when exact image coordinates are unavailable. "
                     f"Frame metadata: camera_id={frame_context['camera_id']}, "
                     f"frame_id={frame_context['frame_id']}. "
-                    "Answer the question in the following format: <think>\nyour reasoning\n"
-                    "</think>\n\n<answer>\nyour JSON answer\n</answer>."
+                    + (
+                        "Answer the question in the following format: <think>\nyour reasoning\n"
+                        "</think>\n\n<answer>\nyour JSON answer\n</answer>."
+                        if self.think
+                        else "Do not think aloud. Answer with only <answer>\nyour JSON answer\n</answer>."
+                    )
                 ),
             }
         )
@@ -101,9 +109,12 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
             ],
             "temperature": 0.2,
             "top_p": 0.3,
-            "max_tokens": 4096,
+            "max_tokens": self.max_tokens,
             "stream": False,
         }
+        if not self.think:
+            # Qwen3-style chat templates honour this switch; harmless for others.
+            payload["chat_template_kwargs"] = {"enable_thinking": False}
         response = httpx.post(
             f"{self.endpoint}/chat/completions",
             json=payload,

@@ -23,6 +23,9 @@ class WorkerSettings(BaseModel):
     model: str = "nvidia/cosmos-reason2-2b"
     api_key_env: str = "COSMOS_API_KEY"
     post_events: bool = True
+    post_batch: bool = False
+    max_tokens: int = 4096
+    think: bool = True
     queue_depth_warning: int = 5
     inference_timeout_seconds: float = 60.0
     continuous: bool = True

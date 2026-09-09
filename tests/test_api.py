@@ -97,3 +97,19 @@ def test_feedback_ingestion_and_listing() -> None:
     assert response.status_code == 200
     assert listed.status_code == 200
     assert listed.json()[0]["message"] == "Person Detected with PPE"
+
+
+def test_events_batch_ingests_all_and_groups_incidents() -> None:
+    store.reset()
+    client = TestClient(app)
+    base = load_json("examples/sample_event.json")
+    batch = []
+    for i in range(3):
+        item = dict(base)
+        item["event_id"] = f"batch-{i}"
+        batch.append(item)
+    response = client.post("/events/batch", json=batch)
+    assert response.status_code == 200
+    assert [e["event_id"] for e in response.json()] == ["batch-0", "batch-1", "batch-2"]
+    assert len(client.get("/events").json()) == 3
+    assert len(client.get("/incidents").json()) == 1
