@@ -7,8 +7,8 @@ Create Date: 2026-05-16 00:00:00
 
 from collections.abc import Sequence
 
-from alembic import op
 import sqlalchemy as sa
+from alembic import op
 
 revision: str = "0001_initial_sqlite_schema"
 down_revision: str | None = None

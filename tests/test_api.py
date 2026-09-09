@@ -2,8 +2,8 @@ from fastapi.testclient import TestClient
 
 from api.main import app
 from api.services.store import store
-from events.schemas import SafetyEvent
 from edge.source_loader import load_json
+from events.schemas import SafetyEvent
 from telemetry.metrics import metrics
 
 
