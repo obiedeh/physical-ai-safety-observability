@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 406" width="720" height="406" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+<rect width="720" height="406" fill="#121a2c"/>
+<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">Board input power, VIN p50</text>
+<rect x="16" y="34" width="10" height="10" fill="#38bdf8"/>
+<text x="30" y="43" fill="#9fb0ca">VIN p50</text>
+<text x="180" y="76.0" fill="#9fb0ca" text-anchor="end">mock, no post</text>
+<rect x="190" y="62" width="156.6" height="12" fill="#38bdf8"/>
+<text x="352.58643832446194" y="72" fill="#eef4ff" font-size="11">24.6 W</text>
+<text x="180" y="108.0" fill="#9fb0ca" text-anchor="end">mock, per-event POST</text>
+<rect x="190" y="94" width="162.7" height="12" fill="#38bdf8"/>
+<text x="358.7343207590835" y="104" fill="#eef4ff" font-size="11">25.6 W</text>
+<text x="180" y="140.0" fill="#9fb0ca" text-anchor="end">mock, batched POST</text>
+<rect x="190" y="126" width="160.1" height="12" fill="#38bdf8"/>
+<text x="356.1122425364499" y="136" fill="#eef4ff" font-size="11">25.2 W</text>
+<text x="180" y="172.0" fill="#9fb0ca" text-anchor="end">mock, unpaced</text>
+<text x="194" y="169" fill="#5f6f8a" font-size="11">not measured</text>
+<text x="180" y="204.0" fill="#9fb0ca" text-anchor="end">2B, think</text>
+<rect x="190" y="190" width="423.7" height="12" fill="#38bdf8"/>
+<text x="619.6565609812544" y="200" fill="#eef4ff" font-size="11">66.6 W</text>
+<text x="180" y="236.0" fill="#9fb0ca" text-anchor="end">2B, no think</text>
+<rect x="190" y="222" width="384.0" height="12" fill="#38bdf8"/>
+<text x="580.0071742652165" y="232" fill="#eef4ff" font-size="11">60.3 W</text>
+<text x="180" y="268.0" fill="#9fb0ca" text-anchor="end">2B, grammar, old prompt</text>
+<rect x="190" y="254" width="235.8" height="12" fill="#38bdf8"/>
+<text x="431.8088405461699" y="264" fill="#eef4ff" font-size="11">37.1 W</text>
+<text x="180" y="300.0" fill="#9fb0ca" text-anchor="end">2B, grammar</text>
+<rect x="190" y="286" width="397.9" height="12" fill="#38bdf8"/>
+<text x="593.906734552187" y="296" fill="#eef4ff" font-size="11">62.5 W</text>
+<text x="180" y="332.0" fill="#9fb0ca" text-anchor="end">8B, no think</text>
+<rect x="190" y="318" width="440.0" height="12" fill="#38bdf8"/>
+<text x="636.0" y="328" fill="#eef4ff" font-size="11">69.1 W</text>
+<text x="180" y="364.0" fill="#9fb0ca" text-anchor="end">8B, grammar</text>
+<rect x="190" y="350" width="419.9" height="12" fill="#38bdf8"/>
+<text x="615.8889146031011" y="360" fill="#eef4ff" font-size="11">66 W</text>
+<text x="704" y="396" fill="#5f6f8a" text-anchor="end" font-size="10">values from reports/thor/*.json</text>
+</svg>
