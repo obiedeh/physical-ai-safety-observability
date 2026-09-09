@@ -1,0 +1,4 @@
+INFO  [alembic.runtime.migration] Context impl SQLiteImpl.
+INFO  [alembic.runtime.migration] Will assume non-transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade  -> 0001_initial_sqlite_schema, initial sqlite schema
+INFO  [alembic.runtime.migration] Running upgrade 0001_initial_sqlite_schema -> 0002_feedback_events, add person ppe feedback table

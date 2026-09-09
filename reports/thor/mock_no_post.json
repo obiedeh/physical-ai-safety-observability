@@ -1,0 +1,4090 @@
+{
+  "schema": "run-report-v1",
+  "note": "Measured runtime overhead of the edge worker on the named device. Detections come from the named adapter; a mock adapter produces fixed detections and this artifact then says nothing about detection quality.",
+  "started_at": "2026-09-09T13:59:17.790487+00:00",
+  "finished_at": "2026-09-09T13:59:17.948934+00:00",
+  "elapsed_s": 0.158,
+  "device": {
+    "host": "jetsonthor",
+    "machine": "aarch64",
+    "kernel": "6.8.12-tegra",
+    "soc": "tegra264",
+    "is_jetson": true,
+    "l4t_release": "# R38 (release), REVISION: 4.0, GCID: 43443517, BOARD: generic, EABI: aarch64, DATE: Wed Dec 31 00:15:19 UTC 2025",
+    "nvpmodel": "NV Power Mode: 120W 1",
+    "cpu_count": 14,
+    "mem_total_gb": 122.82,
+    "loadavg_1m_at_start": 1.994140625,
+    "loadavg_5m_at_start": 1.9931640625,
+    "python": "3.12.3",
+    "git_sha": "254ef27"
+  },
+  "adapter": {
+    "name": "mock_vlm",
+    "model_version": "mock-vlm-structured-v1"
+  },
+  "config": {
+    "adapter": "mock",
+    "adapter_endpoint": "http://127.0.0.1:8000/v1",
+    "model": "nvidia/cosmos-reason2-2b",
+    "post_events": false,
+    "backend": null,
+    "continuous": false
+  },
+  "source": {
+    "camera_id": "bench-camera-1",
+    "source_type": "synthetic",
+    "frame_count": 500,
+    "sample_interval_ms": 0,
+    "zones": 1,
+    "path": "examples/synthetic_benchmark_source.json",
+    "sha256": "f7012b56a5d3fccf230a74b9ca4d261bfa9c7f1bd24a98bb12e60e33f5b32791"
+  },
+  "frames_processed": 500,
+  "frames_per_second": 3158.588,
+  "latency": {
+    "inference": {
+      "n": 500,
+      "p50_ms": 0.0014,
+      "p95_ms": 0.0029,
+      "p99_ms": 0.0042,
+      "min_ms": 0.001,
+      "max_ms": 0.0076,
+      "mean_ms": 0.0016
+    },
+    "rule_eval": {
+      "n": 500,
+      "p50_ms": 0.1621,
+      "p95_ms": 0.2185,
+      "p99_ms": 0.2686,
+      "min_ms": 0.1177,
+      "max_ms": 1.4626,
+      "mean_ms": 0.1634
+    },
+    "backend_post": {
+      "n": 0
+    }
+  },
+  "events": {
+    "total": 2000,
+    "by_rule": {
+      "BLOCKED_EMERGENCY_PATH": 500,
+      "HUMAN_ROBOT_PROXIMITY": 500,
+      "PPE_MISSING": 500,
+      "RESTRICTED_ZONE_ENTRY": 500
+    },
+    "by_severity": {
+      "critical": 500,
+      "high": 1000,
+      "medium": 500
+    }
+  },
+  "memory": {
+    "process_peak_rss_gb": 0.0411
+  },
+  "tegrastats": {
+    "n_samples": 0
+  },
+  "per_frame": [
+    {
+      "frame_id": "frame-0001",
+      "t": 0.002103253733366728,
+      "inference_ms": 0.0058,
+      "rule_ms": 0.362,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0002",
+      "t": 0.0025966810062527657,
+      "inference_ms": 0.0031,
+      "rule_ms": 0.2732,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0003",
+      "t": 0.002950199879705906,
+      "inference_ms": 0.0026,
+      "rule_ms": 0.1727,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0004",
+      "t": 0.0032838666811585426,
+      "inference_ms": 0.0024,
+      "rule_ms": 0.1613,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0005",
+      "t": 0.0036040800623595715,
+      "inference_ms": 0.0023,
+      "rule_ms": 0.1515,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0006",
+      "t": 0.003910257015377283,
+      "inference_ms": 0.0065,
+      "rule_ms": 0.1382,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0007",
+      "t": 0.004200293682515621,
+      "inference_ms": 0.0019,
+      "rule_ms": 0.1346,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0008",
+      "t": 0.004478831775486469,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1299,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0009",
+      "t": 0.004755452740937471,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1244,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0010",
+      "t": 0.005031036678701639,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.123,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0011",
+      "t": 0.005303795915096998,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1216,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0012",
+      "t": 0.005580602679401636,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1239,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0013",
+      "t": 0.005852954927831888,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.125,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0014",
+      "t": 0.00612516887485981,
+      "inference_ms": 0.0042,
+      "rule_ms": 0.1255,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0015",
+      "t": 0.006394399795681238,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1226,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0016",
+      "t": 0.006653132848441601,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1183,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0017",
+      "t": 0.00691782683134079,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1234,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0018",
+      "t": 0.0072090220637619495,
+      "inference_ms": 0.0036,
+      "rule_ms": 0.125,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0019",
+      "t": 0.007599957752972841,
+      "inference_ms": 0.0018,
+      "rule_ms": 0.228,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0020",
+      "t": 0.007889189757406712,
+      "inference_ms": 0.0019,
+      "rule_ms": 0.1328,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0021",
+      "t": 0.008168051019310951,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1294,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0022",
+      "t": 0.008446394931524992,
+      "inference_ms": 0.003,
+      "rule_ms": 0.1258,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0023",
+      "t": 0.008717857766896486,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1264,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0024",
+      "t": 0.008980839978903532,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1185,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0025",
+      "t": 0.009255191776901484,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1258,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0026",
+      "t": 0.009527562651783228,
+      "inference_ms": 0.0024,
+      "rule_ms": 0.1266,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0027",
+      "t": 0.009803812950849533,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1253,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0028",
+      "t": 0.010069517884403467,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1247,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0029",
+      "t": 0.01034042565152049,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1216,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0030",
+      "t": 0.010607619769871235,
+      "inference_ms": 0.004,
+      "rule_ms": 0.1204,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0031",
+      "t": 0.01087783370167017,
+      "inference_ms": 0.0033,
+      "rule_ms": 0.1255,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0032",
+      "t": 0.01115857483819127,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1177,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0033",
+      "t": 0.01143967779353261,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1349,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0034",
+      "t": 0.011721010785549879,
+      "inference_ms": 0.0056,
+      "rule_ms": 0.1291,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0035",
+      "t": 0.01209501177072525,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.2113,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0036",
+      "t": 0.012386105954647064,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1405,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0037",
+      "t": 0.012664393056184053,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1338,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0038",
+      "t": 0.012939698994159698,
+      "inference_ms": 0.0032,
+      "rule_ms": 0.1272,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0039",
+      "t": 0.013214457780122757,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1282,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0040",
+      "t": 0.013487773947417736,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1264,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0041",
+      "t": 0.013761329930275679,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1292,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0042",
+      "t": 0.014031358063220978,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1277,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0043",
+      "t": 0.014301368035376072,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1248,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0044",
+      "t": 0.014579571783542633,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1312,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0045",
+      "t": 0.014848581980913877,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.126,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0046",
+      "t": 0.01511522987857461,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.122,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0047",
+      "t": 0.015444489661604166,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1405,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0048",
+      "t": 0.015729879029095173,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.133,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0049",
+      "t": 0.016007629688829184,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1273,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0050",
+      "t": 0.016288240905851126,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1291,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0051",
+      "t": 0.016568352933973074,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1331,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0052",
+      "t": 0.01696116803213954,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.2272,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0053",
+      "t": 0.017263113986700773,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1465,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0054",
+      "t": 0.01754928007721901,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1334,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0055",
+      "t": 0.01782759604975581,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1291,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0056",
+      "t": 0.018103206995874643,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1297,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0057",
+      "t": 0.018374439794570208,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1273,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0058",
+      "t": 0.01864777272567153,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.1272,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0059",
+      "t": 0.018921440932899714,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1305,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0060",
+      "t": 0.01920998701825738,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1277,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0061",
+      "t": 0.019497154746204615,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1381,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0062",
+      "t": 0.019769728649407625,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1271,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0063",
+      "t": 0.020065553952008486,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1284,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0064",
+      "t": 0.020355748012661934,
+      "inference_ms": 0.0018,
+      "rule_ms": 0.1384,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0065",
+      "t": 0.02064459165558219,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.14,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0066",
+      "t": 0.02092447178438306,
+      "inference_ms": 0.0026,
+      "rule_ms": 0.1297,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0067",
+      "t": 0.021199647802859545,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1332,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0068",
+      "t": 0.02157515799626708,
+      "inference_ms": 0.003,
+      "rule_ms": 0.2185,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0069",
+      "t": 0.02188417688012123,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.153,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0070",
+      "t": 0.0221661776304245,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.132,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0071",
+      "t": 0.02243971498683095,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1331,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0072",
+      "t": 0.02271214174106717,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.128,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0073",
+      "t": 0.02298503089696169,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.131,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0074",
+      "t": 0.02327449480071664,
+      "inference_ms": 0.0024,
+      "rule_ms": 0.1394,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0075",
+      "t": 0.023555059917271137,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1367,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0076",
+      "t": 0.02382850367575884,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1301,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0077",
+      "t": 0.0241048289462924,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1323,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0078",
+      "t": 0.024381717666983604,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1295,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0079",
+      "t": 0.024655311834067106,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1336,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0080",
+      "t": 0.02492724684998393,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1255,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0081",
+      "t": 0.02520020166411996,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1308,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0082",
+      "t": 0.025474173948168755,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1281,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0083",
+      "t": 0.02574729500338435,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1332,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0084",
+      "t": 0.026020535733550787,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1299,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0085",
+      "t": 0.02639222191646695,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.21,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0086",
+      "t": 0.02669357368722558,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1515,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0087",
+      "t": 0.02697907481342554,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1398,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0088",
+      "t": 0.02726366790011525,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1395,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0089",
+      "t": 0.027552399784326553,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1375,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0090",
+      "t": 0.027829085011035204,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1298,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0091",
+      "t": 0.028106243815273046,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1318,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0092",
+      "t": 0.028378437738865614,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1293,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0093",
+      "t": 0.028654003981500864,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1316,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0094",
+      "t": 0.028932855930179358,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1327,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0095",
+      "t": 0.02921765297651291,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1337,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0096",
+      "t": 0.02949472703039646,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1318,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0097",
+      "t": 0.02977003389969468,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1324,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0098",
+      "t": 0.030039718840271235,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1299,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0099",
+      "t": 0.03031965484842658,
+      "inference_ms": 0.0027,
+      "rule_ms": 0.136,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0100",
+      "t": 0.030589608941227198,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1315,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0101",
+      "t": 0.03095277678221464,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.2069,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0102",
+      "t": 0.03128372970968485,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.18,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0103",
+      "t": 0.03157225903123617,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1429,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0104",
+      "t": 0.031839629635214806,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1267,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0105",
+      "t": 0.03210945473983884,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1319,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0106",
+      "t": 0.032373389694839716,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1248,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0107",
+      "t": 0.03264234494417906,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1341,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0108",
+      "t": 0.032905371859669685,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.126,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0109",
+      "t": 0.03317403979599476,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1301,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0110",
+      "t": 0.03343082685023546,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1215,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0111",
+      "t": 0.03370190970599651,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1348,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0112",
+      "t": 0.03396660601720214,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1264,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0113",
+      "t": 0.03423118870705366,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1295,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0114",
+      "t": 0.03449762472882867,
+      "inference_ms": 0.001,
+      "rule_ms": 0.126,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0115",
+      "t": 0.03476508799940348,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1323,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0116",
+      "t": 0.03503021877259016,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1248,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0117",
+      "t": 0.035324580036103725,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1502,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0118",
+      "t": 0.03569162683561444,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.2195,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0119",
+      "t": 0.03598136780783534,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1467,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0120",
+      "t": 0.03625791473314166,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1314,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0121",
+      "t": 0.03654881380498409,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1397,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0122",
+      "t": 0.0368240918032825,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1343,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0123",
+      "t": 0.03710100892931223,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1344,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0124",
+      "t": 0.037398481741547585,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1541,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0125",
+      "t": 0.0376817318610847,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.134,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0126",
+      "t": 0.037952279672026634,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1329,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0127",
+      "t": 0.03822819562628865,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1345,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0128",
+      "t": 0.03849585494026542,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1291,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0129",
+      "t": 0.03877490991726518,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.132,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0130",
+      "t": 0.03904542978852987,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1314,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0131",
+      "t": 0.039327040780335665,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.136,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0132",
+      "t": 0.039593633729964495,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1281,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0133",
+      "t": 0.03987844893708825,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1421,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0134",
+      "t": 0.04146884102374315,
+      "inference_ms": 0.0013,
+      "rule_ms": 1.4103,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0135",
+      "t": 0.041791841853410006,
+      "inference_ms": 0.002,
+      "rule_ms": 0.1657,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0136",
+      "t": 0.04208880476653576,
+      "inference_ms": 0.0019,
+      "rule_ms": 0.1451,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0137",
+      "t": 0.04238267708569765,
+      "inference_ms": 0.0018,
+      "rule_ms": 0.1434,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0138",
+      "t": 0.04266071366146207,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1361,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0139",
+      "t": 0.04293616767972708,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1322,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0140",
+      "t": 0.043231908697634935,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.137,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0141",
+      "t": 0.043520845007151365,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1457,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0142",
+      "t": 0.04379411367699504,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1347,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0143",
+      "t": 0.04406934604048729,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1318,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0144",
+      "t": 0.04433878092095256,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1315,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0145",
+      "t": 0.04462530091404915,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1422,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0146",
+      "t": 0.0449008010327816,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1334,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0147",
+      "t": 0.045174541883170605,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1319,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0148",
+      "t": 0.04544064495712519,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1279,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0149",
+      "t": 0.0457288296893239,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1409,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0150",
+      "t": 0.04600234888494015,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1338,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0151",
+      "t": 0.046367987990379333,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2163,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0152",
+      "t": 0.046652497723698616,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1428,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0153",
+      "t": 0.046934321988373995,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1423,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0154",
+      "t": 0.04723354568704963,
+      "inference_ms": 0.0026,
+      "rule_ms": 0.1353,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0155",
+      "t": 0.04751966567710042,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1403,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0156",
+      "t": 0.047795278020203114,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1322,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0157",
+      "t": 0.048079398926347494,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1435,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0158",
+      "t": 0.04836497362703085,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.142,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0159",
+      "t": 0.048643695656210184,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1406,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0160",
+      "t": 0.04893678892403841,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1505,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0161",
+      "t": 0.04922256665304303,
+      "inference_ms": 0.001,
+      "rule_ms": 0.145,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0162",
+      "t": 0.049504614900797606,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1428,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0163",
+      "t": 0.04977511474862695,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1332,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0164",
+      "t": 0.05004161596298218,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1291,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0165",
+      "t": 0.05032231006771326,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1394,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0166",
+      "t": 0.05059778271242976,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1378,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0167",
+      "t": 0.05086558870971203,
+      "inference_ms": 0.001,
+      "rule_ms": 0.1309,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0168",
+      "t": 0.051242691930383444,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.2176,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0169",
+      "t": 0.051546969916671515,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1586,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0170",
+      "t": 0.05182721093297005,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1393,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0171",
+      "t": 0.05210798094049096,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1346,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0172",
+      "t": 0.05237868381664157,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1336,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0173",
+      "t": 0.0526682767085731,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1479,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0174",
+      "t": 0.05295468494296074,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1402,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0175",
+      "t": 0.053228389006108046,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1349,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0176",
+      "t": 0.053499065805226564,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1325,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0177",
+      "t": 0.05379294604063034,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.151,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0178",
+      "t": 0.05407021474093199,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1377,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0179",
+      "t": 0.05434293672442436,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1345,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0180",
+      "t": 0.054622141644358635,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1303,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0181",
+      "t": 0.054913124069571495,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.149,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0182",
+      "t": 0.055204142816364765,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1381,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0183",
+      "t": 0.05548448581248522,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1402,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0184",
+      "t": 0.05583632877096534,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.205,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0185",
+      "t": 0.056149004958570004,
+      "inference_ms": 0.0045,
+      "rule_ms": 0.1644,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0186",
+      "t": 0.05643033003434539,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.142,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0187",
+      "t": 0.05670823808759451,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1391,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0188",
+      "t": 0.0570144047960639,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1388,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0189",
+      "t": 0.05732361879199743,
+      "inference_ms": 0.0028,
+      "rule_ms": 0.1608,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0190",
+      "t": 0.0576168317347765,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1466,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0191",
+      "t": 0.05790308304131031,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1399,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0192",
+      "t": 0.05818725889548659,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1437,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0193",
+      "t": 0.058479066006839275,
+      "inference_ms": 0.0038,
+      "rule_ms": 0.1508,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0194",
+      "t": 0.05876204697415233,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1425,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0195",
+      "t": 0.059038168750703335,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1355,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0196",
+      "t": 0.05933478893712163,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.154,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0197",
+      "t": 0.05963163264095783,
+      "inference_ms": 0.003,
+      "rule_ms": 0.1545,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0198",
+      "t": 0.059911558870226145,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1391,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0199",
+      "t": 0.06019102269783616,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1368,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0200",
+      "t": 0.060470216907560825,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1364,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0201",
+      "t": 0.06086378265172243,
+      "inference_ms": 0.0027,
+      "rule_ms": 0.2455,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0202",
+      "t": 0.06116952374577522,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1571,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0203",
+      "t": 0.061455181799829006,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.142,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0204",
+      "t": 0.06173712573945522,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1411,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0205",
+      "t": 0.06203646073117852,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.1564,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0206",
+      "t": 0.06231797905638814,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1429,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0207",
+      "t": 0.0625997120514512,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1382,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0208",
+      "t": 0.06287850765511394,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1388,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0209",
+      "t": 0.06318547204136848,
+      "inference_ms": 0.0076,
+      "rule_ms": 0.1527,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0210",
+      "t": 0.06347899092361331,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1506,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0211",
+      "t": 0.06376200076192617,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1435,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0212",
+      "t": 0.06404095469042659,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1414,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0213",
+      "t": 0.06433736300095916,
+      "inference_ms": 0.0028,
+      "rule_ms": 0.1568,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0214",
+      "t": 0.06462332606315613,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1478,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0215",
+      "t": 0.06489880802109838,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.135,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0216",
+      "t": 0.06518080784007907,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1392,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0217",
+      "t": 0.06556637398898602,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.2378,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0218",
+      "t": 0.06587007781490684,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1603,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0219",
+      "t": 0.06615154165774584,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1429,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0220",
+      "t": 0.0664291619323194,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1372,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0221",
+      "t": 0.06673330208286643,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1618,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0222",
+      "t": 0.06702175596728921,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1461,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0223",
+      "t": 0.06731213675811887,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.151,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0224",
+      "t": 0.06760207191109657,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1439,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0225",
+      "t": 0.06790558202192187,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1597,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0226",
+      "t": 0.06819612765684724,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.15,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0227",
+      "t": 0.06847586994990706,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1423,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0228",
+      "t": 0.06875937897711992,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.144,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0229",
+      "t": 0.06905653793364763,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1598,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0230",
+      "t": 0.06934439903125167,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1503,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0231",
+      "t": 0.06962341768667102,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1403,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0232",
+      "t": 0.06990951066836715,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1437,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0233",
+      "t": 0.07020573364570737,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1564,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0234",
+      "t": 0.07060911366716027,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2564,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0235",
+      "t": 0.07091338280588388,
+      "inference_ms": 0.0031,
+      "rule_ms": 0.1596,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0236",
+      "t": 0.07121540186926723,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1452,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0237",
+      "t": 0.07152373576536775,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1647,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0238",
+      "t": 0.07181436568498611,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1519,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0239",
+      "t": 0.07210385799407959,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.149,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0240",
+      "t": 0.07239555288106203,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1456,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0241",
+      "t": 0.07269898802042007,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1635,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0242",
+      "t": 0.07299107266589999,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1531,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0243",
+      "t": 0.07328774780035019,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1599,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0244",
+      "t": 0.07357070269063115,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1446,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0245",
+      "t": 0.07387626776471734,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1662,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0246",
+      "t": 0.07417688891291618,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1567,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0247",
+      "t": 0.07447000965476036,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1529,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0248",
+      "t": 0.07477526972070336,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1519,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0249",
+      "t": 0.07508166786283255,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1656,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0250",
+      "t": 0.07548559503629804,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.25,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0251",
+      "t": 0.07582111470401287,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1873,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0252",
+      "t": 0.07611987367272377,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1546,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0253",
+      "t": 0.0764337726868689,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1685,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0254",
+      "t": 0.07673233794048429,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1609,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0255",
+      "t": 0.07702979305759072,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1539,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0256",
+      "t": 0.0773214497603476,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1498,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0257",
+      "t": 0.07764556165784597,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1732,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0258",
+      "t": 0.07796863606199622,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1733,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0259",
+      "t": 0.07829285878688097,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1772,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0260",
+      "t": 0.07860969286412,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.168,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0261",
+      "t": 0.07892290689051151,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1695,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0262",
+      "t": 0.079249600879848,
+      "inference_ms": 0.0027,
+      "rule_ms": 0.1733,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0263",
+      "t": 0.07956783380359411,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1724,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0264",
+      "t": 0.07988729700446129,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1712,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0265",
+      "t": 0.08020034385845065,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.167,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0266",
+      "t": 0.080513761844486,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1641,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0267",
+      "t": 0.08092470606788993,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.2561,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0268",
+      "t": 0.0812562070786953,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1783,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0269",
+      "t": 0.08157083671540022,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1682,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0270",
+      "t": 0.08188885590061545,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1685,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0271",
+      "t": 0.08220434794202447,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1704,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0272",
+      "t": 0.08251704182475805,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1656,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0273",
+      "t": 0.08283499674871564,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1668,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0274",
+      "t": 0.08316202508285642,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1673,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0275",
+      "t": 0.08348178490996361,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1684,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0276",
+      "t": 0.0837984518148005,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1658,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0277",
+      "t": 0.08411783166229725,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1702,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0278",
+      "t": 0.0844266377389431,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1658,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0279",
+      "t": 0.08473917562514544,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1638,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0280",
+      "t": 0.08505007391795516,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1637,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0281",
+      "t": 0.08536721393465996,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1715,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0282",
+      "t": 0.08567783376201987,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1662,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0283",
+      "t": 0.08608137303963304,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.2475,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0284",
+      "t": 0.0864111608825624,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1776,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0285",
+      "t": 0.08672856772318482,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1702,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0286",
+      "t": 0.08704270794987679,
+      "inference_ms": 0.0028,
+      "rule_ms": 0.1685,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0287",
+      "t": 0.08736824477091432,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1768,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0288",
+      "t": 0.08768743090331554,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1679,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0289",
+      "t": 0.08799614384770393,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1645,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0290",
+      "t": 0.08831562707200646,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1718,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0291",
+      "t": 0.08862868277356029,
+      "inference_ms": 0.0031,
+      "rule_ms": 0.1649,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0292",
+      "t": 0.0889482288621366,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.171,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0293",
+      "t": 0.08926479471847415,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1687,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0294",
+      "t": 0.08957567485049367,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.166,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0295",
+      "t": 0.089882574044168,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1602,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0296",
+      "t": 0.09019387001171708,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1647,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0297",
+      "t": 0.09050200087949634,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1621,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0298",
+      "t": 0.09080734383314848,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1641,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0299",
+      "t": 0.09111941885203123,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1637,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0300",
+      "t": 0.09155296580865979,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2603,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0301",
+      "t": 0.09187825303524733,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1756,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0302",
+      "t": 0.09219109686091542,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1659,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0303",
+      "t": 0.09250079980120063,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1656,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0304",
+      "t": 0.09281881107017398,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1677,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0305",
+      "t": 0.09312879201024771,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1634,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0306",
+      "t": 0.09344004280865192,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1667,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0307",
+      "t": 0.09375061700120568,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.167,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0308",
+      "t": 0.09405992366373539,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1595,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0309",
+      "t": 0.09436847874894738,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.166,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0310",
+      "t": 0.09468147065490484,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1645,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0311",
+      "t": 0.09499098965898156,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1649,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0312",
+      "t": 0.09532033279538155,
+      "inference_ms": 0.0027,
+      "rule_ms": 0.1779,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0313",
+      "t": 0.09563766699284315,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1668,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0314",
+      "t": 0.09597874199971557,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1911,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0315",
+      "t": 0.09629636304453015,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1673,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0316",
+      "t": 0.09672038163989782,
+      "inference_ms": 0.0026,
+      "rule_ms": 0.2677,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0317",
+      "t": 0.09705098392441869,
+      "inference_ms": 0.0041,
+      "rule_ms": 0.175,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0318",
+      "t": 0.09736277163028717,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1666,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0319",
+      "t": 0.09767263289541006,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.162,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0320",
+      "t": 0.09798156982287765,
+      "inference_ms": 0.0027,
+      "rule_ms": 0.1617,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0321",
+      "t": 0.09829177288338542,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1632,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0322",
+      "t": 0.09860164485871792,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1653,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0323",
+      "t": 0.09891316294670105,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1673,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0324",
+      "t": 0.09923959895968437,
+      "inference_ms": 0.0028,
+      "rule_ms": 0.1632,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0325",
+      "t": 0.09956027567386627,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1692,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0326",
+      "t": 0.09987219283357263,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.167,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0327",
+      "t": 0.10018069390207529,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.166,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0328",
+      "t": 0.10049389768391848,
+      "inference_ms": 0.0034,
+      "rule_ms": 0.1638,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0329",
+      "t": 0.10080698179081082,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1694,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0330",
+      "t": 0.101120769046247,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.167,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0331",
+      "t": 0.10143278865143657,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1645,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0332",
+      "t": 0.10174299171194434,
+      "inference_ms": 0.0026,
+      "rule_ms": 0.1642,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0333",
+      "t": 0.10338380094617605,
+      "inference_ms": 0.0014,
+      "rule_ms": 1.4626,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0334",
+      "t": 0.10374077362939715,
+      "inference_ms": 0.0022,
+      "rule_ms": 0.1939,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0335",
+      "t": 0.1040624869056046,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1673,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0336",
+      "t": 0.10437995102256536,
+      "inference_ms": 0.0026,
+      "rule_ms": 0.1693,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0337",
+      "t": 0.10470726573839784,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1713,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0338",
+      "t": 0.10502326674759388,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1676,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0339",
+      "t": 0.10533816600218415,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1676,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0340",
+      "t": 0.10565560078248382,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1678,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0341",
+      "t": 0.10597326885908842,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1702,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0342",
+      "t": 0.10628413874655962,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1653,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0343",
+      "t": 0.1065965099260211,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1645,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0344",
+      "t": 0.10690902872011065,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1664,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0345",
+      "t": 0.1072369646281004,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1678,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0346",
+      "t": 0.10755418706685305,
+      "inference_ms": 0.0038,
+      "rule_ms": 0.1662,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0347",
+      "t": 0.1078650220297277,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1648,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0348",
+      "t": 0.10817467980086803,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1618,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0349",
+      "t": 0.1085744109004736,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2467,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0350",
+      "t": 0.10890430072322488,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1735,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0351",
+      "t": 0.10921911569312215,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1638,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0352",
+      "t": 0.10953415371477604,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1658,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0353",
+      "t": 0.10984783107414842,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1674,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0354",
+      "t": 0.1101624327711761,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1667,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0355",
+      "t": 0.11047558207064867,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1627,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0356",
+      "t": 0.11078240582719445,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1629,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0357",
+      "t": 0.11109401797875762,
+      "inference_ms": 0.0031,
+      "rule_ms": 0.1654,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0358",
+      "t": 0.1114223888143897,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1715,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0359",
+      "t": 0.11173455603420734,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1634,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0360",
+      "t": 0.11204932490363717,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1675,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0361",
+      "t": 0.11236121505498886,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1669,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0362",
+      "t": 0.11267251102253795,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1677,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0363",
+      "t": 0.11298760492354631,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1679,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0364",
+      "t": 0.11329801194369793,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1641,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0365",
+      "t": 0.11360801290720701,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1648,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0366",
+      "t": 0.11403519008308649,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.2719,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0367",
+      "t": 0.11438266187906265,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1774,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0368",
+      "t": 0.11470021866261959,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1669,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0369",
+      "t": 0.11500835698097944,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1654,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0370",
+      "t": 0.11532864486798644,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1692,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0371",
+      "t": 0.11563823791220784,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1645,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0372",
+      "t": 0.11594682186841965,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1613,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0373",
+      "t": 0.11625448986887932,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1618,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0374",
+      "t": 0.116566295735538,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1665,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0375",
+      "t": 0.11688015796244144,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1644,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0376",
+      "t": 0.11719225998967886,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1686,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0377",
+      "t": 0.11753080692142248,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1643,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0378",
+      "t": 0.11785048292949796,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1734,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0379",
+      "t": 0.11816215980798006,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1625,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0380",
+      "t": 0.11847616964951158,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1657,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0381",
+      "t": 0.11878853105008602,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1659,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0382",
+      "t": 0.11921363370493054,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2572,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0383",
+      "t": 0.11954364273697138,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1772,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0384",
+      "t": 0.11985566280782223,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1673,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0385",
+      "t": 0.12017036601901054,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1685,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0386",
+      "t": 0.12048183986917138,
+      "inference_ms": 0.0028,
+      "rule_ms": 0.1644,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0387",
+      "t": 0.12078934907913208,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1638,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0388",
+      "t": 0.12109592370688915,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1622,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0389",
+      "t": 0.12140915496274829,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1668,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0390",
+      "t": 0.1217166930437088,
+      "inference_ms": 0.001,
+      "rule_ms": 0.1619,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0391",
+      "t": 0.12202928680926561,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1664,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0392",
+      "t": 0.12234410177916288,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1691,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0393",
+      "t": 0.12265038071200252,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.162,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0394",
+      "t": 0.12295828806236386,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1643,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0395",
+      "t": 0.12327998271211982,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.173,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0396",
+      "t": 0.12359507568180561,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1723,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0397",
+      "t": 0.12390782684087753,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1628,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0398",
+      "t": 0.12422035494819283,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1656,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0399",
+      "t": 0.12462663277983665,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.2483,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0400",
+      "t": 0.12496053287759423,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1816,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0401",
+      "t": 0.1252746437676251,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.1652,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0402",
+      "t": 0.12558599701151252,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1644,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0403",
+      "t": 0.12589638493955135,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1606,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0404",
+      "t": 0.12620279379189014,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1609,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0405",
+      "t": 0.12650722870603204,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1606,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0406",
+      "t": 0.12681738706305623,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1624,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0407",
+      "t": 0.127137943636626,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1666,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0408",
+      "t": 0.1274597868323326,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1664,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0409",
+      "t": 0.12777163879945874,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.164,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0410",
+      "t": 0.1280787498690188,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1618,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0411",
+      "t": 0.1283913436345756,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1659,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0412",
+      "t": 0.1287008528597653,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1635,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0413",
+      "t": 0.12900743773207068,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1626,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0414",
+      "t": 0.1293106316588819,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1609,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0415",
+      "t": 0.12972863297909498,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.2556,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0416",
+      "t": 0.13005356770008802,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1761,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0417",
+      "t": 0.13036439288407564,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1633,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0418",
+      "t": 0.13067950401455164,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1666,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0419",
+      "t": 0.13099255179986358,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1663,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0420",
+      "t": 0.13131731189787388,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1753,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0421",
+      "t": 0.13163397880271077,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1682,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0422",
+      "t": 0.13194977585226297,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1679,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0423",
+      "t": 0.13226109091192484,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1646,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0424",
+      "t": 0.13257268397137523,
+      "inference_ms": 0.0025,
+      "rule_ms": 0.1644,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0425",
+      "t": 0.13288328563794494,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1649,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0426",
+      "t": 0.1331976200453937,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1656,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0427",
+      "t": 0.133512397762388,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1653,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0428",
+      "t": 0.1338241770863533,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1638,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0429",
+      "t": 0.13413111306726933,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1605,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0430",
+      "t": 0.13444239972159266,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1658,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0431",
+      "t": 0.1347525860182941,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1648,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0432",
+      "t": 0.13516880897805095,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2505,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0433",
+      "t": 0.1355052450671792,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1813,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0434",
+      "t": 0.1358173368498683,
+      "inference_ms": 0.0016,
+      "rule_ms": 0.1671,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0435",
+      "t": 0.13613353297114372,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1666,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0436",
+      "t": 0.13644123682752252,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1631,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0437",
+      "t": 0.13675119075924158,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1606,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0438",
+      "t": 0.13705576583743095,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1608,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0439",
+      "t": 0.13736136769875884,
+      "inference_ms": 0.0024,
+      "rule_ms": 0.1612,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0440",
+      "t": 0.13767094304785132,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1621,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0441",
+      "t": 0.1380039886571467,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1842,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0442",
+      "t": 0.13832040689885616,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1684,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0443",
+      "t": 0.1386317308060825,
+      "inference_ms": 0.0025,
+      "rule_ms": 0.1658,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0444",
+      "t": 0.13894496392458677,
+      "inference_ms": 0.0031,
+      "rule_ms": 0.1607,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0445",
+      "t": 0.1392655186355114,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.172,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0446",
+      "t": 0.13957667769864202,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1647,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0447",
+      "t": 0.13988733477890491,
+      "inference_ms": 0.0025,
+      "rule_ms": 0.1669,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0448",
+      "t": 0.140286048874259,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2426,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0449",
+      "t": 0.140615688636899,
+      "inference_ms": 0.0018,
+      "rule_ms": 0.1769,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0450",
+      "t": 0.14093354996293783,
+      "inference_ms": 0.0017,
+      "rule_ms": 0.1714,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0451",
+      "t": 0.14124823594465852,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.1666,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0452",
+      "t": 0.14155680080875754,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1643,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0453",
+      "t": 0.14186934800818563,
+      "inference_ms": 0.003,
+      "rule_ms": 0.1633,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0454",
+      "t": 0.14217981090769172,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1657,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0455",
+      "t": 0.14249462680891156,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.1605,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0456",
+      "t": 0.14280546084046364,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1658,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0457",
+      "t": 0.143115377984941,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1632,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0458",
+      "t": 0.1434504990465939,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.171,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0459",
+      "t": 0.14376551797613502,
+      "inference_ms": 0.0026,
+      "rule_ms": 0.1661,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0460",
+      "t": 0.1440742970444262,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1624,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0461",
+      "t": 0.1443870929069817,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1655,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0462",
+      "t": 0.14470145478844643,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.17,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0463",
+      "t": 0.14501540875062346,
+      "inference_ms": 0.0041,
+      "rule_ms": 0.1681,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0464",
+      "t": 0.14533034479245543,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1672,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0465",
+      "t": 0.14574301289394498,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.2568,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0466",
+      "t": 0.146078965626657,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1801,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0467",
+      "t": 0.14639355102553964,
+      "inference_ms": 0.0028,
+      "rule_ms": 0.1666,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0468",
+      "t": 0.1467026798054576,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1643,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0469",
+      "t": 0.1470130137167871,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1642,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0470",
+      "t": 0.1473400047980249,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1734,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0471",
+      "t": 0.14765384001657367,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1665,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0472",
+      "t": 0.1479618209414184,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1646,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0473",
+      "t": 0.14827486779540777,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1653,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0474",
+      "t": 0.1485851458273828,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1646,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0475",
+      "t": 0.14889667462557554,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.1644,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0476",
+      "t": 0.14920785184949636,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.165,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0477",
+      "t": 0.1495242128148675,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1687,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0478",
+      "t": 0.14984339894726872,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1695,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0479",
+      "t": 0.15015650074929,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1668,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0480",
+      "t": 0.1504695937037468,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1676,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0481",
+      "t": 0.1508930679410696,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.2686,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0482",
+      "t": 0.15123430779203773,
+      "inference_ms": 0.0029,
+      "rule_ms": 0.1797,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0483",
+      "t": 0.15155225386843085,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1703,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0484",
+      "t": 0.15186577197164297,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1653,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0485",
+      "t": 0.15218500467017293,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1722,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0486",
+      "t": 0.15250610699877143,
+      "inference_ms": 0.0012,
+      "rule_ms": 0.169,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0487",
+      "t": 0.1528178108856082,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1634,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0488",
+      "t": 0.15313394088298082,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1684,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0489",
+      "t": 0.15344697888940573,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1671,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0490",
+      "t": 0.1537612099200487,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1657,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0491",
+      "t": 0.15407458180561662,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1675,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0492",
+      "t": 0.1543861930258572,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1676,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0493",
+      "t": 0.15469984197989106,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1644,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0494",
+      "t": 0.15501049906015396,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1654,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0495",
+      "t": 0.15534114884212613,
+      "inference_ms": 0.0011,
+      "rule_ms": 0.1791,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0496",
+      "t": 0.1556633529253304,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1731,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0497",
+      "t": 0.1559758628718555,
+      "inference_ms": 0.0014,
+      "rule_ms": 0.1668,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0498",
+      "t": 0.15639220597222447,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.2588,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0499",
+      "t": 0.15672126272693276,
+      "inference_ms": 0.0013,
+      "rule_ms": 0.1778,
+      "post_ms": null,
+      "events": 4
+    },
+    {
+      "frame_id": "frame-0500",
+      "t": 0.15704039204865694,
+      "inference_ms": 0.0015,
+      "rule_ms": 0.1664,
+      "post_ms": null,
+      "events": 4
+    }
+  ]
+}
