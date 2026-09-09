@@ -1,0 +1,15 @@
+{
+  "camera_id": "bench-camera-30fps",
+  "name": "Synthetic 30 fps pacing source: 1800 frames at 33 ms intervals, mock detections, one restricted zone",
+  "source_uri": "synthetic://benchmark-30fps",
+  "source_type": "synthetic",
+  "frame_count": 1800,
+  "sample_interval_ms": 33,
+  "zones": [
+    {
+      "zone_id": "robot-cell-a",
+      "type": "restricted",
+      "polygon": [[120, 60], [260, 60], [260, 260], [120, 260]]
+    }
+  ]
+}
