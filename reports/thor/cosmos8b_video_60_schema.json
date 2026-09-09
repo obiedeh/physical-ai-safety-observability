@@ -1,0 +1,836 @@
+{
+  "schema": "run-report-v1",
+  "status": "complete",
+  "error": null,
+  "note": "Measured runtime overhead of the edge worker on the named device. Detections come from the named adapter; a mock adapter produces fixed detections and this artifact then says nothing about detection quality.",
+  "started_at": "2026-09-09T16:58:21.969563+00:00",
+  "finished_at": "2026-09-09T17:02:38.858391+00:00",
+  "elapsed_s": 256.888,
+  "device": {
+    "host": "jetsonthor",
+    "machine": "aarch64",
+    "kernel": "6.8.12-tegra",
+    "soc": "tegra264",
+    "is_jetson": true,
+    "l4t_release": "# R38 (release), REVISION: 4.0, GCID: 43443517, BOARD: generic, EABI: aarch64, DATE: Wed Dec 31 00:15:19 UTC 2025",
+    "nvpmodel": "NV Power Mode: 120W 1",
+    "cpu_count": 14,
+    "mem_total_gb": 122.82,
+    "loadavg_1m_at_start": 3.0546875,
+    "loadavg_5m_at_start": 3.04296875,
+    "python": "3.12.3",
+    "git_sha": "254ef27"
+  },
+  "adapter": {
+    "name": "cosmos_reason2",
+    "model_version": "nvidia/cosmos-reason2-8b"
+  },
+  "config": {
+    "adapter": "cosmos-reason2",
+    "adapter_endpoint": "http://127.0.0.1:8000/v1",
+    "model": "nvidia/cosmos-reason2-8b",
+    "inference_timeout_seconds": 300.0,
+    "post_batch": false,
+    "max_tokens": 512,
+    "think": false,
+    "json_schema": true,
+    "post_events": false,
+    "backend": null,
+    "continuous": false
+  },
+  "source": {
+    "camera_id": "sim-workcell-ludo",
+    "source_type": "video_file",
+    "frame_count": 60,
+    "sample_interval_ms": 0,
+    "zones": 1,
+    "path": "examples/thor_video_source.json",
+    "sha256": "82c35431538a78220a080d9050c7ff5825ef0c3829e3d7832ea32ecef2a99e16"
+  },
+  "frames_processed": 60,
+  "frames_per_second": 0.234,
+  "latency": {
+    "inference": {
+      "n": 60,
+      "unit": "ms",
+      "p50": 3201.0725,
+      "p95": 8257.4246,
+      "p99": 9183.0813,
+      "min": 2993.2757,
+      "max": 14962.103,
+      "mean": 4231.4994
+    },
+    "rule_eval": {
+      "n": 60,
+      "unit": "ms",
+      "p50": 0.3734,
+      "p95": 0.5021,
+      "p99": 0.5752,
+      "min": 0.2811,
+      "max": 0.5985,
+      "mean": 0.3827
+    },
+    "backend_post": {
+      "n": 0
+    }
+  },
+  "model_tokens": {
+    "prompt": {
+      "n": 60,
+      "unit": "count",
+      "p50": 525,
+      "p95": 525,
+      "p99": 525,
+      "min": 525,
+      "max": 525,
+      "mean": 525.0
+    },
+    "completion": {
+      "n": 60,
+      "unit": "count",
+      "p50": 47,
+      "p95": 88,
+      "p99": 88,
+      "min": 44,
+      "max": 157,
+      "mean": 54.95
+    },
+    "note": "Present only when the adapter returns an OpenAI-style usage block."
+  },
+  "detections_per_frame": {
+    "n": 60,
+    "unit": "count",
+    "p50": 1,
+    "p95": 2,
+    "p99": 2,
+    "min": 1,
+    "max": 4,
+    "mean": 1.2333
+  },
+  "detections_by_label": {
+    "box": 8,
+    "pallet": 3,
+    "robot": 63
+  },
+  "events": {
+    "total": 0,
+    "by_rule": {},
+    "by_severity": {}
+  },
+  "memory": {
+    "process_peak_rss_gb": 0.103
+  },
+  "tegrastats": {
+    "n_samples": 256,
+    "rails_mw": {
+      "VDD_GPU": {
+        "p50": 16497.0,
+        "peak": 28662,
+        "min": 1965
+      },
+      "VDD_CPU_SOC_MSS": {
+        "p50": 20425.0,
+        "peak": 21604,
+        "min": 9041
+      },
+      "VIN_SYS_5V0": {
+        "p50": 19772.0,
+        "peak": 20384,
+        "min": 7924
+      },
+      "VIN": {
+        "p50": 65976.0,
+        "peak": 131582,
+        "min": 26040
+      }
+    },
+    "temps_c": {
+      "cpu": {
+        "p50": 51.031,
+        "peak": 54.812
+      },
+      "tj": {
+        "p50": 52.937,
+        "peak": 61.062
+      },
+      "soc012": {
+        "p50": 51.937,
+        "peak": 55.718
+      },
+      "gpu": {
+        "p50": 52.25,
+        "peak": 61.062
+      },
+      "soc345": {
+        "p50": 52.906,
+        "peak": 58.343
+      }
+    },
+    "board_ram_used_mb": {
+      "p50": 70434.0,
+      "peak": 70602
+    }
+  },
+  "per_frame": [
+    {
+      "frame_id": "frame-00000060",
+      "t": 9.391979304142296,
+      "inference_ms": 9183.0813,
+      "rule_ms": 0.3346,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000120",
+      "t": 13.907328022178262,
+      "inference_ms": 4462.0235,
+      "rule_ms": 0.383,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000180",
+      "t": 18.59433371014893,
+      "inference_ms": 4642.0257,
+      "rule_ms": 0.3138,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000240",
+      "t": 23.08115143608302,
+      "inference_ms": 4440.7733,
+      "rule_ms": 0.5021,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000300",
+      "t": 27.585566278081387,
+      "inference_ms": 4455.5356,
+      "rule_ms": 0.3507,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000360",
+      "t": 32.067679467145354,
+      "inference_ms": 4432.8988,
+      "rule_ms": 0.464,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000420",
+      "t": 36.55700836610049,
+      "inference_ms": 4437.4182,
+      "rule_ms": 0.5752,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000480",
+      "t": 41.34092421410605,
+      "inference_ms": 4728.7495,
+      "rule_ms": 0.5985,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00000540",
+      "t": 49.66446119500324,
+      "inference_ms": 8265.1151,
+      "rule_ms": 0.3902,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 83
+    },
+    {
+      "frame_id": "frame-00000600",
+      "t": 57.97257405426353,
+      "inference_ms": 8257.4246,
+      "rule_ms": 0.2993,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 83
+    },
+    {
+      "frame_id": "frame-00000660",
+      "t": 62.485196486115456,
+      "inference_ms": 4455.2406,
+      "rule_ms": 0.3963,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000720",
+      "t": 66.98551539704204,
+      "inference_ms": 4451.1469,
+      "rule_ms": 0.4226,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000780",
+      "t": 71.5003781770356,
+      "inference_ms": 4459.4317,
+      "rule_ms": 0.4548,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000840",
+      "t": 86.51514370925725,
+      "inference_ms": 14962.103,
+      "rule_ms": 0.3234,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 525,
+      "completion_tokens": 157
+    },
+    {
+      "frame_id": "frame-00000900",
+      "t": 89.5768335009925,
+      "inference_ms": 3003.4524,
+      "rule_ms": 0.3507,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00000960",
+      "t": 95.49360933713615,
+      "inference_ms": 5862.1962,
+      "rule_ms": 0.329,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 88
+    },
+    {
+      "frame_id": "frame-00001020",
+      "t": 101.42136255884543,
+      "inference_ms": 5868.471,
+      "rule_ms": 0.3062,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 88
+    },
+    {
+      "frame_id": "frame-00001080",
+      "t": 106.96577162481844,
+      "inference_ms": 5486.2412,
+      "rule_ms": 0.3495,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 82
+    },
+    {
+      "frame_id": "frame-00001140",
+      "t": 112.88012942206115,
+      "inference_ms": 5863.8669,
+      "rule_ms": 0.4342,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 88
+    },
+    {
+      "frame_id": "frame-00001200",
+      "t": 116.1266536442563,
+      "inference_ms": 3202.8963,
+      "rule_ms": 0.3968,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001260",
+      "t": 122.04162732884288,
+      "inference_ms": 5872.0729,
+      "rule_ms": 0.2811,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 88
+    },
+    {
+      "frame_id": "frame-00001320",
+      "t": 125.2882826179266,
+      "inference_ms": 3201.0725,
+      "rule_ms": 0.5385,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001380",
+      "t": 128.3513468732126,
+      "inference_ms": 3008.0354,
+      "rule_ms": 0.3794,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00001440",
+      "t": 131.42404083209112,
+      "inference_ms": 3021.3066,
+      "rule_ms": 0.349,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00001500",
+      "t": 134.469714904204,
+      "inference_ms": 2998.7209,
+      "rule_ms": 0.3278,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00001560",
+      "t": 137.70843691704795,
+      "inference_ms": 3190.7005,
+      "rule_ms": 0.4021,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001620",
+      "t": 140.96087931189686,
+      "inference_ms": 3202.9365,
+      "rule_ms": 0.3165,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001680",
+      "t": 144.20150580490008,
+      "inference_ms": 3194.5692,
+      "rule_ms": 0.3114,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001740",
+      "t": 147.44238693406805,
+      "inference_ms": 3193.8977,
+      "rule_ms": 0.315,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001800",
+      "t": 150.68257431825623,
+      "inference_ms": 3191.3047,
+      "rule_ms": 0.3437,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001860",
+      "t": 153.92583901714534,
+      "inference_ms": 3195.4419,
+      "rule_ms": 0.333,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001920",
+      "t": 157.16770000802353,
+      "inference_ms": 3192.1352,
+      "rule_ms": 0.397,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00001980",
+      "t": 163.09621784789488,
+      "inference_ms": 5875.3003,
+      "rule_ms": 0.4103,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 88
+    },
+    {
+      "frame_id": "frame-00002040",
+      "t": 166.35237505985424,
+      "inference_ms": 3204.7798,
+      "rule_ms": 0.3723,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002100",
+      "t": 169.43170718010515,
+      "inference_ms": 3020.6124,
+      "rule_ms": 0.3839,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00002160",
+      "t": 172.4916871418245,
+      "inference_ms": 3007.2244,
+      "rule_ms": 0.3958,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00002220",
+      "t": 178.09964541019872,
+      "inference_ms": 5546.3224,
+      "rule_ms": 0.3843,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 83
+    },
+    {
+      "frame_id": "frame-00002280",
+      "t": 181.3521922128275,
+      "inference_ms": 3200.1217,
+      "rule_ms": 0.4416,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002340",
+      "t": 184.59729735320434,
+      "inference_ms": 3193.2814,
+      "rule_ms": 0.4009,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002400",
+      "t": 187.84550877613947,
+      "inference_ms": 3201.5423,
+      "rule_ms": 0.3681,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002460",
+      "t": 191.09557104716077,
+      "inference_ms": 3206.8781,
+      "rule_ms": 0.3402,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002520",
+      "t": 194.33949559694156,
+      "inference_ms": 3199.5143,
+      "rule_ms": 0.3433,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002580",
+      "t": 197.56776964990422,
+      "inference_ms": 3186.6239,
+      "rule_ms": 0.3459,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002640",
+      "t": 200.79663843708113,
+      "inference_ms": 3191.0442,
+      "rule_ms": 0.3376,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002700",
+      "t": 204.0227596089244,
+      "inference_ms": 3189.6203,
+      "rule_ms": 0.3437,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002760",
+      "t": 207.27058215020224,
+      "inference_ms": 3206.8842,
+      "rule_ms": 0.3344,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002820",
+      "t": 210.49888877384365,
+      "inference_ms": 3189.9782,
+      "rule_ms": 0.3499,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00002880",
+      "t": 213.54098289692774,
+      "inference_ms": 2994.6149,
+      "rule_ms": 0.3685,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00002940",
+      "t": 216.58021504618227,
+      "inference_ms": 2997.6483,
+      "rule_ms": 0.3759,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00003000",
+      "t": 219.62192482408136,
+      "inference_ms": 2996.2488,
+      "rule_ms": 0.3403,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00003060",
+      "t": 222.65224624425173,
+      "inference_ms": 2993.2757,
+      "rule_ms": 0.4358,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00003120",
+      "t": 225.68308336520568,
+      "inference_ms": 2994.762,
+      "rule_ms": 0.4122,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 44
+    },
+    {
+      "frame_id": "frame-00003180",
+      "t": 228.91522422991693,
+      "inference_ms": 3189.9772,
+      "rule_ms": 0.3949,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00003240",
+      "t": 232.14913374418393,
+      "inference_ms": 3197.2298,
+      "rule_ms": 0.349,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00003300",
+      "t": 235.37622787803411,
+      "inference_ms": 3190.7534,
+      "rule_ms": 0.4933,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00003360",
+      "t": 238.60291403811425,
+      "inference_ms": 3192.3709,
+      "rule_ms": 0.419,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00003420",
+      "t": 244.53072962909937,
+      "inference_ms": 5892.8485,
+      "rule_ms": 0.4444,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 88
+    },
+    {
+      "frame_id": "frame-00003480",
+      "t": 247.7568315002136,
+      "inference_ms": 3190.1875,
+      "rule_ms": 0.3503,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00003540",
+      "t": 250.981668475084,
+      "inference_ms": 3192.1823,
+      "rule_ms": 0.3734,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 525,
+      "completion_tokens": 47
+    },
+    {
+      "frame_id": "frame-00003600",
+      "t": 256.8833697210066,
+      "inference_ms": 5865.8528,
+      "rule_ms": 0.3809,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 525,
+      "completion_tokens": 88
+    }
+  ]
+}

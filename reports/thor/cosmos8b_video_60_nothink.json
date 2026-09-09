@@ -1,0 +1,838 @@
+{
+  "schema": "run-report-v1",
+  "status": "complete",
+  "error": null,
+  "note": "Measured runtime overhead of the edge worker on the named device. Detections come from the named adapter; a mock adapter produces fixed detections and this artifact then says nothing about detection quality.",
+  "started_at": "2026-09-09T17:02:39.158461+00:00",
+  "finished_at": "2026-09-09T17:12:53.466782+00:00",
+  "elapsed_s": 614.308,
+  "device": {
+    "host": "jetsonthor",
+    "machine": "aarch64",
+    "kernel": "6.8.12-tegra",
+    "soc": "tegra264",
+    "is_jetson": true,
+    "l4t_release": "# R38 (release), REVISION: 4.0, GCID: 43443517, BOARD: generic, EABI: aarch64, DATE: Wed Dec 31 00:15:19 UTC 2025",
+    "nvpmodel": "NV Power Mode: 120W 1",
+    "cpu_count": 14,
+    "mem_total_gb": 122.82,
+    "loadavg_1m_at_start": 3.09228515625,
+    "loadavg_5m_at_start": 3.0673828125,
+    "python": "3.12.3",
+    "git_sha": "254ef27"
+  },
+  "adapter": {
+    "name": "cosmos_reason2",
+    "model_version": "nvidia/cosmos-reason2-8b"
+  },
+  "config": {
+    "adapter": "cosmos-reason2",
+    "adapter_endpoint": "http://127.0.0.1:8000/v1",
+    "model": "nvidia/cosmos-reason2-8b",
+    "inference_timeout_seconds": 300.0,
+    "post_batch": false,
+    "max_tokens": 512,
+    "think": false,
+    "json_schema": false,
+    "post_events": false,
+    "backend": null,
+    "continuous": false
+  },
+  "source": {
+    "camera_id": "sim-workcell-ludo",
+    "source_type": "video_file",
+    "frame_count": 60,
+    "sample_interval_ms": 0,
+    "zones": 1,
+    "path": "examples/thor_video_source.json",
+    "sha256": "82c35431538a78220a080d9050c7ff5825ef0c3829e3d7832ea32ecef2a99e16"
+  },
+  "frames_processed": 60,
+  "frames_per_second": 0.098,
+  "latency": {
+    "inference": {
+      "n": 60,
+      "unit": "ms",
+      "p50": 8292.5315,
+      "p95": 27781.8828,
+      "p99": 33426.2703,
+      "min": 3288.3784,
+      "max": 33665.8783,
+      "mean": 10196.5939
+    },
+    "rule_eval": {
+      "n": 60,
+      "unit": "ms",
+      "p50": 0.2891,
+      "p95": 0.3285,
+      "p99": 0.3363,
+      "min": 0.2148,
+      "max": 0.339,
+      "mean": 0.287
+    },
+    "backend_post": {
+      "n": 0
+    }
+  },
+  "model_tokens": {
+    "prompt": {
+      "n": 60,
+      "unit": "count",
+      "p50": 566,
+      "p95": 566,
+      "p99": 566,
+      "min": 566,
+      "max": 566,
+      "mean": 566.0
+    },
+    "completion": {
+      "n": 60,
+      "unit": "count",
+      "p50": 126,
+      "p95": 422,
+      "p99": 508,
+      "min": 49,
+      "max": 512,
+      "mean": 154.65
+    },
+    "note": "Present only when the adapter returns an OpenAI-style usage block."
+  },
+  "detections_per_frame": {
+    "n": 60,
+    "unit": "count",
+    "p50": 1,
+    "p95": 4,
+    "p99": 4,
+    "min": 0,
+    "max": 4,
+    "mean": 1.35
+  },
+  "detections_by_label": {
+    "box": 2,
+    "cube": 6,
+    "cylinder": 4,
+    "robot": 59,
+    "sphere": 10
+  },
+  "events": {
+    "total": 0,
+    "by_rule": {},
+    "by_severity": {}
+  },
+  "memory": {
+    "process_peak_rss_gb": 0.1018
+  },
+  "tegrastats": {
+    "n_samples": 611,
+    "rails_mw": {
+      "VDD_GPU": {
+        "p50": 16490.0,
+        "peak": 22763,
+        "min": 15705
+      },
+      "VDD_CPU_SOC_MSS": {
+        "p50": 21202.0,
+        "peak": 21987,
+        "min": 20024
+      },
+      "VIN_SYS_5V0": {
+        "p50": 20282.0,
+        "peak": 20587,
+        "min": 18957
+      },
+      "VIN": {
+        "p50": 69136.0,
+        "peak": 108376,
+        "min": 62778
+      }
+    },
+    "temps_c": {
+      "cpu": {
+        "p50": 58.562,
+        "peak": 60.218
+      },
+      "tj": {
+        "p50": 59.906,
+        "peak": 61.406
+      },
+      "soc012": {
+        "p50": 59.468,
+        "peak": 61.093
+      },
+      "gpu": {
+        "p50": 59.531,
+        "peak": 61.093
+      },
+      "soc345": {
+        "p50": 59.906,
+        "peak": 61.406
+      }
+    },
+    "board_ram_used_mb": {
+      "p50": 70611.0,
+      "peak": 70620
+    }
+  },
+  "per_frame": [
+    {
+      "frame_id": "frame-00000060",
+      "t": 7.999382548965514,
+      "inference_ms": 7851.6843,
+      "rule_ms": 0.2903,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00000120",
+      "t": 16.33570138318464,
+      "inference_ms": 8292.5315,
+      "rule_ms": 0.2793,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 126
+    },
+    {
+      "frame_id": "frame-00000180",
+      "t": 26.759729019831866,
+      "inference_ms": 10370.902,
+      "rule_ms": 0.2346,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 158
+    },
+    {
+      "frame_id": "frame-00000240",
+      "t": 34.63269745884463,
+      "inference_ms": 7828.3617,
+      "rule_ms": 0.26,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00000300",
+      "t": 44.08930575614795,
+      "inference_ms": 9398.1598,
+      "rule_ms": 0.277,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 143
+    },
+    {
+      "frame_id": "frame-00000360",
+      "t": 52.092166419140995,
+      "inference_ms": 7958.3563,
+      "rule_ms": 0.2707,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 121
+    },
+    {
+      "frame_id": "frame-00000420",
+      "t": 60.100720901973546,
+      "inference_ms": 7966.0408,
+      "rule_ms": 0.2765,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 121
+    },
+    {
+      "frame_id": "frame-00000480",
+      "t": 68.10187236405909,
+      "inference_ms": 7957.3404,
+      "rule_ms": 0.2729,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 121
+    },
+    {
+      "frame_id": "frame-00000540",
+      "t": 75.98306529782712,
+      "inference_ms": 7832.6261,
+      "rule_ms": 0.2642,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00000600",
+      "t": 83.85936660319567,
+      "inference_ms": 7833.7733,
+      "rule_ms": 0.3027,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00000660",
+      "t": 91.72726092906669,
+      "inference_ms": 7825.4321,
+      "rule_ms": 0.296,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00000720",
+      "t": 101.15623052092269,
+      "inference_ms": 9393.4848,
+      "rule_ms": 0.262,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 143
+    },
+    {
+      "frame_id": "frame-00000780",
+      "t": 109.02946859784424,
+      "inference_ms": 7837.4131,
+      "rule_ms": 0.3032,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00000840",
+      "t": 118.00388045283034,
+      "inference_ms": 8945.7409,
+      "rule_ms": 0.2712,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 136
+    },
+    {
+      "frame_id": "frame-00000900",
+      "t": 129.31868407782167,
+      "inference_ms": 11274.029,
+      "rule_ms": 0.2168,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 172
+    },
+    {
+      "frame_id": "frame-00000960",
+      "t": 140.25850052013993,
+      "inference_ms": 10889.7132,
+      "rule_ms": 0.2784,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 166
+    },
+    {
+      "frame_id": "frame-00001020",
+      "t": 150.66279166890308,
+      "inference_ms": 10354.9381,
+      "rule_ms": 0.2634,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 158
+    },
+    {
+      "frame_id": "frame-00001080",
+      "t": 160.0453759240918,
+      "inference_ms": 9335.1619,
+      "rule_ms": 0.2804,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 142
+    },
+    {
+      "frame_id": "frame-00001140",
+      "t": 163.4220529831946,
+      "inference_ms": 3341.3584,
+      "rule_ms": 0.2881,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00001200",
+      "t": 166.8031087317504,
+      "inference_ms": 3345.7739,
+      "rule_ms": 0.2871,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00001260",
+      "t": 170.17930369079113,
+      "inference_ms": 3341.5984,
+      "rule_ms": 0.3183,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00001320",
+      "t": 173.57623639516532,
+      "inference_ms": 3357.819,
+      "rule_ms": 0.2332,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00001380",
+      "t": 182.48502829298377,
+      "inference_ms": 8869.6595,
+      "rule_ms": 0.2916,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 135
+    },
+    {
+      "frame_id": "frame-00001440",
+      "t": 192.17897594114766,
+      "inference_ms": 9658.0579,
+      "rule_ms": 0.2865,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 147
+    },
+    {
+      "frame_id": "frame-00001500",
+      "t": 198.81402715900913,
+      "inference_ms": 6596.9586,
+      "rule_ms": 0.2891,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 566,
+      "completion_tokens": 100
+    },
+    {
+      "frame_id": "frame-00001560",
+      "t": 207.84936214005575,
+      "inference_ms": 8999.3273,
+      "rule_ms": 0.2881,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 137
+    },
+    {
+      "frame_id": "frame-00001620",
+      "t": 216.10396668314934,
+      "inference_ms": 8218.9134,
+      "rule_ms": 0.3017,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 125
+    },
+    {
+      "frame_id": "frame-00001680",
+      "t": 237.08673261711374,
+      "inference_ms": 20947.8404,
+      "rule_ms": 0.2371,
+      "post_ms": null,
+      "events": 0,
+      "detections": 3,
+      "prompt_tokens": 566,
+      "completion_tokens": 320
+    },
+    {
+      "frame_id": "frame-00001740",
+      "t": 240.46295116702095,
+      "inference_ms": 3336.5867,
+      "rule_ms": 0.2936,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00001800",
+      "t": 244.18065816583112,
+      "inference_ms": 3667.4299,
+      "rule_ms": 0.2845,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 55
+    },
+    {
+      "frame_id": "frame-00001860",
+      "t": 247.5660176659003,
+      "inference_ms": 3346.2929,
+      "rule_ms": 0.3004,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00001920",
+      "t": 250.96923964610323,
+      "inference_ms": 3364.0865,
+      "rule_ms": 0.3071,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00001980",
+      "t": 280.4053088920191,
+      "inference_ms": 29397.0727,
+      "rule_ms": 0.3056,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 566,
+      "completion_tokens": 447
+    },
+    {
+      "frame_id": "frame-00002040",
+      "t": 288.33580544404685,
+      "inference_ms": 7888.5149,
+      "rule_ms": 0.2919,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00002100",
+      "t": 298.48258451977745,
+      "inference_ms": 10104.8679,
+      "rule_ms": 0.2957,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 153
+    },
+    {
+      "frame_id": "frame-00002160",
+      "t": 308.0276546771638,
+      "inference_ms": 9509.7119,
+      "rule_ms": 0.277,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 144
+    },
+    {
+      "frame_id": "frame-00002220",
+      "t": 315.9385076891631,
+      "inference_ms": 7875.3372,
+      "rule_ms": 0.256,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 119
+    },
+    {
+      "frame_id": "frame-00002280",
+      "t": 326.81230388302356,
+      "inference_ms": 10830.6945,
+      "rule_ms": 0.3027,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 164
+    },
+    {
+      "frame_id": "frame-00002340",
+      "t": 334.8114167088643,
+      "inference_ms": 7956.8889,
+      "rule_ms": 0.3285,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 120
+    },
+    {
+      "frame_id": "frame-00002400",
+      "t": 362.6298816530034,
+      "inference_ms": 27775.5659,
+      "rule_ms": 0.2831,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 566,
+      "completion_tokens": 422
+    },
+    {
+      "frame_id": "frame-00002460",
+      "t": 389.0163836008869,
+      "inference_ms": 26338.4447,
+      "rule_ms": 0.3022,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 566,
+      "completion_tokens": 400
+    },
+    {
+      "frame_id": "frame-00002520",
+      "t": 416.82343661319464,
+      "inference_ms": 27763.4663,
+      "rule_ms": 0.3292,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 566,
+      "completion_tokens": 422
+    },
+    {
+      "frame_id": "frame-00002580",
+      "t": 426.2981122001074,
+      "inference_ms": 9435.671,
+      "rule_ms": 0.2538,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 143
+    },
+    {
+      "frame_id": "frame-00002640",
+      "t": 436.04464485589415,
+      "inference_ms": 9710.7457,
+      "rule_ms": 0.2887,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 147
+    },
+    {
+      "frame_id": "frame-00002700",
+      "t": 439.43034016294405,
+      "inference_ms": 3350.4664,
+      "rule_ms": 0.3117,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00002760",
+      "t": 442.82055120402947,
+      "inference_ms": 3358.7114,
+      "rule_ms": 0.2905,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00002820",
+      "t": 446.21900145104155,
+      "inference_ms": 3359.8592,
+      "rule_ms": 0.315,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    },
+    {
+      "frame_id": "frame-00002880",
+      "t": 456.25632909312844,
+      "inference_ms": 9991.3355,
+      "rule_ms": 0.2736,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 151
+    },
+    {
+      "frame_id": "frame-00002940",
+      "t": 466.7351931547746,
+      "inference_ms": 10432.3042,
+      "rule_ms": 0.321,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 158
+    },
+    {
+      "frame_id": "frame-00003000",
+      "t": 476.55361235979944,
+      "inference_ms": 9782.4947,
+      "rule_ms": 0.3237,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 148
+    },
+    {
+      "frame_id": "frame-00003060",
+      "t": 486.3145824819803,
+      "inference_ms": 9721.3225,
+      "rule_ms": 0.3148,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 147
+    },
+    {
+      "frame_id": "frame-00003120",
+      "t": 494.30860221618786,
+      "inference_ms": 7953.7679,
+      "rule_ms": 0.3016,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 120
+    },
+    {
+      "frame_id": "frame-00003180",
+      "t": 504.1907706800848,
+      "inference_ms": 9841.8346,
+      "rule_ms": 0.3062,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 149
+    },
+    {
+      "frame_id": "frame-00003240",
+      "t": 537.8915957161225,
+      "inference_ms": 33665.8783,
+      "rule_ms": 0.2148,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 566,
+      "completion_tokens": 512
+    },
+    {
+      "frame_id": "frame-00003300",
+      "t": 541.215716810897,
+      "inference_ms": 3288.3784,
+      "rule_ms": 0.339,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 49
+    },
+    {
+      "frame_id": "frame-00003360",
+      "t": 569.0330747887492,
+      "inference_ms": 27781.8828,
+      "rule_ms": 0.2614,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 566,
+      "completion_tokens": 422
+    },
+    {
+      "frame_id": "frame-00003420",
+      "t": 602.4921874268912,
+      "inference_ms": 33426.2703,
+      "rule_ms": 0.2633,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 566,
+      "completion_tokens": 508
+    },
+    {
+      "frame_id": "frame-00003480",
+      "t": 607.5880457721651,
+      "inference_ms": 5066.4124,
+      "rule_ms": 0.2986,
+      "post_ms": null,
+      "events": 0,
+      "detections": 2,
+      "prompt_tokens": 566,
+      "completion_tokens": 76
+    },
+    {
+      "frame_id": "frame-00003540",
+      "t": 610.9114161618054,
+      "inference_ms": 3292.9414,
+      "rule_ms": 0.3363,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 49
+    },
+    {
+      "frame_id": "frame-00003600",
+      "t": 614.3028899310157,
+      "inference_ms": 3357.4009,
+      "rule_ms": 0.3263,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 566,
+      "completion_tokens": 50
+    }
+  ]
+}
