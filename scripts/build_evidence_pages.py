@@ -123,8 +123,8 @@ def bar_chart(title: str, series: list[tuple[str, list[float | None]]], categori
             return plot_w * (math.log10(v) - lo) / (math.log10(vmax) - lo or 1)
         return plot_w * v / vmax
 
-    out = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
-           f'font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">',
+    out = [(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
+            f'font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">'),
            f'<rect width="{width}" height="{height}" fill="#121a2c"/>',
            f'<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">{html.escape(title)}</text>']
     lx = 16
