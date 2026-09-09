@@ -1,6 +1,6 @@
 # Physical AI Safety Observability
 
-**Runtime safety layer for robots and industrial workcells: structured safety events, an operator review API, and telemetry hooks. This is an engineering scaffold. No hardware or model performance has been measured yet.**
+**Runtime safety layer for robots and industrial workcells: structured safety events, an operator review API, and telemetry hooks. The pipeline's runtime overhead is measured on Jetson AGX Thor with a mock model; no real model inference or detection quality has been measured yet.**
 
 The system turns camera or video input, safety rules, runtime telemetry, and model outputs into safety events an operator can review. The goal is operational review, not demo object detection. Nothing here acts autonomously.
 
@@ -12,11 +12,36 @@ The system turns camera or video input, safety rules, runtime telemetry, and mod
 | Safety policy engine | Implemented | PPE, restricted zone, proximity risk and unsafe-event rules over structured detections | Zone geometry from camera calibration |
 | Edge worker | Implemented | Frame sampling from synthetic, video-file and RTSP-style sources; adapter interface for models | Live camera deployment |
 | Model adapters | Mock plus adapter paths | Deterministic mock VLM adapter; OpenAI-compatible and Cosmos-Reason2 adapter paths with hardened response parsing | Any measured run against a real model endpoint |
-| Telemetry | Hooks implemented | Latency p95 and p99, event counts, memory pressure, queue depth, dropped frames, runtime snapshots | Any committed measurement from those hooks |
-| Jetson path | Configuration only | `configs/jetson.json` and a deployment note | Latency, memory or sustained-runtime artifacts on a Jetson |
+| Telemetry | **Measured** (mock model), 2026-09-09, Jetson AGX Thor | Run artifacts under `reports/thor/` with device provenance, per-frame timings, event counts, process RSS and tegrastats | Any measurement with a real model |
+| Jetson path | **Runtime measured** with the mock adapter; model inference not measured | Worker and FastAPI backend run on Thor; see the section below | Real-model latency, memory and sustained-runtime artifacts |
 | Evidence chain | Implemented | Hashing and evidence-chain helpers under `evidence/` | Artifacts produced through them |
 
-There are no measured numbers in this repository. The `artifacts/` directories hold placeholders. When a run is committed it will carry device, date, inputs and hashes, following the same rule as the sibling repositories.
+The measured numbers in this repository are runtime-overhead figures with a mock model; they say nothing about detection quality. Every run artifact carries device, date, inputs and hashes.
+
+## Measured on Jetson AGX Thor, 2026-09-09
+
+Device: Jetson AGX Thor Developer Kit (`tegra264`), L4T R38.4.0, `nvpmodel` 120W, Python 3.12.3, repository commit `254ef27`. Adapter: `mock_vlm` (fixed detections, microsecond cost), so the figures below are the cost of frame sampling, the safety policy engine, event construction and the backend path, not of any model. Written by `python -m edge.worker ... --report`.
+
+| Run | Frames | Achieved rate | Rule evaluation p50 / p95 / p99 | Backend POST per frame, p50 / p95 | Board power VIN p50 | Artifact |
+|---|---|---|---|---|---|---|
+| 30 fps pacing, no posting | 1800 | **28.642 frames/s** | 0.8364 / 0.9677 / 1.1174 ms | n/a | 24252 mW | [`reports/thor/mock_30fps_no_post.json`](reports/thor/mock_30fps_no_post.json) |
+| 30 fps pacing, posting to local FastAPI + SQLite | 400 | **4.51 frames/s** | 0.6189 / 0.7587 / 0.7847 ms | **156.2 / 181.6 ms** (four events per frame) | 25346 mW | [`reports/thor/mock_30fps_backend.json`](reports/thor/mock_30fps_backend.json) |
+| unpaced, no posting | 500 | 3159 frames/s | 0.1621 / 0.2185 / 0.2686 ms | n/a | run too short to sample | [`reports/thor/mock_no_post.json`](reports/thor/mock_no_post.json) |
+
+What the numbers say:
+
+- At camera-rate pacing the worker keeps up: 28.642 frames/s against a 30 frames/s source, with rule evaluation under 1.1 ms p99 and board power at the device's idle level (about 24 W).
+- The synchronous per-event POST to the backend is the bottleneck. With four events per frame the backend path costs 156 ms p50 per frame, which caps end-to-end throughput at 4.51 frames/s on this device. Batching events per frame or posting asynchronously is the first runtime fix this measurement points at.
+- Peak process RSS was 0.061 GB. Junction temperature peaked at 39.7 C. These are 60 to 90 second runs, not sustained validation.
+- Nothing here measures a model. The mock adapter returns fixed detections that trip every rule on every frame, which is why event counts are exactly four per frame.
+
+Reproduce on a Jetson:
+
+```bash
+python -m edge.worker --source examples/synthetic_30fps_source.json --adapter mock --no-post --once --report reports/thor/run.json
+```
+
+`tegrastats` sidecars (`*_tegrastats.jsonl`) hold the 1 Hz rail and temperature samples for the paced runs.
 
 ## Architecture
 
@@ -110,14 +135,15 @@ Video or RTSP input needs the optional OpenCV dependency (`pip install -e .[open
 ## What Is Not Established
 
 - No model has been run against real camera input in this repository.
-- No latency, memory, power or thermal measurement exists on any device.
+- No real-model latency, memory, power or thermal measurement exists; the Thor figures above use a mock adapter.
 - No operator dashboard exists; review is through the API.
 - No zone geometry is derived from calibration; rules use configured regions.
 
 ## Next Work, in Order
 
-1. One committed measured run: the mock path on a Jetson with telemetry hooks writing an artifact (latency p95 and p99, memory, dropped frames), device and date recorded.
-2. Cosmos-Reason2 adapter run against a local endpoint with the same artifact shape.
+1. Done 2026-09-09: mock path on Jetson AGX Thor with run artifacts under `reports/thor/`.
+2. Cosmos-Reason2 adapter run against a local vLLM endpoint on Thor with the same artifact shape. Blocked on model weights: the Cosmos-Reason2 checkpoints are gated on Hugging Face and are not present on the device.
+2b. Batch or async event posting, then re-measure the backend path.
 3. RTSP camera source and calibration-derived zones.
 4. Operator dashboard and human-in-the-loop review workflow.
 5. Incident export and audit trails through the evidence chain.

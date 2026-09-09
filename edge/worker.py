@@ -17,6 +17,7 @@ from runtime_settings import RuntimeSettings, load_settings
 from rules.engine import SafetyPolicyEngine
 from telemetry.logging import configure_logging, log_event
 from telemetry.metrics import metrics
+from telemetry.run_report import RunRecorder
 from telemetry.runtime import RuntimeMonitor, Timer
 
 logger = logging.getLogger("edge.worker")
@@ -87,6 +88,7 @@ def run_worker(
     feedback_interval_seconds: float = 2.0,
     max_cycles: int | None = None,
     clean_feedback_terminal: bool = False,
+    recorder: RunRecorder | None = None,
 ) -> list[dict[str, Any]]:
     adapter = adapter or MockVLMAdapter()
     engine = SafetyPolicyEngine(zones=source.zones)
@@ -129,6 +131,8 @@ def run_worker(
         runtime.record_latency(runtime.inference_latency_ms + runtime.rule_eval_latency_ms)
         metrics.set_gauge("rule_eval_latency_ms", rule_timer.elapsed_ms)
 
+        frame_events: list[dict[str, Any]] = []
+        post_ms_total: float | None = None
         for event in events:
             payload = event.model_dump(mode="json")
             if post_events:
@@ -136,7 +140,9 @@ def run_worker(
                     post_event(backend, payload)
                 runtime.backend_post_latency_ms = post_timer.elapsed_ms
                 metrics.set_gauge("backend_post_latency_ms", post_timer.elapsed_ms)
+                post_ms_total = (post_ms_total or 0.0) + post_timer.elapsed_ms
             emitted.append(payload)
+            frame_events.append(payload)
             if not clean_feedback_terminal:
                 log_event(
                     logger,
@@ -146,6 +152,15 @@ def run_worker(
                     severity=event.severity,
                     confidence=event.confidence,
                 )
+
+        if recorder is not None:
+            recorder.record_frame(
+                frame_id=str(frame_context["frame_id"]),
+                inference_ms=runtime.inference_latency_ms,
+                rule_ms=runtime.rule_eval_latency_ms,
+                post_ms=post_ms_total,
+                events=frame_events,
+            )
 
         if continuous:
             sleep_remaining = feedback_interval_seconds - (time.monotonic() - cycle_started)
@@ -221,6 +236,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="Environment variable containing adapter API key, if required",
     )
     parser.add_argument("--no-post", action="store_true", help="Generate events without posting")
+    parser.add_argument(
+        "--report",
+        help="Write a measured run artifact (JSON) to this path when the run completes",
+    )
+    parser.add_argument(
+        "--frame-count",
+        type=int,
+        help="Override the source's frame_count for this run",
+    )
     parser.add_argument("--once", action="store_true", help="Process the source once and then exit")
     parser.add_argument(
         "--feedback-interval-seconds",
@@ -266,7 +290,32 @@ def main() -> None:
         logging.getLogger("httpx").setLevel(logging.WARNING)
         logger.setLevel(logging.WARNING)
     source = load_source(args.source)
+    if args.frame_count:
+        source = source.model_copy(update={"frame_count": args.frame_count})
     adapter = build_adapter(settings)
+    recorder: RunRecorder | None = None
+    if args.report:
+        recorder = RunRecorder(
+            adapter_name=getattr(adapter, "adapter_name", type(adapter).__name__),
+            model_version=str(getattr(adapter, "model_version", "unknown")),
+            source_path=args.source,
+            source_info={
+                "camera_id": source.camera_id,
+                "source_type": source.source_type,
+                "frame_count": source.frame_count,
+                "sample_interval_ms": source.sample_interval_ms,
+                "zones": len(source.zones),
+            },
+            config={
+                "adapter": settings.worker.adapter,
+                "adapter_endpoint": settings.worker.adapter_endpoint,
+                "model": settings.worker.model,
+                "post_events": settings.worker.post_events,
+                "backend": settings.worker.backend if settings.worker.post_events else None,
+                "continuous": settings.worker.continuous,
+            },
+        )
+        recorder.start_tegrastats()
     events = run_worker(
         source=source,
         backend=settings.worker.backend,
@@ -275,7 +324,11 @@ def main() -> None:
         continuous=settings.worker.continuous,
         feedback_interval_seconds=settings.worker.feedback_interval_seconds,
         clean_feedback_terminal=settings.worker.clean_feedback_terminal,
+        recorder=recorder,
     )
+    if recorder is not None:
+        out = recorder.write(args.report)
+        log_event(logger, "run_report_written", path=str(out), frames=len(recorder.frames))
     if settings.worker.clean_feedback_terminal:
         print()
     else:

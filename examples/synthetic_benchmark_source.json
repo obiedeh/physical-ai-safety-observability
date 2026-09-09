@@ -1,0 +1,15 @@
+{
+  "camera_id": "bench-camera-1",
+  "name": "Synthetic benchmark source: 500 frames, mock detections, one restricted zone",
+  "source_uri": "synthetic://benchmark",
+  "source_type": "synthetic",
+  "frame_count": 500,
+  "sample_interval_ms": 0,
+  "zones": [
+    {
+      "zone_id": "robot-cell-a",
+      "type": "restricted",
+      "polygon": [[120, 60], [260, 60], [260, 260], [120, 260]]
+    }
+  ]
+}
