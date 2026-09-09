@@ -6,3 +6,6 @@ __pycache__/
 data/
 *.sqlite3
 output/
+
+# Local benchmark inputs (videos copied from other repositories); not tracked here
+inputs/

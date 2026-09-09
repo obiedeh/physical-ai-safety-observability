@@ -1,0 +1,127 @@
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000060", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:14:52.156371+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000120", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:14:58.959092+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000180", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:03.896587+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000240", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:09.429598+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000300", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:14.869090+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000360", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:19.892472+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000420", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:25.288969+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000480", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:30.746151+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000540", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:35.942573+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000600", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:40.636640+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000660", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:45.426219+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000720", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:50.193308+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000780", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:54.989688+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000840", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:15:59.516983+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000900", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:05.056050+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000960", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:12.064203+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001020", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:16.555929+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001080", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:20.711182+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001140", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:27.169664+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001200", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:33.104735+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001260", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:44.242057+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001320", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:16:56.833946+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001380", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:17:01.023578+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001440", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:17:04.170184+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001500", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T14:17:07.291110+00:00"}
+Traceback (most recent call last):
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_transports/default.py", line 101, in map_httpcore_exceptions
+    yield
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_transports/default.py", line 250, in handle_request
+    resp = self._pool.handle_request(req)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 256, in handle_request
+    raise exc from None
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_sync/connection_pool.py", line 236, in handle_request
+    response = connection.handle_request(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_sync/connection.py", line 103, in handle_request
+    return self._connection.handle_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_sync/http11.py", line 136, in handle_request
+    raise exc
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_sync/http11.py", line 106, in handle_request
+    ) = self._receive_response_headers(**kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_sync/http11.py", line 177, in _receive_response_headers
+    event = self._receive_event(timeout=timeout)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_sync/http11.py", line 217, in _receive_event
+    data = self._network_stream.read(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_backends/sync.py", line 126, in read
+    with map_exceptions(exc_map):
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpcore/_exceptions.py", line 14, in map_exceptions
+    raise to_exc(exc) from exc
+httpcore.ReadTimeout: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/oedeh/github/physical-ai-safety-observability/edge/worker.py", line 343, in <module>
+    main()
+  File "/home/oedeh/github/physical-ai-safety-observability/edge/worker.py", line 323, in main
+    events = run_worker(
+             ^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/edge/worker.py", line 103, in run_worker
+    analysis = adapter.analyze_frame(frame_context)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/edge/adapters/openai_compatible.py", line 107, in analyze_frame
+    response = httpx.post(
+               ^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_api.py", line 304, in post
+    return request(
+           ^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_api.py", line 109, in request
+    return client.request(
+           ^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_client.py", line 825, in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_client.py", line 914, in send
+    response = self._send_handling_auth(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_client.py", line 942, in _send_handling_auth
+    response = self._send_handling_redirects(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_client.py", line 979, in _send_handling_redirects
+    response = self._send_single_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_client.py", line 1014, in _send_single_request
+    response = transport.handle_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_transports/default.py", line 249, in handle_request
+    with map_httpcore_exceptions():
+  File "/usr/lib/python3.12/contextlib.py", line 158, in __exit__
+    self.gen.throw(value)
+  File "/home/oedeh/github/physical-ai-safety-observability/.venv/lib/python3.12/site-packages/httpx/_transports/default.py", line 118, in map_httpcore_exceptions
+    raise mapped_exc(message) from exc
+httpx.ReadTimeout: timed out
