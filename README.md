@@ -60,17 +60,26 @@ What these numbers say, and do not say:
 - Board power under a real model is 67 W p50 against about 24 W idle for the mock path. The first attempt at this run failed on a 60 s adapter timeout at frame 26 ([log](reports/thor/cosmos2b_video_60_attempt1_timeout.log)); the timeout is now a command-line option and a failed run writes a partial artifact with the error.
 - No ground truth exists for this footage, so nothing here is precision or recall. That measurement needs the authored simulation scenes with known PPE and zone states; see Next Work.
 
-Second run, same 60 frames, `--no-think --max-tokens 512` ([`reports/thor/cosmos2b_video_60_nothink.json`](reports/thor/cosmos2b_video_60_nothink.json)):
+Four runs on the same 60 frames, same server, same device. Each column is one artifact under `reports/thor/`.
 
-| | think block, 4096 cap | no think, 512 cap |
-|---|---|---|
-| Inference p50 / p95 / max per frame | 4.35 / 12.85 / 15.41 s | **3.57 / 6.58 / 9.35 s** |
-| Completion tokens p50 / max | 260 / 977 | 157 / 415 |
-| Throughput | 0.154 frames/s | 0.241 frames/s |
-| Board power VIN p50 / peak | 66.6 / 107.1 W | 60.3 / 105.2 W |
-| Schema-echo detections | 12 of 97 | 11 of 106 |
+| | think block, 4096 cap | no think, 512 cap | + JSON-schema grammar, original prompt | + JSON-schema grammar, JSON-only prompt |
+|---|---|---|---|---|
+| Artifact | [`cosmos2b_video_60.json`](reports/thor/cosmos2b_video_60.json) | [`..._nothink.json`](reports/thor/cosmos2b_video_60_nothink.json) | [`..._schema_v1prompt.json`](reports/thor/cosmos2b_video_60_schema_v1prompt.json) | [`..._schema.json`](reports/thor/cosmos2b_video_60_schema.json) |
+| Inference p50 / p95 / max per frame | 4.35 / 12.85 / 15.41 s | 3.57 / 6.58 / 9.35 s | 0.31 / 0.33 / 4.19 s | **2.69 / 3.36 / 8.03 s** |
+| Completion tokens p50 / max | 260 / 977 | 157 / 415 | 7 / 7 | 135 / 512 |
+| Throughput | 0.154 frames/s | 0.241 frames/s | 2.303 frames/s | 0.367 frames/s |
+| Board power VIN p50 | 66.6 W | 60.3 W | 37.1 W | 62.5 W |
+| Detections, total | 97 | 106 | 0 | 193 |
+| Labels outside the schema vocabulary | 59 | 57 | 0 | **0** |
+| "person" detections (footage has none) | 0 | 0 | 0 | **6** |
+| Safety events fired | 0 | 0 | 0 | **7** (HUMAN_ROBOT_PROXIMITY 2, PPE_MISSING 5) |
 
-Dropping the think block halves the p95 and removes the 13 to 15 s tail; the median moves less because about 2 s of every frame is prompt prefill and image encoding, not generation. Label compliance does not improve, so the vocabulary problem is prompt and model, not reasoning length.
+What the four columns say together:
+
+- Reasoning length drives the latency tail. Removing the think block halves the p95; the grammar removes generation almost entirely (p95 3.36 s), leaving about 2 to 3 s of prompt prefill and image encoding per frame on this device.
+- The grammar fixes the vocabulary completely: zero out-of-schema labels in both constrained runs, against 46 and 47 before. With the original prompt, which still asked for an `<answer>` wrapper the grammar forbids, the model emitted an empty list on every frame (7 tokens). With a prompt written for JSON-only output it produced 193 in-vocabulary detections.
+- Constrained output exposes the real problem: on footage with no people, the model labelled six detections "person", and five of those tripped PPE and proximity rules, seven false safety events. Vocabulary compliance is not detection quality. Only labelled ground truth can turn this into a precision and recall number, which is why that is the next step.
+- A server detail worth recording: with vLLM 0.14's `--reasoning-parser qwen3` enabled, `response_format` JSON schema is accepted but not enforced (probe: an enum-constrained request returned an unconstrained answer with a code fence). The two constrained runs used a second container without the parser (`cosmos2b-vllm-noreason`), otherwise identical.
 
 Reproduce (server, then worker), on a Jetson with the weights under `~/models/cosmos-reason2-2b`:
 
@@ -83,6 +92,7 @@ docker run -d --name cosmos2b-vllm --runtime=nvidia --network host --ipc host \
 python -m edge.worker --source examples/thor_video_source.json --adapter cosmos-reason2 \
   --adapter-endpoint http://127.0.0.1:8000/v1 --model nvidia/cosmos-reason2-2b \
   --inference-timeout-seconds 240 --no-post --once --report reports/thor/cosmos2b_video_60.json
+# constrained run: start the server WITHOUT --reasoning-parser, then add --no-think --max-tokens 512 --json-schema
 ```
 
 Reproduce on a Jetson:
@@ -183,7 +193,7 @@ Video or RTSP input needs the optional OpenCV dependency (`pip install -e .[open
 ## What Is Not Established
 
 - No model has been run against real camera input in this repository; the real-model run used simulation footage.
-- No detection-quality measurement exists: no labelled ground truth, so no precision or recall for any rule.
+- No detection-quality measurement exists: no labelled ground truth, so no precision or recall for any rule. The constrained run shows false positives (people reported in people-free footage) that only ground truth can quantify.
 - The measured runs are 60 to 390 seconds, not sustained operation.
 - No operator dashboard exists; review is through the API.
 - No zone geometry is derived from calibration; rules use configured regions.
@@ -193,7 +203,7 @@ Video or RTSP input needs the optional OpenCV dependency (`pip install -e .[open
 1. Done 2026-09-09: mock path on Jetson AGX Thor with run artifacts under `reports/thor/`.
 2. Done 2026-09-09: Cosmos-Reason2-2B through a local vLLM server on Thor, inference cost and power measured on simulation footage.
 2b. Done 2026-09-09: batched posting measured at 7.1 frames/s (from 4.4); asynchronous posting is next.
-2c. Done 2026-09-09: no-think, 512-token run halves p95 latency; label compliance unchanged. Next: a constrained-output prompt or grammar (JSON schema mode) and a larger model, measured the same way.
+2c. Done 2026-09-09: no-think halves p95; JSON-schema grammar removes all out-of-vocabulary labels and drops p95 to 3.4 s, but the model then reports people that are not there (7 false events on 60 frames). Next: labelled ground truth, then a larger model measured the same way.
 3. RTSP camera source and calibration-derived zones.
 4. Operator dashboard and human-in-the-loop review workflow.
 5. Incident export and audit trails through the evidence chain.
