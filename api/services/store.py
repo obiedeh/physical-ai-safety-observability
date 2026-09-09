@@ -77,31 +77,29 @@ class SQLiteStore:
             )
 
     def reset(self) -> None:
-        with self._lock:
-            with self._connect() as connection:
-                connection.execute("DELETE FROM events")
-                connection.execute("DELETE FROM incidents")
-                connection.execute("DELETE FROM cameras")
-                connection.execute("DELETE FROM feedback")
+        with self._lock, self._connect() as connection:
+            connection.execute("DELETE FROM events")
+            connection.execute("DELETE FROM incidents")
+            connection.execute("DELETE FROM cameras")
+            connection.execute("DELETE FROM feedback")
 
     def register_camera(self, registration: CameraRegistration) -> Camera:
         camera = Camera(**registration.model_dump())
-        with self._lock:
-            with self._connect() as connection:
-                connection.execute(
-                    """
+        with self._lock, self._connect() as connection:
+            connection.execute(
+                """
                     INSERT INTO cameras(camera_id, payload, registered_at)
                     VALUES (?, ?, ?)
                     ON CONFLICT(camera_id) DO UPDATE SET
                         payload=excluded.payload,
                         registered_at=excluded.registered_at
                     """,
-                    (
-                        camera.camera_id,
-                        camera.model_dump_json(),
-                        camera.registered_at.isoformat(),
-                    ),
-                )
+                (
+                    camera.camera_id,
+                    camera.model_dump_json(),
+                    camera.registered_at.isoformat(),
+                ),
+            )
         return camera
 
     def list_cameras(self) -> list[Camera]:
@@ -113,25 +111,24 @@ class SQLiteStore:
             return [Camera.model_validate_json(row["payload"]) for row in rows]
 
     def add_feedback(self, feedback: PersonPPEFeedback) -> PersonPPEFeedback:
-        with self._lock:
-            with self._connect() as connection:
-                connection.execute(
-                    """
-                    INSERT INTO feedback(feedback_id, camera_id, frame_id, message, timestamp, payload)
-                    VALUES (?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(feedback_id) DO UPDATE SET
-                        message=excluded.message,
-                        payload=excluded.payload
-                    """,
-                    (
-                        feedback.feedback_id,
-                        feedback.camera_id,
-                        feedback.frame_id,
-                        feedback.message,
-                        feedback.timestamp.isoformat(),
-                        feedback.model_dump_json(),
-                    ),
-                )
+        with self._lock, self._connect() as connection:
+            connection.execute(
+                """
+                INSERT INTO feedback(feedback_id, camera_id, frame_id, message, timestamp, payload)
+                VALUES (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(feedback_id) DO UPDATE SET
+                    message=excluded.message,
+                    payload=excluded.payload
+                """,
+                (
+                    feedback.feedback_id,
+                    feedback.camera_id,
+                    feedback.frame_id,
+                    feedback.message,
+                    feedback.timestamp.isoformat(),
+                    feedback.model_dump_json(),
+                ),
+            )
         return feedback
 
     def list_feedback(self) -> list[PersonPPEFeedback]:
@@ -143,15 +140,13 @@ class SQLiteStore:
             return [PersonPPEFeedback.model_validate_json(row["payload"]) for row in rows]
 
     def add_event(self, event: SafetyEvent) -> SafetyEvent:
-        with self._lock:
-            with self._connect() as connection:
-                return self._add_event_in_connection(connection, event)
+        with self._lock, self._connect() as connection:
+            return self._add_event_in_connection(connection, event)
 
     def add_events(self, events: list[SafetyEvent]) -> list[SafetyEvent]:
         """Persist many events in one transaction; incident grouping runs per event in order."""
-        with self._lock:
-            with self._connect() as connection:
-                return [self._add_event_in_connection(connection, event) for event in events]
+        with self._lock, self._connect() as connection:
+            return [self._add_event_in_connection(connection, event) for event in events]
 
     def _add_event_in_connection(self, connection: sqlite3.Connection, event: SafetyEvent) -> SafetyEvent:
         incident = self._find_groupable_incident(connection, event)

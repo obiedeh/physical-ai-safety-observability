@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from pathlib import Path
 from time import perf_counter
+from typing import Self
 
 from events.schemas import RuntimeContext, RuntimeStatus
 
@@ -77,7 +78,7 @@ class RuntimeMonitor:
 
 
 class Timer:
-    def __enter__(self) -> "Timer":
+    def __enter__(self) -> Self:
         self._start = perf_counter()
         self.elapsed_ms = 0.0
         return self
