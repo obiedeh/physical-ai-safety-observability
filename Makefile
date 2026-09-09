@@ -16,3 +16,6 @@ test: .venv
 	PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 $(PYTHON) -m pytest -q
 
 verify: lint test
+
+evidence-pages:
+	python3 scripts/build_evidence_pages.py
