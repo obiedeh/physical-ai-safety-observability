@@ -81,6 +81,25 @@ What the four columns say together:
 - Constrained output exposes the real problem: on footage with no people, the model labelled six detections "person", and five of those tripped PPE and proximity rules, seven false safety events. Vocabulary compliance is not detection quality. Only labelled ground truth can turn this into a precision and recall number, which is why that is the next step.
 - A server detail worth recording: with vLLM 0.14's `--reasoning-parser qwen3` enabled, `response_format` JSON schema is accepted but not enforced (probe: an enum-constrained request returned an unconstrained answer with a code fence). The two constrained runs used a second container without the parser (`cosmos2b-vllm-noreason`), otherwise identical.
 
+#### Model size: Cosmos-Reason2-8B on the same frames
+
+Same server image, same device, `--gpu-memory-utilization 0.35`, no reasoning parser, same 60 frames.
+
+| | 2B, grammar, JSON-only prompt | **8B, grammar, JSON-only prompt** | 2B, no think, 512 cap | 8B, no think, 512 cap |
+|---|---|---|---|---|
+| Artifact | [`cosmos2b_video_60_schema.json`](reports/thor/cosmos2b_video_60_schema.json) | [`cosmos8b_video_60_schema.json`](reports/thor/cosmos8b_video_60_schema.json) | [`cosmos2b_video_60_nothink.json`](reports/thor/cosmos2b_video_60_nothink.json) | [`cosmos8b_video_60_nothink.json`](reports/thor/cosmos8b_video_60_nothink.json) |
+| Inference p50 / p95 / max | 2.69 / 3.36 / 8.03 s | 3.20 / 8.26 / 14.96 s | 3.57 / 6.58 / 9.35 s | 8.29 / 27.78 / 33.67 s |
+| Completion tokens p50 / max | 135 / 512 | 47 / 157 | 157 / 415 | 126 / 512 |
+| Board power VIN p50 / peak | 62.5 / 83.1 W | 66.0 / 131.6 W | 60.3 / 105.2 W | 69.1 / 108.4 W |
+| Detections, total | 193 | 74 | 106 | 81 |
+| Out-of-vocabulary labels | 0 | 0 | 57 | 20 |
+| "person" on people-free footage | 6 | **0** | 0 | 0 |
+| Safety events fired | 7 (false) | **0** | 0 | 0 |
+
+- On this footage the larger model removes the phantom people: zero "person" labels and zero false events under the same grammar and prompt, where the 2B produced six and seven. Sixty frames of one simulation is a signal, not a rate; it does not say what the 8B does when a person is present.
+- The 8B decodes at roughly 13 tokens/s on this device against about 60 for the 2B, so its p50 is 3.2 s constrained and 8.3 s unconstrained, with a tail near 34 s. Unconstrained, it still invents labels outside the schema (cube, cylinder, sphere): the grammar is needed at either size.
+- Peak board power reached 132 W in the constrained 8B run; the p50 stays near 66 W for both sizes because prefill dominates the duty cycle.
+
 Reproduce (server, then worker), on a Jetson with the weights under `~/models/cosmos-reason2-2b`:
 
 ```bash
@@ -203,7 +222,8 @@ Video or RTSP input needs the optional OpenCV dependency (`pip install -e .[open
 1. Done 2026-09-09: mock path on Jetson AGX Thor with run artifacts under `reports/thor/`.
 2. Done 2026-09-09: Cosmos-Reason2-2B through a local vLLM server on Thor, inference cost and power measured on simulation footage.
 2b. Done 2026-09-09: batched posting measured at 7.1 frames/s (from 4.4); asynchronous posting is next.
-2c. Done 2026-09-09: no-think halves p95; JSON-schema grammar removes all out-of-vocabulary labels and drops p95 to 3.4 s, but the model then reports people that are not there (7 false events on 60 frames). Next: labelled ground truth, then a larger model measured the same way.
+2c. Done 2026-09-09: no-think halves p95; JSON-schema grammar removes all out-of-vocabulary labels and drops p95 to 3.4 s, but the 2B then reports people that are not there (7 false events on 60 frames).
+2d. Done 2026-09-09: Cosmos-Reason2-8B under the same grammar and prompt reports no phantom people on this footage at about 2.6x the latency. Next: labelled ground truth so both sizes get a precision and recall, not a count on one video.
 3. RTSP camera source and calibration-derived zones.
 4. Operator dashboard and human-in-the-loop review workflow.
 5. Incident export and audit trails through the evidence chain.
