@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 214" width="720" height="214" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
+<rect width="720" height="214" fill="#121a2c"/>
+<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">Worker throughput, mock adapter</text>
+<rect x="16" y="34" width="10" height="10" fill="#38bdf8"/>
+<text x="30" y="43" fill="#9fb0ca">frames/s</text>
+<text x="180" y="76.0" fill="#9fb0ca" text-anchor="end">mock, no post</text>
+<rect x="190" y="62" width="156.2" height="12" fill="#38bdf8"/>
+<text x="352.16634082161954" y="72" fill="#eef4ff" font-size="11">28.6 frames/s</text>
+<text x="180" y="108.0" fill="#9fb0ca" text-anchor="end">mock, per-event POST</text>
+<rect x="190" y="94" width="42.0" height="12" fill="#38bdf8"/>
+<text x="238.04798824512656" y="104" fill="#eef4ff" font-size="11">4.36 frames/s</text>
+<text x="180" y="140.0" fill="#9fb0ca" text-anchor="end">mock, batched POST</text>
+<rect x="190" y="126" width="71.5" height="12" fill="#38bdf8"/>
+<text x="267.4561424425321" y="136" fill="#eef4ff" font-size="11">7.08 frames/s</text>
+<text x="180" y="172.0" fill="#9fb0ca" text-anchor="end">mock, unpaced</text>
+<rect x="190" y="158" width="440.0" height="12" fill="#38bdf8"/>
+<text x="636.0" y="168" fill="#eef4ff" font-size="11">3,078 frames/s</text>
+<text x="704" y="204" fill="#5f6f8a" text-anchor="end" font-size="10">log scale, values from reports/thor/*.json</text>
+</svg>
