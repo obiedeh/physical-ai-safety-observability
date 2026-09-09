@@ -13,6 +13,12 @@ def ingest_event(event: SafetyEvent) -> SafetyEvent:
     return store.add_event(event)
 
 
+@router.post("/events/batch", response_model=list[SafetyEvent])
+def ingest_events_batch(events: list[SafetyEvent]) -> list[SafetyEvent]:
+    """Ingest all events of one frame in a single request and one database transaction."""
+    return store.add_events(events)
+
+
 @router.get("/events", response_model=list[SafetyEvent])
 def list_events() -> list[SafetyEvent]:
     return store.list_events()

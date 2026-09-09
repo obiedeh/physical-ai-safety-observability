@@ -145,47 +145,56 @@ class SQLiteStore:
     def add_event(self, event: SafetyEvent) -> SafetyEvent:
         with self._lock:
             with self._connect() as connection:
-                incident = self._find_groupable_incident(connection, event)
-                incident = merge_event_into_incident(incident, event)
-                connection.execute(
-                    """
-                    INSERT INTO incidents(
-                        incident_id, camera_id, rule_id, grouping_severity,
-                        opened_at, updated_at, payload
-                    )
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(incident_id) DO UPDATE SET
-                        updated_at=excluded.updated_at,
-                        payload=excluded.payload
-                    """,
-                    (
-                        incident.incident_id,
-                        incident.camera_id,
-                        incident.rule_id or "",
-                        str(incident.grouping_severity or ""),
-                        incident.opened_at.isoformat(),
-                        incident.updated_at.isoformat(),
-                        incident.model_dump_json(),
-                    ),
-                )
-                connection.execute(
-                    """
-                    INSERT INTO events(event_id, camera_id, rule_id, severity, timestamp, incident_id, payload)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)
-                    ON CONFLICT(event_id) DO UPDATE SET
-                        incident_id=excluded.incident_id,
-                        payload=excluded.payload
-                    """,
-                    (
-                        event.event_id,
-                        event.camera_id,
-                        event.rule_id,
-                        event.severity,
-                        event.timestamp.isoformat(),
-                        event.incident_id,
-                        event.model_dump_json(),
-                    ),
-                )
+                return self._add_event_in_connection(connection, event)
+
+    def add_events(self, events: list[SafetyEvent]) -> list[SafetyEvent]:
+        """Persist many events in one transaction; incident grouping runs per event in order."""
+        with self._lock:
+            with self._connect() as connection:
+                return [self._add_event_in_connection(connection, event) for event in events]
+
+    def _add_event_in_connection(self, connection: sqlite3.Connection, event: SafetyEvent) -> SafetyEvent:
+        incident = self._find_groupable_incident(connection, event)
+        incident = merge_event_into_incident(incident, event)
+        connection.execute(
+            """
+            INSERT INTO incidents(
+                incident_id, camera_id, rule_id, grouping_severity,
+                opened_at, updated_at, payload
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(incident_id) DO UPDATE SET
+                updated_at=excluded.updated_at,
+                payload=excluded.payload
+            """,
+            (
+                incident.incident_id,
+                incident.camera_id,
+                incident.rule_id or "",
+                str(incident.grouping_severity or ""),
+                incident.opened_at.isoformat(),
+                incident.updated_at.isoformat(),
+                incident.model_dump_json(),
+            ),
+        )
+        connection.execute(
+            """
+            INSERT INTO events(event_id, camera_id, rule_id, severity, timestamp, incident_id, payload)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(event_id) DO UPDATE SET
+                incident_id=excluded.incident_id,
+                payload=excluded.payload
+            """,
+            (
+                event.event_id,
+                event.camera_id,
+                event.rule_id,
+                event.severity,
+                event.timestamp.isoformat(),
+                event.incident_id,
+                event.model_dump_json(),
+            ),
+        )
         metrics.observe_event(event)
         return event
 

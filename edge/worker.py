@@ -42,6 +42,8 @@ def build_adapter(settings: RuntimeSettings) -> VLMAdapter:
             model=worker.model,
             api_key=api_key,
             timeout=worker.inference_timeout_seconds,
+            max_tokens=worker.max_tokens,
+            think=worker.think,
         )
     raise ValueError(f"unsupported adapter: {worker.adapter}")
 
@@ -51,6 +53,23 @@ def post_event(backend: str, event_payload: dict[str, Any], *, retries: int = 3)
     for attempt in range(retries):
         try:
             response = httpx.post(url, json=event_payload, timeout=10)
+            response.raise_for_status()
+            return
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code < 500 or attempt == retries - 1:
+                raise
+        except (httpx.NetworkError, httpx.TimeoutException):
+            if attempt == retries - 1:
+                raise
+        time.sleep(0.5 * (2**attempt))
+
+
+def post_events_batch(backend: str, payloads: list[dict[str, Any]], *, retries: int = 3) -> None:
+    """Post all events of one frame in a single request to /events/batch."""
+    url = f"{backend.rstrip('/')}/events/batch"
+    for attempt in range(retries):
+        try:
+            response = httpx.post(url, json=payloads, timeout=10)
             response.raise_for_status()
             return
         except httpx.HTTPStatusError as exc:
@@ -89,6 +108,7 @@ def run_worker(
     max_cycles: int | None = None,
     clean_feedback_terminal: bool = False,
     recorder: RunRecorder | None = None,
+    post_batch: bool = False,
 ) -> list[dict[str, Any]]:
     adapter = adapter or MockVLMAdapter()
     engine = SafetyPolicyEngine(zones=source.zones)
@@ -135,7 +155,7 @@ def run_worker(
         post_ms_total: float | None = None
         for event in events:
             payload = event.model_dump(mode="json")
-            if post_events:
+            if post_events and not post_batch:
                 with Timer() as post_timer:
                     post_event(backend, payload)
                 runtime.backend_post_latency_ms = post_timer.elapsed_ms
@@ -143,6 +163,12 @@ def run_worker(
                 post_ms_total = (post_ms_total or 0.0) + post_timer.elapsed_ms
             emitted.append(payload)
             frame_events.append(payload)
+        if post_events and post_batch and frame_events:
+            with Timer() as post_timer:
+                post_events_batch(backend, frame_events)
+            runtime.backend_post_latency_ms = post_timer.elapsed_ms
+            metrics.set_gauge("backend_post_latency_ms", post_timer.elapsed_ms)
+            post_ms_total = post_timer.elapsed_ms
             if not clean_feedback_terminal:
                 log_event(
                     logger,
@@ -241,6 +267,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--no-post", action="store_true", help="Generate events without posting")
     parser.add_argument(
+        "--post-batch", action="store_true",
+        help="Post all events of a frame in one request to /events/batch instead of one request per event",
+    )
+    parser.add_argument("--max-tokens", type=int, help="Completion token cap for real adapters")
+    parser.add_argument(
+        "--no-think", action="store_true",
+        help="Ask reasoning models for the answer only (no think block; enable_thinking=false)",
+    )
+    parser.add_argument(
         "--report",
         help="Write a measured run artifact (JSON) to this path when the run completes",
     )
@@ -288,6 +323,12 @@ def settings_from_args(args: argparse.Namespace) -> RuntimeSettings:
         settings.worker.feedback_interval_seconds = args.feedback_interval_seconds
     if args.inference_timeout_seconds is not None:
         settings.worker.inference_timeout_seconds = args.inference_timeout_seconds
+    if args.post_batch:
+        settings.worker.post_batch = True
+    if args.max_tokens is not None:
+        settings.worker.max_tokens = args.max_tokens
+    if args.no_think:
+        settings.worker.think = False
     if args.verbose:
         settings.worker.clean_feedback_terminal = False
     return settings
@@ -322,6 +363,9 @@ def main() -> None:
                 "adapter_endpoint": settings.worker.adapter_endpoint,
                 "model": settings.worker.model,
                 "inference_timeout_seconds": settings.worker.inference_timeout_seconds,
+                "post_batch": settings.worker.post_batch,
+                "max_tokens": settings.worker.max_tokens,
+                "think": settings.worker.think,
                 "post_events": settings.worker.post_events,
                 "backend": settings.worker.backend if settings.worker.post_events else None,
                 "continuous": settings.worker.continuous,
@@ -338,6 +382,7 @@ def main() -> None:
             feedback_interval_seconds=settings.worker.feedback_interval_seconds,
             clean_feedback_terminal=settings.worker.clean_feedback_terminal,
             recorder=recorder,
+            post_batch=settings.worker.post_batch,
         )
     except Exception as exc:
         # A failed run is still evidence: write what was measured plus the error, then re-raise.
