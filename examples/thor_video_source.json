@@ -1,0 +1,16 @@
+{
+  "camera_id": "sim-workcell-ludo",
+  "name": "Isaac Sim Ludo workcell demo video (simulation, no ground-truth labels), 1 frame every 60",
+  "source_uri": "inputs/ludo_physical_game.mp4",
+  "source_type": "video_file",
+  "frame_count": 60,
+  "frame_stride": 60,
+  "sample_interval_ms": 0,
+  "zones": [
+    {
+      "zone_id": "robot-cell-a",
+      "type": "restricted",
+      "polygon": [[120, 60], [520, 60], [520, 520], [120, 520]]
+    }
+  ]
+}

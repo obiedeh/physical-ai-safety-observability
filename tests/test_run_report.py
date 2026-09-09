@@ -28,8 +28,8 @@ def test_recorder_summarises_frames_and_events(tmp_path: Path) -> None:
     data = json.loads(out.read_text())
     assert data["schema"] == "run-report-v1"
     assert data["frames_processed"] == 3
-    assert data["latency"]["inference"]["p50_ms"] == 3.0
-    assert data["latency"]["inference"]["max_ms"] == 5.0
+    assert data["latency"]["inference"]["p50"] == 3.0
+    assert data["latency"]["inference"]["max"] == 5.0
     assert data["latency"]["backend_post"]["n"] == 1
     assert data["events"] == {"total": 3, "by_rule": {"ppe": 2, "zone": 1}, "by_severity": {"critical": 1, "high": 2}}
     assert set(data["device"]) >= {"host", "machine", "python", "is_jetson", "git_sha"}
@@ -44,7 +44,19 @@ def test_worker_populates_recorder_without_posting(tmp_path: Path) -> None:
     events = run_worker(source=source, backend="http://127.0.0.1:1", adapter=MockVLMAdapter(),
                         post_events=False, recorder=rec)
     data = json.loads(rec.write(tmp_path / "run.json", repo_root=ROOT).read_text())
+    assert data["detections_by_label"].get("person", 0) >= 1
+    assert data["detections_per_frame"]["n"] == source.frame_count
     assert data["frames_processed"] == source.frame_count == len(rec.frames)
     assert data["events"]["total"] == len(events)
     assert len(data["source"]["sha256"]) == 64
     assert data["tegrastats"] is None
+
+
+def test_failed_run_writes_partial_artifact_with_error(tmp_path: Path) -> None:
+    rec = RunRecorder(adapter_name="cosmos_reason2", model_version="x")
+    rec.record_frame(frame_id="f1", inference_ms=5000.0, rule_ms=0.5, post_ms=None, events=[])
+    rec.error = "ReadTimeout: timed out"
+    data = json.loads(rec.write(tmp_path / "partial.json", repo_root=ROOT).read_text())
+    assert data["status"] == "failed"
+    assert data["error"].startswith("ReadTimeout")
+    assert data["frames_processed"] == 1

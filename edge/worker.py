@@ -154,12 +154,16 @@ def run_worker(
                 )
 
         if recorder is not None:
+            raw = analysis.get("raw_response") if isinstance(analysis, dict) else None
             recorder.record_frame(
                 frame_id=str(frame_context["frame_id"]),
                 inference_ms=runtime.inference_latency_ms,
                 rule_ms=runtime.rule_eval_latency_ms,
                 post_ms=post_ms_total,
                 events=frame_events,
+                detections=len(analysis.get("detections", []) or []),
+                usage=raw.get("usage") if isinstance(raw, dict) else None,
+                labels=[str(d.get("label")) for d in (analysis.get("detections") or []) if isinstance(d, dict)],
             )
 
         if continuous:
@@ -241,6 +245,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Write a measured run artifact (JSON) to this path when the run completes",
     )
     parser.add_argument(
+        "--inference-timeout-seconds",
+        type=float,
+        help="HTTP timeout for real adapters; reasoning models may need several minutes",
+    )
+    parser.add_argument(
         "--frame-count",
         type=int,
         help="Override the source's frame_count for this run",
@@ -277,6 +286,8 @@ def settings_from_args(args: argparse.Namespace) -> RuntimeSettings:
         settings.worker.continuous = False
     if args.feedback_interval_seconds is not None:
         settings.worker.feedback_interval_seconds = args.feedback_interval_seconds
+    if args.inference_timeout_seconds is not None:
+        settings.worker.inference_timeout_seconds = args.inference_timeout_seconds
     if args.verbose:
         settings.worker.clean_feedback_terminal = False
     return settings
@@ -310,22 +321,31 @@ def main() -> None:
                 "adapter": settings.worker.adapter,
                 "adapter_endpoint": settings.worker.adapter_endpoint,
                 "model": settings.worker.model,
+                "inference_timeout_seconds": settings.worker.inference_timeout_seconds,
                 "post_events": settings.worker.post_events,
                 "backend": settings.worker.backend if settings.worker.post_events else None,
                 "continuous": settings.worker.continuous,
             },
         )
         recorder.start_tegrastats()
-    events = run_worker(
-        source=source,
-        backend=settings.worker.backend,
-        adapter=adapter,
-        post_events=settings.worker.post_events,
-        continuous=settings.worker.continuous,
-        feedback_interval_seconds=settings.worker.feedback_interval_seconds,
-        clean_feedback_terminal=settings.worker.clean_feedback_terminal,
-        recorder=recorder,
-    )
+    try:
+        events = run_worker(
+            source=source,
+            backend=settings.worker.backend,
+            adapter=adapter,
+            post_events=settings.worker.post_events,
+            continuous=settings.worker.continuous,
+            feedback_interval_seconds=settings.worker.feedback_interval_seconds,
+            clean_feedback_terminal=settings.worker.clean_feedback_terminal,
+            recorder=recorder,
+        )
+    except Exception as exc:
+        # A failed run is still evidence: write what was measured plus the error, then re-raise.
+        if recorder is not None:
+            recorder.error = f"{type(exc).__name__}: {str(exc)[:300]}"
+            out = recorder.write(args.report)
+            log_event(logger, "run_report_written_partial", path=str(out), frames=len(recorder.frames), error=recorder.error)
+        raise
     if recorder is not None:
         out = recorder.write(args.report)
         log_event(logger, "run_report_written", path=str(out), frames=len(recorder.frames))
