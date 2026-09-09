@@ -26,6 +26,7 @@ class WorkerSettings(BaseModel):
     post_batch: bool = False
     max_tokens: int = 4096
     think: bool = True
+    json_schema: bool = False
     queue_depth_warning: int = 5
     inference_timeout_seconds: float = 60.0
     continuous: bool = True
