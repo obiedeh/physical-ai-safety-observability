@@ -44,6 +44,7 @@ def build_adapter(settings: RuntimeSettings) -> VLMAdapter:
             timeout=worker.inference_timeout_seconds,
             max_tokens=worker.max_tokens,
             think=worker.think,
+            json_schema=worker.json_schema,
         )
     raise ValueError(f"unsupported adapter: {worker.adapter}")
 
@@ -272,6 +273,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument("--max-tokens", type=int, help="Completion token cap for real adapters")
     parser.add_argument(
+        "--json-schema", action="store_true",
+        help="Constrain the model's output to the detection JSON schema (response_format json_schema)",
+    )
+    parser.add_argument(
         "--no-think", action="store_true",
         help="Ask reasoning models for the answer only (no think block; enable_thinking=false)",
     )
@@ -329,6 +334,8 @@ def settings_from_args(args: argparse.Namespace) -> RuntimeSettings:
         settings.worker.max_tokens = args.max_tokens
     if args.no_think:
         settings.worker.think = False
+    if args.json_schema:
+        settings.worker.json_schema = True
     if args.verbose:
         settings.worker.clean_feedback_terminal = False
     return settings
@@ -366,6 +373,7 @@ def main() -> None:
                 "post_batch": settings.worker.post_batch,
                 "max_tokens": settings.worker.max_tokens,
                 "think": settings.worker.think,
+                "json_schema": settings.worker.json_schema,
                 "post_events": settings.worker.post_events,
                 "backend": settings.worker.backend if settings.worker.post_events else None,
                 "continuous": settings.worker.continuous,

@@ -52,3 +52,24 @@ def test_cosmos_adapter_honours_max_tokens_and_no_think(monkeypatch: pytest.Monk
     adapter_think = CosmosReason2Adapter(endpoint="http://x/v1")
     adapter_think.analyze_frame({"camera_id": "c", "frame_id": "f", "frame_bytes": b"\xff\xd8"})
     assert captured["payload"]["max_tokens"] == 4096 and "chat_template_kwargs" not in captured["payload"]
+
+
+def test_cosmos_adapter_json_schema_mode_sets_response_format(monkeypatch: pytest.MonkeyPatch) -> None:
+    captured: dict = {}
+
+    class _Resp:
+        def raise_for_status(self) -> None:
+            return None
+
+        def json(self) -> dict:
+            return {"choices": [{"message": {"content": "{\"detections\": [{\"label\": \"robot\", \"confidence\": 0.9, \"bbox\": [1, 2, 3, 4]}]}"}}]}
+
+    monkeypatch.setattr("edge.adapters.openai_compatible.httpx.post", lambda url, json=None, headers=None, timeout=None: captured.update(payload=json) or _Resp())
+    adapter = CosmosReason2Adapter(endpoint="http://x/v1", think=False, max_tokens=512, json_schema=True)
+    out = adapter.analyze_frame({"camera_id": "c", "frame_id": "f", "frame_bytes": b"\xff\xd8"})
+    rf = captured["payload"]["response_format"]
+    assert rf["type"] == "json_schema" and rf["json_schema"]["strict"] is True
+    assert rf["json_schema"]["schema"]["properties"]["detections"]["items"]["properties"]["label"]["enum"][0] == "person"
+    prompt = captured["payload"]["messages"][1]["content"][-1]["text"]
+    assert "<answer>" not in prompt and "empty detections list" in prompt
+    assert out["detections"][0]["label"] == "robot"

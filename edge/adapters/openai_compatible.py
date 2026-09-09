@@ -54,6 +54,43 @@ class OpenAICompatibleAdapter(VLMAdapter):
         }
 
 
+#: JSON schema for constrained decoding. Mirrors the prompt schema; the label
+#: enum is the only vocabulary the policy engine understands.
+DETECTION_JSON_SCHEMA: dict[str, Any] = {
+    "type": "object",
+    "properties": {
+        "detections": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string",
+                        "enum": ["person", "robot", "pallet", "cart", "box", "unsafe_event"],
+                    },
+                    "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                    "bbox": {
+                        "type": "array",
+                        "items": {"type": "number"},
+                        "minItems": 4,
+                        "maxItems": 4,
+                    },
+                    "ppe": {
+                        "type": "object",
+                        "properties": {"hard_hat": {"type": "boolean"}, "vest": {"type": "boolean"}},
+                        "required": ["hard_hat", "vest"],
+                    },
+                    "blocking_emergency_path": {"type": "boolean"},
+                    "summary": {"type": "string"},
+                },
+                "required": ["label", "confidence", "bbox"],
+            },
+        }
+    },
+    "required": ["detections"],
+}
+
+
 class CosmosReason2Adapter(OpenAICompatibleAdapter):
     adapter_name = "cosmos_reason2"
 
@@ -65,10 +102,12 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
         timeout: float = 60.0,
         max_tokens: int = 4096,
         think: bool = True,
+        json_schema: bool = False,
     ) -> None:
         super().__init__(endpoint=endpoint, model=model, api_key=api_key, timeout=timeout)
         self.max_tokens = max_tokens
         self.think = think
+        self.json_schema = json_schema
 
     def analyze_frame(self, frame_context: dict[str, Any]) -> dict[str, Any]:
         headers = {"Accept": "application/json", "Content-Type": "application/json"}
@@ -76,6 +115,24 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
             headers["Authorization"] = f"Bearer {self.api_key}"
 
         content = _media_content_from_frame(frame_context)
+        if self.json_schema:
+            # Grammar-constrained decoding: the server enforces the schema, so the prompt
+            # describes the task and must not ask for wrapper tags the grammar forbids.
+            content.append(
+                {
+                    "type": "text",
+                    "text": (
+                        "You are watching a Physical AI workcell camera. List every person, robot, "
+                        "pallet, cart, box and unsafe event you can see in this frame, one detection "
+                        "per object, with a bounding box in pixel coordinates and, for people, whether "
+                        "a hard hat and a high-visibility vest are worn. If nothing of those kinds is "
+                        "visible, return an empty detections list. "
+                        f"Frame metadata: camera_id={frame_context['camera_id']}, "
+                        f"frame_id={frame_context['frame_id']}."
+                    ),
+                }
+            )
+            return self._post(frame_context, content, headers)
         content.append(
             {
                 "type": "text",
@@ -98,6 +155,11 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
             }
         )
 
+        return self._post(frame_context, content, headers)
+
+    def _post(
+        self, frame_context: dict[str, Any], content: list[dict[str, Any]], headers: dict[str, str]
+    ) -> dict[str, Any]:
         payload = {
             "model": self.model_version,
             "messages": [
@@ -115,6 +177,12 @@ class CosmosReason2Adapter(OpenAICompatibleAdapter):
         if not self.think:
             # Qwen3-style chat templates honour this switch; harmless for others.
             payload["chat_template_kwargs"] = {"enable_thinking": False}
+        if self.json_schema:
+            # Constrained decoding: the server only emits tokens that satisfy the schema.
+            payload["response_format"] = {
+                "type": "json_schema",
+                "json_schema": {"name": "safety_detections", "schema": DETECTION_JSON_SCHEMA, "strict": True},
+            }
         response = httpx.post(
             f"{self.endpoint}/chat/completions",
             json=payload,
