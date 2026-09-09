@@ -1,57 +1,22 @@
 # Physical AI Safety Observability
 
-Edge-first safety observability platform for robotics, industrial workcells, and Physical AI environments.
+**Runtime safety layer for robots and industrial workcells: structured safety events, an operator review API, and telemetry hooks. This is an engineering scaffold. No hardware or model performance has been measured yet.**
 
-This project turns camera/video input, safety rules, runtime telemetry, and multimodal model outputs into structured safety events that an operator can review. The goal is not demo object detection. The goal is operational awareness that can survive real edge deployment.
+The system turns camera or video input, safety rules, runtime telemetry, and model outputs into safety events an operator can review. The goal is operational review, not demo object detection. Nothing here acts autonomously.
 
-## Core Stack
+## Status at a Glance
 
-**Implemented:** Python · FastAPI · SQLite · Pydantic · Pytest · Docker/Compose · structured safety events
+| Layer | State | What exists | What does not exist yet |
+|---|---|---|---|
+| Event model and API | Implemented | FastAPI backend for health, camera registration, event ingestion, incident timelines and metrics; SQLite persistence; Alembic migrations; OpenAPI docs | Operator dashboard |
+| Safety policy engine | Implemented | PPE, restricted zone, proximity risk and unsafe-event rules over structured detections | Zone geometry from camera calibration |
+| Edge worker | Implemented | Frame sampling from synthetic, video-file and RTSP-style sources; adapter interface for models | Live camera deployment |
+| Model adapters | Mock plus adapter paths | Deterministic mock VLM adapter; OpenAI-compatible and Cosmos-Reason2 adapter paths with hardened response parsing | Any measured run against a real model endpoint |
+| Telemetry | Hooks implemented | Latency p95 and p99, event counts, memory pressure, queue depth, dropped frames, runtime snapshots | Any committed measurement from those hooks |
+| Jetson path | Configuration only | `configs/jetson.json` and a deployment note | Latency, memory or sustained-runtime artifacts on a Jetson |
+| Evidence chain | Implemented | Hashing and evidence-chain helpers under `evidence/` | Artifacts produced through them |
 
-**Planned / integration path:** NVIDIA Cosmos/VLM endpoint · RTSP/video sources · Jetson runtime metrics · operator dashboard
-
-<p>
-  <img src="https://img.shields.io/badge/Python-3.x-blue" alt="Python" />
-  <img src="https://img.shields.io/badge/FastAPI-API-009688" alt="FastAPI" />
-  <img src="https://img.shields.io/badge/SQLite-persistence-003B57" alt="SQLite" />
-  <img src="https://img.shields.io/badge/Pydantic-schemas-E92063" alt="Pydantic" />
-  <img src="https://img.shields.io/badge/Pytest-tested-brightgreen" alt="Pytest" />
-  <img src="https://img.shields.io/badge/Docker-Compose-2496ED" alt="Docker Compose" />
-  <img src="https://img.shields.io/badge/OpenAPI-docs-6BA539" alt="OpenAPI" />
-  <img src="https://img.shields.io/badge/Jetson-integration%20path-76B900" alt="NVIDIA Jetson integration path" />
-</p>
-
-## Architecture and Evidence
-
-- [Architecture overview](docs/architecture.md)
-- [System architecture diagram](docs/diagrams/system-architecture.mmd)
-- [Runtime flow diagram](docs/diagrams/runtime-flow.mmd)
-- [Data flow diagram](docs/diagrams/data-flow.mmd)
-- [Deployment view diagram](docs/diagrams/deployment-view.mmd)
-- [Sample outputs](artifacts/sample-outputs/)
-- [Logs](artifacts/logs/)
-- [Reports](artifacts/reports/)
-
-## Recommended GitHub About
-
-- **Suggested short description:** Safety observability layer for Physical AI systems with telemetry ingestion, threshold monitoring, event review, and runtime evidence.
-- **Suggested topics/tags:** `physical-ai`, `safety`, `observability`, `telemetry`, `edge-ai`, `human-in-the-loop`, `runtime-monitoring`
-- **Positioning category:** Flagship
-
-## What Works Now
-
-This repository now includes a runnable engineering scaffold:
-
-- FastAPI backend for health, camera registration, event ingestion, incident timelines, and metrics
-- SQLite-backed event, camera, and incident persistence
-- Alembic-managed database schema migrations
-- Edge worker CLI for synthetic, video-file, and RTSP-style frame sampling
-- Mock VLM adapter that produces structured detections without pretending to be real AI
-- OpenAI-compatible and Cosmos-Reason2 adapter paths with hardened response parsing
-- Safety policy engine for PPE, restricted zones, proximity risk, and unsafe events
-- Telemetry hooks for latency p95/p99, event counts, memory pressure, queue depth, dropped frames, and runtime snapshots
-- Sample event schemas and demo payloads
-- Tests, lint configuration, Dockerfile, Compose file, and CI workflow
+There are no measured numbers in this repository. The `artifacts/` directories hold placeholders. When a run is committed it will carry device, date, inputs and hashes, following the same rule as the sibling repositories.
 
 ## Architecture
 
@@ -65,6 +30,8 @@ Edge Worker -> VLM Adapter -> Safety Policy Engine -> FastAPI Backend
  Runtime Telemetry                              Operator/Event APIs
 ```
 
+Diagrams: [system](docs/diagrams/system-architecture.mmd), [runtime flow](docs/diagrams/runtime-flow.mmd), [data flow](docs/diagrams/data-flow.mmd), [deployment view](docs/diagrams/deployment-view.mmd). Overview: [docs/architecture.md](docs/architecture.md).
+
 ## Repository Layout
 
 ```text
@@ -72,9 +39,10 @@ api/          FastAPI application and API routes
 edge/         Edge worker, frame sampling, model adapter interfaces
 rules/        Safety policy evaluation logic
 telemetry/    Runtime metrics and observability helpers
+evidence/     Hashing and evidence-chain helpers
 configs/      Local and Jetson-oriented config examples
 examples/     Demo events and sample video-source inputs
-docs/         Architecture, deployment, schemas, and roadmap
+docs/         Architecture, deployment, schemas, roadmap
 tests/        Unit tests for API and safety logic
 ```
 
@@ -98,64 +66,28 @@ python -m edge.worker \
   --backend http://127.0.0.1:8080
 ```
 
-Open:
-
-- API health: `http://127.0.0.1:8080/health`
-- OpenAPI docs: `http://127.0.0.1:8080/docs`
-- Metrics: `http://127.0.0.1:8080/metrics`
-
-Apply migrations manually when needed:
+Open `http://127.0.0.1:8080/health`, `/docs`, and `/metrics`. Apply migrations manually when needed:
 
 ```bash
 PHYSICAL_AI_CONFIG=configs/local.json alembic upgrade head
 ```
 
-For the Linux validation path used by CI:
+CI and the local verification path:
 
 ```bash
 make install-dev
 make verify
 ```
 
-The current CI gate runs Ruff linting and tests on Ubuntu.
-
-## Docker
-
-```bash
-docker compose --profile demo up --build
-```
+The CI gate runs Ruff and the test suite on Ubuntu. Docker: `docker compose --profile demo up --build`.
 
 ## Safety Event Model
 
-The platform emits structured events with:
+Each event carries camera ID, timestamp, rule ID, severity, confidence, evidence, a human-review recommendation, and telemetry context. See [docs/event_schema.md](docs/event_schema.md) and [examples/sample_event.json](examples/sample_event.json).
 
-- camera ID
-- timestamp
-- rule ID
-- severity
-- confidence
-- evidence
-- human-review recommendation
-- telemetry context
+## Model Integration
 
-See `docs/event_schema.md` and `examples/sample_event.json`.
-
-## Model Integration Strategy
-
-The current VLM adapter is intentionally mocked. That is not a weakness. It is the correct engineering move at this stage.
-
-Real adapters should be added behind the same interface for:
-
-- NVIDIA Cosmos Reasoning / VLM endpoints
-- Gemma-style multimodal endpoints
-- local vLLM OpenAI-compatible APIs
-- Jetson-hosted inference services
-- future RTSP/live camera pipelines
-
-Do not hardwire the app to one model. Keep inference replaceable.
-
-Cosmos-Reason2 is the recommended first real backend. Use it through the dedicated adapter
-that targets NVIDIA NIM's OpenAI-compatible Chat Completions API:
+The VLM adapter is intentionally mocked so the event model, policy engine and review flow can be tested deterministically. Real adapters sit behind the same interface: NVIDIA Cosmos Reasoning or VLM endpoints, Gemma-style multimodal endpoints, local vLLM OpenAI-compatible APIs, Jetson-hosted inference services. Cosmos-Reason2 through NVIDIA NIM's OpenAI-compatible API is the intended first real backend:
 
 ```bash
 python -m edge.worker \
@@ -167,59 +99,29 @@ python -m edge.worker \
   --model nvidia/cosmos-reason2-2b
 ```
 
+Video or RTSP input needs the optional OpenCV dependency (`pip install -e .[opencv]`); set `source_type` to `video_file` or `rtsp` in the source JSON.
+
 ## Runtime Paths
 
-Primary target today: Linux local development with the deterministic/mock model path. Jetson is a deployment target once a real local or endpoint-backed VLM adapter is configured and benchmarked.
+- **Demo path, today:** Linux local development with the deterministic mock model.
+- **Jetson path:** `PHYSICAL_AI_CONFIG=configs/jetson.json` with the same commands. This is a deployment shape, not hardware performance evidence. Latency, memory and sustained-runtime artifacts must be committed before any measured Jetson readiness is claimed.
+- **Real VLM path:** `configs/cosmos_reasoning.json` with `COSMOS_API_KEY` set.
 
-Demo path:
+## What Is Not Established
 
-```bash
-uvicorn api.main:app --reload --port 8080
-python -m edge.worker --config configs/local.json --source examples/sample_source.json
-```
+- No model has been run against real camera input in this repository.
+- No latency, memory, power or thermal measurement exists on any device.
+- No operator dashboard exists; review is through the API.
+- No zone geometry is derived from calibration; rules use configured regions.
 
-Jetson path:
+## Next Work, in Order
 
-```bash
-PHYSICAL_AI_CONFIG=configs/jetson.json uvicorn api.main:app --host 0.0.0.0 --port 8080
-python -m edge.worker --config configs/jetson.json --source examples/sample_source.json
-```
+1. One committed measured run: the mock path on a Jetson with telemetry hooks writing an artifact (latency p95 and p99, memory, dropped frames), device and date recorded.
+2. Cosmos-Reason2 adapter run against a local endpoint with the same artifact shape.
+3. RTSP camera source and calibration-derived zones.
+4. Operator dashboard and human-in-the-loop review workflow.
+5. Incident export and audit trails through the evidence chain.
 
-The Jetson path is a deployment shape, not yet hardware performance evidence. Commit latency, memory, and sustained-runtime artifacts before claiming measured Jetson readiness.
+## Related
 
-Real VLM path:
-
-```bash
-export COSMOS_API_KEY=...
-python -m edge.worker --config configs/cosmos_reasoning.json --source examples/sample_source.json
-```
-
-Video or RTSP input uses the optional OpenCV dependency:
-
-```bash
-pip install -e .[opencv]
-```
-
-Set `source_type` to `video_file` or `rtsp` in the source JSON and provide the file path or RTSP URI in `source_uri`.
-
-## Production Roadmap
-
-1. Connect RTSP cameras and real frame extraction
-2. Add Cosmos/VLM adapter using local OpenAI-compatible endpoint
-3. Add zone geometry from camera calibration files
-4. Add operator dashboard
-5. Add Prometheus/Grafana deployment profile
-6. Benchmark Jetson memory, latency, and sustained runtime stability
-7. Add human-in-the-loop review workflow
-8. Add incident export and audit trails
-
-## Positioning
-
-This project supports a broader engineering focus around:
-
-- Physical AI safety
-- Edge AI observability
-- robotics workcell monitoring
-- multimodal inference systems
-- deployable Jetson AI pipelines
-- operator-facing safety intelligence
+Sibling systems: [jetson-edge-ai-security](https://github.com/obiedeh/jetson-edge-ai-security) (measured Thor inference and power evidence for a defensive telemetry runtime) and the [Physical AI case study](https://obiedeh.github.io/physical-ai-jetson-robotics.html).
