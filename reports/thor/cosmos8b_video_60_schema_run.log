@@ -1,0 +1,122 @@
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000060", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:58:31.361074+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000120", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:58:35.876335+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000180", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:58:40.563459+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000240", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:58:45.049364+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000300", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:58:49.554521+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000360", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:58:54.036502+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000420", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:58:58.525377+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000480", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:03.309718+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000540", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:11.633457+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000600", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:19.941606+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000660", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:24.454179+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000720", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:28.954467+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000780", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:33.469292+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000840", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:48.484224+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000900", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:51.545607+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00000960", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T16:59:57.462694+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001020", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:03.390473+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001080", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:08.934835+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001140", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:14.849085+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001200", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:18.095637+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001260", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:24.010797+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001320", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:27.257129+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001380", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:30.320339+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001440", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:33.393060+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001500", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:36.438796+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001560", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:39.677414+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001620", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:42.929996+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001680", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:46.170644+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001740", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:49.411513+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001800", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:52.651641+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001860", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:55.894922+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001920", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:00:59.136692+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00001980", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:05.065215+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002040", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:08.321419+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002100", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:11.400728+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002160", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:14.460697+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002220", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:20.068669+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002280", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:23.321130+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002340", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:26.566266+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002400", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:29.814559+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002460", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:33.064640+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002520", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:36.308586+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002580", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:39.536846+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002640", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:42.765725+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002700", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:45.991848+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002760", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:49.239683+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002820", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:52.467975+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002880", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:55.510050+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00002940", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:01:58.549268+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003000", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:01.590998+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003060", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:04.621180+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003120", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:07.652049+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003180", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:10.884242+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003240", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:14.118185+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003300", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:17.345125+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003360", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:20.571883+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003420", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:26.499606+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003480", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:29.725901+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003540", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:32.950709+00:00"}
+HTTP Request: POST http://127.0.0.1:8000/v1/chat/completions "HTTP/1.1 200 OK"
+{"camera_id": "sim-workcell-ludo", "feedback": "No Person Detected", "frame_id": "frame-00003600", "level": "info", "logger": "edge.worker", "message": "person_ppe_feedback", "timestamp": "2026-09-09T17:02:38.852395+00:00"}
+{"frames": 60, "level": "info", "logger": "edge.worker", "message": "run_report_written", "path": "reports/thor/cosmos8b_video_60_schema.json", "timestamp": "2026-09-09T17:02:38.881359+00:00"}
+{"camera_id": "sim-workcell-ludo", "events": 0, "level": "info", "logger": "edge.worker", "message": "worker_complete", "timestamp": "2026-09-09T17:02:38.881571+00:00"}
