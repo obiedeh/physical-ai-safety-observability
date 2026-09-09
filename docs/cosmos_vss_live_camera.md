@@ -25,7 +25,7 @@ The interactive entry point is:
 
 For a non-interactive Tapo run:
 
-    python -m edge.live_camera --host 192.168.1.146 --camera-type tapo --username CAMERA_USER --backend http://127.0.0.1:8081
+    python -m edge.live_camera --host 192.0.2.10 --camera-type tapo --username CAMERA_USER --backend http://127.0.0.1:8081
 
 Omit password from the command so it is prompted securely.
 

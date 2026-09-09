@@ -2,7 +2,7 @@
 
 Run with Isaac Sim's Python, not the project venv Python:
 
-    /home/oedeh/isaacsim/python.sh simulation/omniverse_ppe_world.py \
+    "$ISAACSIM_ROOT"/python.sh simulation/omniverse_ppe_world.py \
       --scenario person-no-ppe \
       --frames 30 \
       --output-dir artifacts/omniverse/person_no_ppe

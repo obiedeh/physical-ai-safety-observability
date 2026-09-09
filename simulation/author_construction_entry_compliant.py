@@ -2,7 +2,7 @@
 
 Run headlessly with Isaac Sim's Python from the repository root:
 
-    /home/oedeh/isaacsim/python.sh simulation/author_construction_entry_compliant.py
+    "$ISAACSIM_ROOT"/python.sh simulation/author_construction_entry_compliant.py
 
 Outputs:
     output/construction_entry_compliant.usd
