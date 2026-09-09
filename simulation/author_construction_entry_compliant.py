@@ -28,17 +28,17 @@ simulation_app = SimulationApp(
 )
 
 # Import Omniverse and Isaac APIs after SimulationApp is created.
-import carb  # noqa: E402
-import omni.usd  # noqa: E402
-from omni.isaac.core import World  # noqa: E402
-from omni.isaac.core.utils.prims import delete_prim, is_prim_path_valid  # noqa: E402
-from omni.isaac.core.utils.stage import add_reference_to_stage, save_stage  # noqa: E402
-from omni.isaac.nucleus import get_assets_root_path, is_file  # noqa: E402
-from pxr import Gf, Sdf, Usd, UsdGeom, UsdLux, UsdShade  # noqa: E402
+import carb
 
 # Replicator is used only for the required thumbnail render.
-import omni.replicator.core as rep  # noqa: E402
-from PIL import Image  # noqa: E402
+import omni.replicator.core as rep
+import omni.usd
+from omni.isaac.core import World
+from omni.isaac.core.utils.prims import delete_prim, is_prim_path_valid
+from omni.isaac.core.utils.stage import add_reference_to_stage, save_stage
+from omni.isaac.nucleus import get_assets_root_path, is_file
+from PIL import Image
+from pxr import Gf, Sdf, Usd, UsdGeom, UsdLux, UsdShade
 
 OUTPUT_DIR = Path("output")
 STAGE_PATH = OUTPUT_DIR / "construction_entry_compliant.usd"
@@ -115,7 +115,7 @@ def _first_existing_asset(assets_root: str, relative_paths: list[str]) -> str | 
         try:
             if is_file(candidate):
                 return candidate
-        except Exception:
+        except Exception:  # noqa: BLE001 - omni.client raises assorted types; a probe failure is a warning
             carb.log_warn(f"Could not check asset path: {candidate}")
     return None
 

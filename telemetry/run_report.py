@@ -47,7 +47,7 @@ def _read_text(path: str) -> str | None:
 
 def _run(cmd: list[str], timeout: float = 5.0) -> str | None:
     try:
-        out = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
+        out = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, check=False)
     except (OSError, subprocess.SubprocessError):
         return None
     return out.stdout.strip() or None

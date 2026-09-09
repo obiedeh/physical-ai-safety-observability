@@ -13,8 +13,8 @@ from edge.adapters.openai_compatible import CosmosReason2Adapter, OpenAICompatib
 from edge.frame_sampler import sample_frames
 from edge.source_loader import VideoSource, load_source
 from events.schemas import PersonPPEFeedback
-from runtime_settings import RuntimeSettings, load_settings
 from rules.engine import SafetyPolicyEngine
+from runtime_settings import RuntimeSettings, load_settings
 from telemetry.logging import configure_logging, log_event
 from telemetry.metrics import metrics
 from telemetry.run_report import RunRecorder

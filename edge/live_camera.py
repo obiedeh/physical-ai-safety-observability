@@ -9,7 +9,6 @@ from edge.source_loader import VideoSource
 from edge.worker import build_adapter, run_worker
 from runtime_settings import load_settings
 
-
 CAMERA_PATHS = {
     "tapo": ["stream1", "stream2"],
     "generic": [
