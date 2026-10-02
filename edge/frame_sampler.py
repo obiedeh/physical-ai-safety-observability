@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from time import sleep
 from typing import Any
 
+from edge.redaction import mask_url
 from edge.source_loader import VideoSource
 from evidence.hashing import hash_bytes, hash_text
 
@@ -46,7 +47,7 @@ def sample_opencv_frames(source: VideoSource) -> Iterator[dict[str, Any]]:
 
     capture = cv2.VideoCapture(source.source_uri)
     if not capture.isOpened():
-        raise RuntimeError(f"unable to open video source: {source.source_uri}")
+        raise RuntimeError(f"unable to open video source: {mask_url(source.source_uri)}")
 
     emitted = 0
     frame_index = 0
