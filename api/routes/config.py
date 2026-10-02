@@ -148,7 +148,11 @@ def model_guard() -> dict:
 @router.post("/model/guard")
 def rerun_model_guard() -> dict:
     result = edge_service.run_guard()
-    return {"guard": result.to_dict(), "constrained_allowed": edge_service.constrained_allowed()}
+    return {
+        "guard": result.to_dict(),
+        "constrained_allowed": edge_service.constrained_allowed(),
+        "json_schema": edge_service.model_settings.json_schema,
+    }
 
 
 @router.get("/inference", response_model=InferenceSettings)

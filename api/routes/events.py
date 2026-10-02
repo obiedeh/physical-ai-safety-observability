@@ -20,8 +20,21 @@ def ingest_events_batch(events: list[SafetyEvent]) -> list[SafetyEvent]:
 
 
 @router.get("/events", response_model=list[SafetyEvent])
-def list_events() -> list[SafetyEvent]:
-    return store.list_events()
+def list_events(
+    camera_id: str | None = None,
+    rule_id: str | None = None,
+    severity: str | None = None,
+    limit: int | None = None,
+    newest_first: bool = False,
+) -> list[SafetyEvent]:
+    events = store.list_events(camera_id=camera_id, limit=None, newest_first=newest_first)
+    if rule_id:
+        events = [e for e in events if e.rule_id == rule_id]
+    if severity:
+        events = [e for e in events if e.severity == severity]
+    if limit:
+        events = events[: max(1, min(limit, 2000))]
+    return events
 
 
 @router.get("/incidents", response_model=list[Incident])
