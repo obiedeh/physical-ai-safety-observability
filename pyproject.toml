@@ -10,8 +10,11 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
   "alembic>=1.13",
+  "av>=12",
+  "cryptography>=42",
   "fastapi>=0.110",
   "httpx>=0.27",
+  "Pillow>=10",
   "pydantic>=2.6",
   "uvicorn[standard]>=0.27",
 ]
@@ -47,3 +50,13 @@ testpaths = ["tests"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
+
+[tool.ruff.lint.per-file-ignores]
+# Boundaries with libav, sockets, model servers and log handlers: any exception
+# there is recorded (redacted) and reported, never allowed to kill the loop.
+"edge/capture.py" = ["BLE001", "S110"]
+"edge/probe.py" = ["BLE001", "S110"]
+"edge/model_guard.py" = ["BLE001"]
+"edge/redaction.py" = ["BLE001"]
+"edge/service.py" = ["BLE001"]
+"edge/poster.py" = ["BLE001"]
