@@ -9,3 +9,7 @@ output/
 
 # Local benchmark inputs (videos copied from other repositories); not tracked here
 inputs/
+
+# Operator web UI (Vite); build with `cd web && pnpm build`
+web/node_modules/
+web/dist/
