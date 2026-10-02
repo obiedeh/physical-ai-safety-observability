@@ -61,6 +61,14 @@ def list_runs() -> list[dict]:
     return edge_service.list_runs()
 
 
+@router.get("/runs/{host}/{name}")
+def get_run(host: str, name: str) -> dict:
+    path = (edge_service.reports_dir / host / f"{name}.json").resolve()
+    if not str(path).startswith(str(edge_service.reports_dir.resolve())) or not path.is_file():
+        raise HTTPException(status_code=404, detail="run not found")
+    return json.loads(path.read_text())
+
+
 @router.get("/runs/status")
 def run_status() -> dict:
     return edge_service.run_status()

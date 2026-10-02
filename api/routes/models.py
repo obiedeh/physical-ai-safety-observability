@@ -1,6 +1,7 @@
 """Model catalog with host preflight, and the app-managed vLLM container."""
 from __future__ import annotations
 
+import httpx
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
@@ -26,7 +27,17 @@ def catalog() -> dict:
 
 @router.get("/server")
 def server_status() -> dict:
-    return edge_service.model_server.status()
+    status = edge_service.model_server.status()
+    status["ready"] = False
+    if status.get("state") == "starting" and status.get("endpoint"):
+        try:
+            response = httpx.get(f"{status['endpoint']}/models", timeout=1.5)
+            status["ready"] = response.status_code == 200
+        except httpx.HTTPError:
+            status["ready"] = False
+    if status["ready"]:
+        status["state"] = "ready"
+    return status
 
 
 @router.post("/server/start")
