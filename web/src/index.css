@@ -1,0 +1,86 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+    --background: 222 47% 9%;
+    --foreground: 213 31% 91%;
+    --card: 222 44% 13%;
+    --card-foreground: 213 31% 91%;
+    --primary: 199 95% 60%;
+    --primary-foreground: 222 47% 9%;
+    --secondary: 222 40% 18%;
+    --secondary-foreground: 213 31% 91%;
+    --muted: 222 40% 18%;
+    --muted-foreground: 215 18% 58%;
+    --destructive: 0 80% 60%;
+    --destructive-foreground: 213 31% 95%;
+    --ok: 152 65% 48%;
+    --warn: 38 95% 58%;
+    --border: 222 36% 22%;
+    --input: 222 36% 24%;
+    --ring: 199 95% 60%;
+    --radius: 0.5rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased text-sm;
+  }
+
+  input,
+  select,
+  textarea {
+    @apply bg-background border border-input rounded-md px-2.5 py-1.5 text-sm text-foreground
+      placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-ring/60
+      disabled:opacity-50;
+  }
+
+  input[type="checkbox"] {
+    @apply h-4 w-4 rounded-sm accent-[hsl(var(--primary))] p-0;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--secondary));
+    border-radius: 6px;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-card border border-border rounded-lg;
+  }
+  .label {
+    @apply block text-xs font-medium text-muted-foreground mb-1 uppercase tracking-wide;
+  }
+  .mono {
+    @apply font-mono text-xs;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 hsl(var(--ok) / 0.6);
+  }
+  100% {
+    box-shadow: 0 0 0 6px hsl(var(--ok) / 0);
+  }
+}
+.live-dot {
+  animation: pulse-ring 1.4s ease-out infinite;
+}

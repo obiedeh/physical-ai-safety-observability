@@ -11,6 +11,7 @@ from edge.adapters.base import VLMAdapter
 from edge.adapters.mock_vlm import MockVLMAdapter
 from edge.adapters.openai_compatible import CosmosReason2Adapter, OpenAICompatibleAdapter
 from edge.frame_sampler import sample_frames
+from edge.redaction import REDACTOR
 from edge.source_loader import VideoSource, load_source
 from events.schemas import PersonPPEFeedback
 from rules.engine import SafetyPolicyEngine
@@ -395,7 +396,7 @@ def main() -> None:
     except Exception as exc:
         # A failed run is still evidence: write what was measured plus the error, then re-raise.
         if recorder is not None:
-            recorder.error = f"{type(exc).__name__}: {str(exc)[:300]}"
+            recorder.error = REDACTOR.redact(f"{type(exc).__name__}: {str(exc)[:300]}")
             out = recorder.write(args.report)
             log_event(logger, "run_report_written_partial", path=str(out), frames=len(recorder.frames), error=recorder.error)
         raise

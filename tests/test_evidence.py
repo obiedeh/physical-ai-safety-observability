@@ -12,8 +12,8 @@ def test_hash_text_is_deterministic() -> None:
 
 def test_redact_uri_credentials_removes_rtsp_userinfo() -> None:
     assert (
-        redact_uri_credentials("rtsp://user:secret@192.168.1.146:554/stream1")
-        == "rtsp://192.168.1.146:554/stream1"
+        redact_uri_credentials("rtsp://user:secret@192.0.2.10:554/stream1")
+        == "rtsp://192.0.2.10:554/stream1"
     )
 
 
@@ -23,7 +23,7 @@ def test_build_evidence_redacts_source_uri_credentials() -> None:
             "camera_id": "front-door",
             "frame_id": "frame-1",
             "timestamp": datetime.now(UTC),
-            "source_uri": "rtsp://user:secret@192.168.1.146:554/stream1",
+            "source_uri": "rtsp://user:secret@192.0.2.10:554/stream1",
         },
         adapter_name="cosmos_reason2",
         model_version="nvidia/cosmos-reason2-8b",
@@ -32,4 +32,4 @@ def test_build_evidence_redacts_source_uri_credentials() -> None:
         detections=[],
     )
 
-    assert evidence.source_uri == "rtsp://192.168.1.146:554/stream1"
+    assert evidence.source_uri == "rtsp://192.0.2.10:554/stream1"

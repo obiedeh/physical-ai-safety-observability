@@ -1,110 +1,26 @@
+"""Optional CLI path for a live camera.
+
+The supported way to run a camera is the web UI (Cameras → add → the API
+hosts the capture and inference threads). This CLI keeps a terminal path for
+the same code: either run a camera already saved in the UI (``--camera-id``),
+or describe one on the command line / interactively, probe it, and run it
+for a fixed duration, optionally writing a ``run-report-v1`` artifact.
+"""
+from __future__ import annotations
+
 import argparse
 import getpass
-import signal
-from dataclasses import dataclass
-from typing import Any
-from urllib.parse import quote
+import sys
+import time
 
-from edge.source_loader import VideoSource
-from edge.worker import build_adapter, run_worker
+from api.services.store import SQLiteStore
+from edge.camera_profiles import CAMERA_PROFILES, get_profile
+from edge.config_models import CameraIn, InferenceSettings, ModelSettings
+from edge.probe import probe_stream
+from edge.redaction import REDACTOR
+from edge.secrets import SecretBox
+from edge.service import EdgeService
 from runtime_settings import load_settings
-
-CAMERA_PATHS = {
-    "tapo": ["stream1", "stream2"],
-    "generic": [
-        "stream1",
-        "stream2",
-        "live",
-        "h264",
-        "Streaming/Channels/101",
-        "cam/realmonitor?channel=1&subtype=0",
-    ],
-}
-
-
-@dataclass(frozen=True)
-class ProbeResult:
-    camera_type: str
-    uri: str
-    redacted_uri: str
-    width: int
-    height: int
-
-
-def _safe_userinfo(username: str, password: str) -> str:
-    return f"{quote(username, safe='')}:{quote(password, safe='')}"
-
-
-def _build_uri(host: str, port: int, path: str, username: str, password: str) -> str:
-    clean_path = path.lstrip("/")
-    return f"rtsp://{_safe_userinfo(username, password)}@{host}:{port}/{clean_path}"
-
-
-def _redacted_uri(host: str, port: int, path: str) -> str:
-    return f"rtsp://{host}:{port}/{path.lstrip('/')}"
-
-
-def _candidate_profiles(camera_type: str) -> list[tuple[str, str]]:
-    if camera_type != "auto":
-        return [(camera_type, path) for path in CAMERA_PATHS[camera_type]]
-    seen: set[str] = set()
-    candidates: list[tuple[str, str]] = []
-    for profile in ("tapo", "generic"):
-        for path in CAMERA_PATHS[profile]:
-            key = f"{profile}:{path}"
-            if key in seen:
-                continue
-            seen.add(key)
-            candidates.append((profile, path))
-    return candidates
-
-
-def _probe_uri(uri: str, timeout_seconds: int) -> tuple[int, int] | None:
-    try:
-        import cv2  # type: ignore[import-not-found]
-    except ImportError as exc:
-        raise RuntimeError(
-            "OpenCV is required for live RTSP probing. Install the opencv extra."
-        ) from exc
-
-    def timeout_handler(signum: int, frame: Any) -> None:
-        raise TimeoutError("RTSP probe timed out")
-
-    previous_handler = signal.signal(signal.SIGALRM, timeout_handler)
-    signal.alarm(timeout_seconds)
-    capture = None
-    try:
-        capture = cv2.VideoCapture(uri)
-        if not capture.isOpened():
-            return None
-        ok, frame = capture.read()
-        if not ok or frame is None:
-            return None
-        return int(frame.shape[1]), int(frame.shape[0])
-    except TimeoutError:
-        return None
-    finally:
-        signal.alarm(0)
-        signal.signal(signal.SIGALRM, previous_handler)
-        if capture is not None:
-            capture.release()
-
-
-def probe_camera(
-    *, host: str, port: int, camera_type: str, username: str, password: str, timeout_seconds: int
-) -> ProbeResult:
-    for profile, path in _candidate_profiles(camera_type):
-        uri = _build_uri(host, port, path, username, password)
-        redacted = _redacted_uri(host, port, path)
-        print(f"Trying {profile} RTSP path: {redacted}")
-        dimensions = _probe_uri(uri, timeout_seconds)
-        if dimensions is None:
-            continue
-        width, height = dimensions
-        return ProbeResult(profile, uri, redacted, width, height)
-    raise RuntimeError(
-        "No RTSP candidate opened. Check camera type, local camera account, password, RTSP setting, and network reachability."
-    )
 
 
 def _prompt(value: str | None, label: str, default: str | None = None) -> str:
@@ -120,115 +36,131 @@ def _prompt(value: str | None, label: str, default: str | None = None) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Verify a live RTSP camera and run safety observability."
-    )
+    parser = argparse.ArgumentParser(description="Run a live camera through the safety pipeline.")
+    parser.add_argument("--camera-id", help="Run a camera already saved in the UI")
     parser.add_argument("--host", help="Camera IP address or hostname")
-    parser.add_argument("--port", type=int, default=554, help="RTSP port")
+    parser.add_argument("--port", type=int, help="Stream port (profile default when omitted)")
     parser.add_argument(
-        "--camera-type", choices=["auto", "tapo", "generic"], help="Camera RTSP profile to probe"
+        "--camera-type", choices=sorted(k for k in CAMERA_PROFILES if k not in {"synthetic"}),
+        help="Camera profile",
     )
-    parser.add_argument("--username", help="Local RTSP/camera-account username")
-    parser.add_argument(
-        "--password", help="Local RTSP/camera-account password. Omit to prompt securely."
-    )
-    parser.add_argument(
-        "--config", default="configs/cosmos_reasoning.json", help="Runtime config path"
-    )
-    parser.add_argument("--backend", help="Safety API backend URL")
-    parser.add_argument("--camera-id", default="live-camera", help="Camera ID for emitted events")
-    parser.add_argument("--name", default="Live RTSP camera", help="Camera display name")
-    parser.add_argument("--frame-count", type=int, default=3, help="Frames to sample per run")
-    parser.add_argument(
-        "--frame-stride", type=int, default=30, help="Decode stride for sampled frames"
-    )
-    parser.add_argument(
-        "--probe-timeout", type=int, default=12, help="Seconds per RTSP candidate probe"
-    )
-    parser.add_argument(
-        "--dry-run",
-        action="store_true",
-        help="Only verify the RTSP camera; do not run inference or post events",
-    )
-    parser.add_argument(
-        "--once", action="store_true", help="Process one camera sampling pass and exit"
-    )
-    parser.add_argument(
-        "--feedback-interval-seconds",
-        type=float,
-        help="Seconds between person/PPE feedback checks in continuous mode",
-    )
-    parser.add_argument(
-        "--verbose",
-        action="store_true",
-        help="Print structured worker logs instead of clean feedback-only output",
-    )
+    parser.add_argument("--stream-quality", choices=["main", "sub"], default="sub")
+    parser.add_argument("--stream-path", help="Override the profile's stream path")
+    parser.add_argument("--username", help="Camera account username")
+    parser.add_argument("--password", help="Camera account password. Omit to prompt securely.")
+    parser.add_argument("--config", help="Runtime config JSON (database path etc.)")
+    parser.add_argument("--backend", help="Safety API backend URL for event posting")
+    parser.add_argument("--no-post", action="store_true", help="Evaluate rules without posting")
+    parser.add_argument("--adapter", choices=["mock", "cosmos-reason2", "openai-compatible"])
+    parser.add_argument("--adapter-endpoint", help="OpenAI-compatible base URL")
+    parser.add_argument("--model", help="Model name served at the endpoint")
+    parser.add_argument("--json-schema", action="store_true", help="Constrained decoding")
+    parser.add_argument("--think", action="store_true", help="Allow the model's think block")
+    parser.add_argument("--max-tokens", type=int)
+    parser.add_argument("--interval-ms", type=int, help="Inference cadence")
+    parser.add_argument("--duration", type=float, default=60.0, help="Seconds to run (0 = until Ctrl-C)")
+    parser.add_argument("--report", help="Write a run-report-v1 artifact to this path")
+    parser.add_argument("--dry-run", action="store_true", help="Probe the camera and exit")
+    parser.add_argument("--save", action="store_true", help="Save the camera to the UI config store")
     return parser
 
 
 def main() -> None:
     args = build_parser().parse_args()
-    host = _prompt(args.host, "Camera host/IP")
-    camera_type = _prompt(args.camera_type, "Camera type (auto, tapo, generic)", "auto")
-    username = _prompt(args.username, "RTSP username")
-    password = args.password or getpass.getpass("RTSP password: ")
-
-    result = probe_camera(
-        host=host,
-        port=args.port,
-        camera_type=camera_type,
-        username=username,
-        password=password,
-        timeout_seconds=args.probe_timeout,
-    )
-    print(
-        f"Verified {result.camera_type} camera: {result.redacted_uri} ({result.width}x{result.height})"
-    )
-    if args.dry_run:
-        return
-
     settings = load_settings(args.config)
-    if args.backend:
-        settings.worker.backend = args.backend
-    if args.once:
-        settings.worker.continuous = False
-    if args.feedback_interval_seconds is not None:
-        settings.worker.feedback_interval_seconds = args.feedback_interval_seconds
-    if args.verbose:
-        settings.worker.clean_feedback_terminal = False
+    store = SQLiteStore(database_path=settings.app.database_path)
+    service = EdgeService(
+        store, secrets=SecretBox(),
+        backend=args.backend or settings.worker.backend,
+        post_enabled=not args.no_post,
+    )
 
-    source = VideoSource(
-        camera_id=args.camera_id,
-        name=args.name,
-        source_uri=result.uri,
-        source_type="rtsp",
-        frame_count=args.frame_count,
-        frame_stride=args.frame_stride,
-        sample_interval_ms=0,
-        zones=[
-            {
-                "zone_id": f"{args.camera_id}-entry",
-                "type": "restricted",
-                "polygon": [
-                    [0, 0],
-                    [result.width, 0],
-                    [result.width, result.height],
-                    [0, result.height],
-                ],
-            }
-        ],
-    )
-    events = run_worker(
-        source=source,
-        backend=settings.worker.backend,
-        adapter=build_adapter(settings),
-        post_events=settings.worker.post_events,
-        continuous=settings.worker.continuous,
-        feedback_interval_seconds=settings.worker.feedback_interval_seconds,
-        clean_feedback_terminal=settings.worker.clean_feedback_terminal,
-    )
-    if not settings.worker.continuous:
-        print(f"posted_events={len(events)}")
+    if args.camera_id:
+        record = service.get_camera(args.camera_id)
+        if record is None:
+            sys.exit(f"camera '{args.camera_id}' is not in the config store")
+        camera_id = record.camera_id
+        print(f"camera={camera_id} profile={record.profile} url={record.masked_url}")
+    else:
+        host = _prompt(args.host, "Camera host/IP")
+        camera_type = _prompt(args.camera_type, "Camera type", "tapo")
+        profile = get_profile(camera_type)
+        username = _prompt(args.username, "Camera username") if profile.requires_auth else (args.username or "")
+        password = args.password or (getpass.getpass("Camera password: ") if profile.requires_auth else "")
+        REDACTOR.register(password)
+        camera = CameraIn(
+            name=f"cli-{host}", profile=profile.model_type, host=host, port=args.port,
+            username=username, password=password, stream_quality=args.stream_quality,
+            stream_path=args.stream_path or "",
+        )
+        url = profile.build_url(
+            host=host, username=username or None, password=password or None, port=camera.port,
+            quality=camera.stream_quality, path=camera.stream_path or None,
+        )
+        result = probe_stream(url)
+        print(f"probe: ok={result.ok} stage={result.stage} url={result.masked_url}")
+        if not result.ok:
+            sys.exit(result.error)
+        print(f"stream: {result.width}x{result.height} {result.codec} {result.fps or '?'} fps")
+        if args.dry_run:
+            return
+        record = service.create_camera(camera)
+        camera_id = record.camera_id
+        if not args.save:
+            print("(camera not kept after this run; pass --save to keep it in the UI)")
+
+    if args.adapter or args.adapter_endpoint or args.model or args.json_schema or args.think:
+        current = service.get_model_settings()
+        service.put_model_settings(
+            ModelSettings(
+                backend=args.adapter or ("cosmos-reason2" if current.backend == "mock" else current.backend),
+                endpoint=args.adapter_endpoint or current.endpoint,
+                model=args.model or current.model,
+                json_schema=args.json_schema or current.json_schema,
+                think=args.think,
+                max_tokens=args.max_tokens or current.max_tokens,
+                timeout_s=current.timeout_s,
+                reasoning_parser=current.reasoning_parser,
+            )
+        )
+    if args.interval_ms:
+        current_inf = service.get_inference_settings()
+        service.put_inference_settings(
+            InferenceSettings(**{**current_inf.model_dump(), "interval_ms": args.interval_ms})
+        )
+
+    service.start()
+    try:
+        if service.model_settings.json_schema:
+            guard = service.run_guard()
+            if not guard.ok:
+                sys.exit(f"refusing constrained run: {guard.message}")
+        if args.report:
+            service.start_run(camera_id, "cli-run")
+        started = time.monotonic()
+        last_print = 0.0
+        while args.duration <= 0 or time.monotonic() - started < args.duration:
+            time.sleep(0.5)
+            latest = service.hub.latest.get(camera_id)
+            if latest and time.monotonic() - last_print > 2.0:
+                last_print = time.monotonic()
+                print(
+                    f"\r{latest.get('status'):<24} {latest.get('feedback', ''):<32} "
+                    f"events={len(latest.get('events', []))}",
+                    end="", flush=True,
+                )
+        print()
+        if args.report:
+            result = service.stop_run()
+            print(f"report written: {result['written']} ({result['frames']} frames)")
+    except KeyboardInterrupt:
+        print()
+        if args.report and service.run_status().get("recording"):
+            print(f"report written: {service.stop_run()['written']}")
+    finally:
+        service.stop()
+        if not args.camera_id and not args.save:
+            service.delete_camera(camera_id)
 
 
 if __name__ == "__main__":

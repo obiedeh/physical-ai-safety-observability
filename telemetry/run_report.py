@@ -185,6 +185,11 @@ class RunRecorder:
     error: str | None = None
     started_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     tegrastats: TegrastatsSampler | None = None
+    #: Optional live-capture and transport blocks filled by the camera worker:
+    #: ``capture`` (fps, decoded, dropped, sampled, resolution, codec),
+    #: ``transport`` (async poster queue/posted/failed/dropped, post and
+    #: packet-to-event latency), ``server`` (image / reasoning parser / guard).
+    extra: dict[str, Any] = field(default_factory=dict)
     _mono_start: float = field(default_factory=time.monotonic)
 
     def start_tegrastats(self) -> bool:
@@ -205,6 +210,8 @@ class RunRecorder:
         detections: int | None = None,
         usage: dict[str, Any] | None = None,
         labels: list[str] | None = None,
+        capture_to_result_ms: float | None = None,
+        frame_age_ms: float | None = None,
     ) -> None:
         usage = usage or {}
         for label in labels or []:
@@ -220,6 +227,10 @@ class RunRecorder:
                 "detections": detections,
                 "prompt_tokens": usage.get("prompt_tokens"),
                 "completion_tokens": usage.get("completion_tokens"),
+                "capture_to_result_ms": (
+                    round(capture_to_result_ms, 4) if capture_to_result_ms is not None else None
+                ),
+                "frame_age_ms": round(frame_age_ms, 4) if frame_age_ms is not None else None,
             }
         )
         for event in events:
@@ -274,6 +285,12 @@ class RunRecorder:
                 "inference": self._stats("inference_ms"),
                 "rule_eval": self._stats("rule_ms"),
                 "backend_post": self._stats("post_ms"),
+                # Frame capture → rules evaluated (sampling delay + inference + rules).
+                "capture_to_result": self._stats("capture_to_result_ms"),
+                # Frame capture → backend acknowledged the event (async poster).
+                "packet_to_event": (
+                    (self.extra.get("transport") or {}).get("packet_to_event_ms") or {"n": 0}
+                ),
             },
             "model_tokens": {
                 "prompt": self._stats("prompt_tokens"),
@@ -293,6 +310,9 @@ class RunRecorder:
                 ),
             },
             "tegrastats": self.tegrastats.summary() if self.tegrastats else None,
+            "capture": self.extra.get("capture"),
+            "transport": self.extra.get("transport"),
+            "server": self.extra.get("server"),
             "per_frame": self.frames,
         }
 

@@ -1,0 +1,62 @@
+{
+  "schema": "constrained-guard-probe-v1",
+  "device": "Jetson AGX Thor",
+  "note": "Output of scripts/guard_probe.py against the app-managed vLLM containers. Home directory paths replaced with ~. No camera input involved.",
+  "started_at": "2026-10-02T13:00:24Z",
+  "steps": [
+    {
+      "step": "start reasoning entry with json_schema=true",
+      "http": 422,
+      "detail": "'Cosmos Reason 2 (2B), reasoning parser (think mode)' runs with --reasoning-parser; constrained (json_schema) runs require the no-reasoning entry."
+    },
+    {
+      "step": "start reasoning entry (think mode)",
+      "http": 200,
+      "ready_after_s": 55.6,
+      "command": "/usr/bin/docker run --rm --name physical-ai-vllm --runtime nvidia --network host --ipc host -v ~/models/cosmos-reason2-2b:/models/cosmos-reason2-2b -v ~/.cache/vllm:/root/.cache/vllm ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04 vllm serve /models/cosmos-reason2-2b --served-model-name nvidia/cosmos-reason2-2b --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.25 --max-model-len 8192 --media-io-kwargs {\"video\": {\"num_frames\": -1}} --reasoning-parser qwen3"
+    },
+    {
+      "step": "PUT /config/model json_schema=true reasoning_parser=true",
+      "http": 422,
+      "detail": "[{'type': 'value_error', 'loc': ['body'], 'msg': 'Value error, json_schema (constrained decoding) cannot be enabled against a server started with --reasoning-parser: vLLM 0.14 silently ignores the schema. Start the no-reasoning container or disable json_schema.', 'input': {'backend': 'cosmos-reason2', 'endpoint': 'http://127.0.0.1:8000', 'model': 'nvidia/cosmos-reason2-2b', 'json_schema': True, 'r"
+    },
+    {
+      "step": "canary against reasoning-parser server (reasoning_parser unknown)",
+      "http": 200,
+      "guard": {
+        "guard": {
+          "ok": false,
+          "stage": "constrained",
+          "message": "Server ignored response_format json_schema (got 'banana'). It is most likely running with --reasoning-parser; use the no-reasoning container for constrained runs.",
+          "served_models": [],
+          "constrained_enforced": false
+        },
+        "constrained_allowed": false,
+        "json_schema": true
+      }
+    },
+    {
+      "step": "start no-reasoning entry with json_schema=true",
+      "http": 200,
+      "ready_after_s": 55.6,
+      "command": "/usr/bin/docker run --rm --name physical-ai-vllm --runtime nvidia --network host --ipc host -v ~/models/cosmos-reason2-2b:/models/cosmos-reason2-2b -v ~/.cache/vllm:/root/.cache/vllm ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04 vllm serve /models/cosmos-reason2-2b --served-model-name nvidia/cosmos-reason2-2b --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.25 --max-model-len 8192 --media-io-kwargs {\"video\": {\"num_frames\": -1}}"
+    },
+    {
+      "step": "canary against no-reasoning server",
+      "http": 200,
+      "guard": {
+        "guard": {
+          "ok": true,
+          "stage": "ok",
+          "message": "json_schema enforced by server",
+          "served_models": [],
+          "constrained_enforced": true
+        },
+        "constrained_allowed": true,
+        "json_schema": true
+      }
+    }
+  ],
+  "image": "ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04",
+  "finished_at": "2026-10-02T13:02:33Z"
+}

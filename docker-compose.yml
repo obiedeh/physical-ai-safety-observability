@@ -32,6 +32,7 @@ services:
       - examples/sample_source.json
       - --backend
       - http://api:8080
+      - --once
 
 volumes:
   observability-data:

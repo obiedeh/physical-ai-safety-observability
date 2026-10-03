@@ -1,10 +1,13 @@
 import json
 import sqlite3
+from datetime import UTC, datetime
 from pathlib import Path
 from threading import Lock
+from typing import Any
 
 from api.models.camera import Camera, CameraRegistration
 from api.services.migrations import run_migrations
+from edge.redaction import mask_url
 from events.lifecycle import can_group_event, merge_event_into_incident
 from events.schemas import Incident, PersonPPEFeedback, SafetyEvent
 from runtime_settings import load_settings
@@ -73,6 +76,18 @@ class SQLiteStore:
                     payload TEXT NOT NULL
                 );
                 CREATE INDEX IF NOT EXISTS idx_feedback_timestamp ON feedback(timestamp);
+                CREATE TABLE IF NOT EXISTS camera_configs (
+                    camera_id TEXT PRIMARY KEY,
+                    enabled INTEGER NOT NULL DEFAULT 1,
+                    payload TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS settings (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                );
                 """
             )
 
@@ -82,9 +97,14 @@ class SQLiteStore:
             connection.execute("DELETE FROM incidents")
             connection.execute("DELETE FROM cameras")
             connection.execute("DELETE FROM feedback")
+            connection.execute("DELETE FROM camera_configs")
+            connection.execute("DELETE FROM settings")
 
     def register_camera(self, registration: CameraRegistration) -> Camera:
-        camera = Camera(**registration.model_dump())
+        # Registrations are metadata only; a credentialed URI is never stored.
+        data = registration.model_dump()
+        data["source_uri"] = mask_url(str(data.get("source_uri", "")))
+        camera = Camera(**data)
         with self._lock, self._connect() as connection:
             connection.execute(
                 """
@@ -109,6 +129,80 @@ class SQLiteStore:
                     "SELECT payload FROM cameras ORDER BY registered_at"
                 ).fetchall()
             return [Camera.model_validate_json(row["payload"]) for row in rows]
+
+    # ── Camera configuration (UI-driven; passwords encrypted in the payload) ──
+
+    def list_camera_configs(self, *, enabled_only: bool = False) -> list[dict[str, Any]]:
+        query = "SELECT camera_id, enabled, payload, created_at, updated_at FROM camera_configs"
+        if enabled_only:
+            query += " WHERE enabled = 1"
+        query += " ORDER BY created_at"
+        with self._lock, self._connect() as connection:
+            rows = connection.execute(query).fetchall()
+        return [_camera_config_row(row) for row in rows]
+
+    def get_camera_config(self, camera_id: str) -> dict[str, Any] | None:
+        with self._lock, self._connect() as connection:
+            row = connection.execute(
+                "SELECT camera_id, enabled, payload, created_at, updated_at FROM camera_configs "
+                "WHERE camera_id = ?",
+                (camera_id,),
+            ).fetchone()
+        return _camera_config_row(row) if row else None
+
+    def save_camera_config(self, camera_id: str, payload: dict[str, Any], *, enabled: bool) -> dict[str, Any]:
+        now = datetime.now(UTC).isoformat()
+        with self._lock, self._connect() as connection:
+            connection.execute(
+                """
+                INSERT INTO camera_configs(camera_id, enabled, payload, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?)
+                ON CONFLICT(camera_id) DO UPDATE SET
+                    enabled=excluded.enabled,
+                    payload=excluded.payload,
+                    updated_at=excluded.updated_at
+                """,
+                (camera_id, 1 if enabled else 0, json.dumps(payload), now, now),
+            )
+        result = self.get_camera_config(camera_id)
+        assert result is not None
+        return result
+
+    def set_camera_config_enabled(self, camera_id: str, enabled: bool) -> dict[str, Any] | None:
+        now = datetime.now(UTC).isoformat()
+        with self._lock, self._connect() as connection:
+            cursor = connection.execute(
+                "UPDATE camera_configs SET enabled = ?, updated_at = ? WHERE camera_id = ?",
+                (1 if enabled else 0, now, camera_id),
+            )
+            if cursor.rowcount == 0:
+                return None
+        return self.get_camera_config(camera_id)
+
+    def delete_camera_config(self, camera_id: str) -> bool:
+        with self._lock, self._connect() as connection:
+            cursor = connection.execute(
+                "DELETE FROM camera_configs WHERE camera_id = ?", (camera_id,)
+            )
+            return cursor.rowcount > 0
+
+    # ── Runtime settings (key → JSON) ─────────────────────────────────────────
+
+    def get_setting(self, key: str) -> dict[str, Any] | None:
+        with self._lock, self._connect() as connection:
+            row = connection.execute("SELECT value FROM settings WHERE key = ?", (key,)).fetchone()
+        return json.loads(row["value"]) if row else None
+
+    def put_setting(self, key: str, value: dict[str, Any]) -> None:
+        now = datetime.now(UTC).isoformat()
+        with self._lock, self._connect() as connection:
+            connection.execute(
+                """
+                INSERT INTO settings(key, value, updated_at) VALUES (?, ?, ?)
+                ON CONFLICT(key) DO UPDATE SET value=excluded.value, updated_at=excluded.updated_at
+                """,
+                (key, json.dumps(value), now),
+            )
 
     def add_feedback(self, feedback: PersonPPEFeedback) -> PersonPPEFeedback:
         with self._lock, self._connect() as connection:
@@ -193,13 +287,31 @@ class SQLiteStore:
         metrics.observe_event(event)
         return event
 
-    def list_events(self) -> list[SafetyEvent]:
+    def list_events(
+        self, *, camera_id: str | None = None, limit: int | None = None, newest_first: bool = False
+    ) -> list[SafetyEvent]:
+        clauses = ["camera_id = ?"] if camera_id else []
+        params: list[Any] = [camera_id] if camera_id else []
+        where = f"WHERE {' AND '.join(clauses)}" if clauses else ""
+        order = "DESC" if newest_first else "ASC"
+        limit_sql = f" LIMIT {int(limit)}" if limit else ""
         with self._lock:
             with self._connect() as connection:
                 rows = connection.execute(
-                    "SELECT payload FROM events ORDER BY timestamp"
+                    f"SELECT payload FROM events {where} ORDER BY timestamp {order}{limit_sql}",
+                    params,
                 ).fetchall()
             return [SafetyEvent.model_validate_json(row["payload"]) for row in rows]
+
+    def count_events(self, camera_id: str | None = None) -> int:
+        with self._lock, self._connect() as connection:
+            if camera_id:
+                row = connection.execute(
+                    "SELECT COUNT(*) FROM events WHERE camera_id = ?", (camera_id,)
+                ).fetchone()
+            else:
+                row = connection.execute("SELECT COUNT(*) FROM events").fetchone()
+        return int(row[0]) if row else 0
 
     def list_incidents(self) -> list[Incident]:
         with self._lock:
@@ -237,6 +349,15 @@ class SQLiteStore:
             if can_group_event(incident, event, self.incident_window_seconds):
                 return incident
         return None
+
+
+def _camera_config_row(row: sqlite3.Row) -> dict[str, Any]:
+    payload = json.loads(row["payload"])
+    payload["camera_id"] = row["camera_id"]
+    payload["enabled"] = bool(row["enabled"])
+    payload["created_at"] = row["created_at"]
+    payload["updated_at"] = row["updated_at"]
+    return payload
 
 
 store = SQLiteStore()
