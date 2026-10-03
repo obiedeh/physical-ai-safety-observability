@@ -2,6 +2,7 @@ from datetime import UTC, datetime
 from typing import Any
 from urllib.parse import urlsplit, urlunsplit
 
+from edge.redaction import mask_url
 from events.schemas import Evidence, RuntimeContext
 from evidence.hashing import hash_text
 
@@ -32,8 +33,8 @@ def build_evidence(
 def redact_uri_credentials(uri: str) -> str:
     parts = urlsplit(uri)
     if not parts.username and not parts.password:
-        return uri
+        return mask_url(uri)
     host = parts.hostname or ""
     if parts.port is not None:
         host = f"{host}:{parts.port}"
-    return urlunsplit((parts.scheme, host, parts.path, parts.query, parts.fragment))
+    return mask_url(urlunsplit((parts.scheme, host, parts.path, parts.query, parts.fragment)))
