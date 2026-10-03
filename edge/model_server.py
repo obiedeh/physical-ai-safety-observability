@@ -82,6 +82,15 @@ CATALOG: list[CatalogEntry] = [
 ]
 
 
+def _arg_after(args: list[str], flag: str) -> str | None:
+    for i, arg in enumerate(args):
+        if arg == flag and i + 1 < len(args):
+            return args[i + 1]
+        if arg.startswith(flag + "="):
+            return arg.split("=", 1)[1]
+    return None
+
+
 def find_entry(key: str) -> CatalogEntry | None:
     return next((e for e in CATALOG if e.key == key or e.served_model_name == key), None)
 
@@ -144,7 +153,13 @@ def annotate_catalog() -> dict[str, Any]:
 
 
 class ModelServerManager:
-    """Owns one vLLM container started by this app; never touches other containers."""
+    """Owns one vLLM container started by this app; never touches other containers.
+
+    The container is detached (``docker run -d``) so it outlives an API restart:
+    another app on the device may be using the same model server. On start-up
+    the manager adopts a container of its name that is still running; only an
+    explicit stop (UI / API) removes it.
+    """
 
     def __init__(self, container_name: str = "physical-ai-vllm") -> None:
         self.container_name = container_name
@@ -154,6 +169,35 @@ class ModelServerManager:
         self._started_at: float | None = None
         self._log: list[str] = []
         self._lock = threading.RLock()
+        self._adopted = self._adopt_running()
+
+    def _adopt_running(self) -> bool:
+        docker = shutil.which("docker")
+        if not docker:
+            return False
+        probe = subprocess.run(
+            [docker, "inspect", "--format",
+             "{{.State.Running}}|{{.Config.Image}}|{{join .Config.Cmd \" \"}}", self.container_name],
+            capture_output=True, text=True, check=False,
+        )
+        if probe.returncode != 0:
+            return False
+        running, _image, cmd = (probe.stdout.strip().split("|", 2) + ["", ""])[:3]
+        if running != "true":
+            return False
+        served = _arg_after(cmd.split(), "--served-model-name")
+        port = _arg_after(cmd.split(), "--port")
+        parser = _arg_after(cmd.split(), "--reasoning-parser")
+        entry = next(
+            (e for e in CATALOG if e.served_model_name == served
+             and (e.reasoning_parser or None) == (parser or None)),
+            None,
+        )
+        self._entry = entry
+        self._port = int(port) if port and port.isdigit() else 8000
+        self._started_at = time.time()
+        self._log = [f"adopted running container {self.container_name}: {cmd}"]
+        return True
 
     def start(self, entry: CatalogEntry, *, port: int = 8000, model_path: str | None = None) -> dict:
         docker = shutil.which("docker")
@@ -169,7 +213,7 @@ class ModelServerManager:
                 f"{entry.label} needs ~{required:.0f} GB but only {avail:.0f} GB is available."
             )
         with self._lock:
-            if self._proc is not None and self._proc.poll() is None:
+            if self._container_running():
                 if self._entry is not None and self._entry.key == entry.key and self._port == port:
                     return self.status()
                 self._stop_locked()
@@ -178,7 +222,7 @@ class ModelServerManager:
             cache.mkdir(parents=True, exist_ok=True)
             mount = f"/models/{path.name}"
             command = [
-                docker, "run", "--rm", "--name", self.container_name,
+                docker, "run", "-d", "--rm", "--name", self.container_name,
                 "--runtime", "nvidia", "--network", "host", "--ipc", "host",
                 "-v", f"{path}:{mount}",
                 "-v", f"{cache}:/root/.cache/vllm",
@@ -192,38 +236,57 @@ class ModelServerManager:
             ]
             if entry.reasoning_parser:
                 command += ["--reasoning-parser", entry.reasoning_parser]
-            self._proc = subprocess.Popen(
-                command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
-            )
+            launched = subprocess.run(command, capture_output=True, text=True, check=False)
             self._entry = entry
             self._port = port
             self._started_at = time.time()
-            self._log = [" ".join(command)]
+            self._adopted = False
+            self._log = [" ".join(command), launched.stdout.strip() or launched.stderr.strip()]
+            if launched.returncode != 0:
+                raise RuntimeError(f"docker run failed: {launched.stderr.strip()[:300]}")
+            # Follow the container log so the UI can show progress.
+            self._proc = subprocess.Popen(
+                [docker, "logs", "-f", self.container_name],
+                stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1,
+            )
             threading.Thread(target=self._drain, daemon=True).start()
             return self.status()
 
     def stop(self) -> dict:
+        """Explicit stop from the UI/API: removes the container."""
         with self._lock:
             self._stop_locked()
             return self.status()
 
+    def detach(self) -> None:
+        """Called on API shutdown: leave the container running, stop following its log."""
+        with self._lock:
+            if self._proc is not None and self._proc.poll() is None:
+                self._proc.terminate()
+            self._proc = None
+
+    def _container_running(self) -> bool:
+        docker = shutil.which("docker")
+        if not docker:
+            return False
+        probe = subprocess.run(
+            [docker, "inspect", "--format", "{{.State.Running}}", self.container_name],
+            capture_output=True, text=True, check=False,
+        )
+        return probe.returncode == 0 and probe.stdout.strip() == "true"
+
     def _stop_locked(self) -> None:
-        if self._proc is None:
-            return
-        if self._proc.poll() is None:
-            docker = shutil.which("docker")
-            if docker:
-                subprocess.run(
-                    [docker, "stop", "-t", "20", self.container_name], capture_output=True, check=False
-                )
+        docker = shutil.which("docker")
+        if docker and self._container_running():
+            subprocess.run(
+                [docker, "stop", "-t", "20", self.container_name], capture_output=True, check=False
+            )
+        if self._proc is not None and self._proc.poll() is None:
             self._proc.terminate()
-            try:
-                self._proc.wait(timeout=25)
-            except subprocess.TimeoutExpired:
-                self._proc.kill()
-                self._proc.wait()
         self._proc = None
         self._started_at = None
+        self._entry = None
+        self._adopted = False
         self._log.append("managed model server stopped")
 
     def _drain(self) -> None:
@@ -241,21 +304,25 @@ class ModelServerManager:
     def status(self) -> dict:
         with self._lock:
             entry = self._entry.to_dict() if self._entry else None
+            running = self._container_running() if (self._entry or self._started_at) else False
             base = {
                 "container_name": self.container_name,
                 "entry": entry,
-                "endpoint": f"http://127.0.0.1:{self._port}/v1" if self._entry else None,
+                "endpoint": f"http://127.0.0.1:{self._port}/v1" if running else None,
                 "reasoning_parser": self._entry.reasoning_parser if self._entry else None,
+                "adopted": self._adopted,
                 "log_tail": list(self._log[-60:]),
             }
-            if self._proc is None:
+            if not running:
+                if self._started_at is not None:
+                    # Launched by us but no longer running: the container exited.
+                    self._started_at = None
+                    return {**base, "state": "failed", "pid": None, "uptime_s": None, "exit_code": 1}
                 return {**base, "state": "stopped", "pid": None, "uptime_s": None, "exit_code": None}
-            code = self._proc.poll()
-            running = code is None
             return {
                 **base,
-                "state": "starting" if running else ("failed" if code else "stopped"),
-                "pid": self._proc.pid,
-                "uptime_s": round(time.time() - self._started_at, 1) if running and self._started_at else None,
-                "exit_code": code,
+                "state": "starting",
+                "pid": self._proc.pid if self._proc else None,
+                "uptime_s": round(time.time() - self._started_at, 1) if self._started_at else None,
+                "exit_code": None,
             }
