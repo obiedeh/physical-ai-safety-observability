@@ -6,6 +6,8 @@ Runtime safety layer for robots and industrial workcells: cameras configured in 
 
 The goal is operational review, not demo object detection. Nothing here acts autonomously.
 
+One-page tour of the system: [showcase](https://obiedeh.github.io/physical-ai-safety-observability/docs/showcase/) (source: [docs/showcase/index.html](docs/showcase/index.html)).
+
 ## Status at a Glance
 
 | Layer | State | What exists | What does not exist yet |
