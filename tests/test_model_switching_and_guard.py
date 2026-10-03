@@ -157,3 +157,34 @@ def test_guard_check_server_reports_model_mismatch(monkeypatch) -> None:
     monkeypatch.setattr(model_guard.httpx, "get", boom)
     down = model_guard.check_server("http://127.0.0.1:8000/v1", "m")
     assert not down.ok and down.stage == "server"
+
+
+def test_model_server_adopts_running_container_and_detach_keeps_it(monkeypatch) -> None:
+    from edge import model_server as ms
+
+    calls: list[list[str]] = []
+
+    class R:
+        def __init__(self, out: str = "", code: int = 0) -> None:
+            self.stdout, self.stderr, self.returncode = out, "", code
+
+    def fake_run(cmd, **kw):
+        calls.append(cmd)
+        if cmd[1] == "inspect" and "{{.State.Running}}|" in cmd[3]:
+            return R("true|img|vllm serve /models/x --served-model-name nvidia/cosmos-reason2-2b "
+                     "--host 0.0.0.0 --port 8000")
+        if cmd[1] == "inspect":
+            return R("true")
+        return R()
+
+    monkeypatch.setattr(ms.shutil, "which", lambda name: "/usr/bin/docker")
+    monkeypatch.setattr(ms.subprocess, "run", fake_run)
+    mgr = ms.ModelServerManager()
+    status = mgr.status()
+    assert status["adopted"] is True and status["state"] == "starting"
+    assert status["entry"]["key"] == "cosmos-reason2-2b"
+    assert status["endpoint"] == "http://127.0.0.1:8000/v1"
+    mgr.detach()
+    assert not any(c[1] == "stop" for c in calls)  # shutdown never stops the container
+    mgr.stop()
+    assert any(c[1] == "stop" for c in calls)
