@@ -1,8 +1,10 @@
 """Model catalog with host preflight, and the app-managed vLLM container."""
 from __future__ import annotations
 
+import logging
+
 import httpx
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel, Field
 
 from api.services.edge import edge_service
@@ -10,6 +12,14 @@ from edge.config_models import ModelSettings
 from edge.model_server import annotate_catalog, find_entry
 
 router = APIRouter(prefix="/models", tags=["models"])
+logger = logging.getLogger("api.models")
+
+
+class StopServerIn(BaseModel):
+    # The model server may be shared with another app on the device: stopping
+    # it is deliberate, logged with the caller, and never implicit.
+    confirm: bool = False
+    reason: str = ""
 
 
 class StartServerIn(BaseModel):
@@ -53,6 +63,7 @@ def server_start(req: StartServerIn) -> dict:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
     except MemoryError as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
+    edge_service.note_server_event("started by operator", entry=entry.key, port=req.port)
     applied = None
     if req.apply:
         current = edge_service.get_model_settings()
@@ -82,5 +93,16 @@ def server_start(req: StartServerIn) -> dict:
 
 
 @router.post("/server/stop")
-def server_stop() -> dict:
-    return edge_service.model_server.stop()
+def server_stop(req: StopServerIn, request: Request) -> dict:
+    if not req.confirm:
+        raise HTTPException(
+            status_code=409,
+            detail="Stopping the model server affects every app using it; send confirm=true.",
+        )
+    client = request.client.host if request.client else "unknown"
+    logger.warning(
+        "model server stop requested by %s (%s)", client, req.reason or "no reason given"
+    )
+    status = edge_service.model_server.stop()
+    edge_service.note_server_event("stopped by operator", client=client, reason=req.reason)
+    return status

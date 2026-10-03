@@ -198,3 +198,36 @@ def test_disable_and_delete(service: EdgeService) -> None:
     assert service.session(cam.camera_id) is not None
     assert service.delete_camera(cam.camera_id)
     assert service.session(cam.camera_id) is None and service.get_camera(cam.camera_id) is None
+
+
+def test_run_refuses_when_model_server_not_ready_and_aborts_on_outage(service: EdgeService) -> None:
+    cam = service.create_camera(CameraIn(name="Demo", profile="synthetic"))
+    service.model_settings = ModelSettings(backend="cosmos-reason2", endpoint="http://127.0.0.1:1")
+    service.adapter = NoPPEAdapter()
+    with pytest.raises(RuntimeError, match="not ready"):
+        service.start_run(cam.camera_id, "should refuse")
+    # Back to a working model: the run starts, then the server "goes down".
+    service.model_settings = ModelSettings(backend="mock")
+    service.outage_abort_s = 0.5
+    assert _wait(lambda: service.hub.latest.get(cam.camera_id, {}).get("status") == "ok")
+    service.start_run(cam.camera_id, "outage run")
+    assert _wait(lambda: service.run_status()["frames"] >= 1)
+    service.adapter = BrokenAdapter()
+    assert _wait(lambda: service.run_status().get("recording") is False, timeout=8)
+    runs = service.list_runs()
+    report = json.loads(Path(runs[-1]["path"]).read_text())
+    assert report["status"] == "failed" and "model server down" in report["error"]
+    kinds = [e["kind"] for e in report["server"]["events_during_run"]]
+    assert "outage started" in kinds
+    assert "pw@" not in json.dumps(report)
+
+
+def test_stop_endpoint_requires_confirm() -> None:
+    from fastapi.testclient import TestClient
+
+    from api.main import app
+
+    client = TestClient(app)
+    assert client.post("/models/server/stop", json={}).status_code == 409
+    r = client.post("/models/server/stop", json={"confirm": True, "reason": "test"})
+    assert r.status_code == 200 and r.json()["state"] == "stopped"
