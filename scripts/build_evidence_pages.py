@@ -37,6 +37,16 @@ RUNS: list[tuple[str, str, str]] = [
 ]
 
 
+# Commit messages on main were rewritten on 2026-10-03 with no change to any
+# file, which changed commit ids. Artifacts keep the id they recorded.
+REWRITTEN_COMMIT_IDS = {"254ef27": "0b3d9d0"}
+
+
+def _current_sha_note(recorded: object) -> str:
+    current = REWRITTEN_COMMIT_IDS.get(str(recorded))
+    return f" ({current} on main today, identical tree)" if current else ""
+
+
 def load_runs(reports: Path) -> list[dict]:
     runs = []
     known = {name: (caption, short) for name, caption, short in RUNS}
@@ -226,7 +236,7 @@ def build_page(rows: list[dict], charts: dict[str, str], repo_url: str) -> str:
 <body><main>
 <div class="eyebrow">Measured evidence · Jetson AGX Thor</div>
 <h1>Physical AI Safety Observability</h1>
-<p class="lead">Every number on this page is read from a run artifact under <a href="{repo_url}/tree/main/reports/thor">reports/thor/</a>; each row links to its JSON. Device: {html.escape(str(dev.get('host')))}, {html.escape(str(dev.get('soc')))}, {html.escape(str(dev.get('l4t_release')))}, {html.escape(str(dev.get('nvpmodel')))}. Runs on {', '.join(dates)}, repository commit {html.escape(str(dev.get('git_sha')))}. These are runtime-overhead and inference-cost measurements on simulation footage; none is a detection-quality number.</p>
+<p class="lead">Every number on this page is read from a run artifact under <a href="{repo_url}/tree/main/reports/thor">reports/thor/</a>; each row links to its JSON. Device: {html.escape(str(dev.get('host')))}, {html.escape(str(dev.get('soc')))}, {html.escape(str(dev.get('l4t_release')))}, {html.escape(str(dev.get('nvpmodel')))}. Runs on {', '.join(dates)}, repository commit {html.escape(str(dev.get('git_sha')))} as recorded by the artifacts{_current_sha_note(dev.get('git_sha'))}. These are runtime-overhead and inference-cost measurements on simulation footage; none is a detection-quality number.</p>
 <div class="cards">{''.join(cards)}</div>
 
 <h2>Runtime overhead, mock adapter</h2>
