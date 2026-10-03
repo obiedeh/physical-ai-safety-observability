@@ -1,0 +1,28 @@
+# systemd user unit for the Physical AI Safety Observability API + operator UI.
+#
+#   mkdir -p ~/.config/systemd/user ~/.local/share/physical-ai-safety
+#   printf '{"app":{"database_path":"%s/.local/share/physical-ai-safety/db.sqlite3"}}\n' "$HOME" \
+#       > ~/.local/share/physical-ai-safety/config.json
+#   cp deploy/physical-ai-safety.service ~/.config/systemd/user/
+#   systemctl --user daemon-reload && systemctl --user enable --now physical-ai-safety
+#   loginctl enable-linger $USER      # keep it running without a login session
+#
+# Camera credentials are entered in the UI and stored encrypted; the key file
+# lives under ~/.config/physical-ai-safety/ (never in the repo).
+[Unit]
+Description=Physical AI Safety Observability API and operator UI
+After=network-online.target docker.service
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=%h/github/physical-ai-safety-observability
+Environment=PHYSICAL_AI_CONFIG=%h/.local/share/physical-ai-safety/config.json
+Environment=PHYSICAL_AI_SECRET_KEY_FILE=%h/.config/physical-ai-safety/secret.key
+Environment=PHYSICAL_AI_BACKEND=http://127.0.0.1:8081
+ExecStart=%h/github/physical-ai-safety-observability/.venv/bin/uvicorn api.main:app --host 0.0.0.0 --port 8081
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+
+[Install]
+WantedBy=default.target

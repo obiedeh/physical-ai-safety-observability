@@ -30,7 +30,7 @@ RUNS: list[tuple[str, str, str]] = [
     ("mock_no_post", "mock, unpaced, no posting", "mock, unpaced"),
     ("cosmos2b_video_60", "Cosmos-Reason2-2B, think block, 4096 cap", "2B, think"),
     ("cosmos2b_video_60_nothink", "Cosmos-Reason2-2B, no think, 512 cap", "2B, no think"),
-    ("cosmos2b_video_60_schema_v1prompt", "Cosmos-Reason2-2B, grammar, original prompt", "2B, grammar, old prompt"),
+    ("cosmos2b_video_60_schema_v1prompt", "Cosmos-Reason2-2B, grammar, original prompt — FAILURE CASE: empty output on every frame; latency and frames/s are the cost of generating nothing", "2B, grammar, old prompt (empty)"),
     ("cosmos2b_video_60_schema", "Cosmos-Reason2-2B, grammar, JSON-only prompt", "2B, grammar"),
     ("cosmos8b_video_60_nothink", "Cosmos-Reason2-8B, no think, 512 cap", "8B, no think"),
     ("cosmos8b_video_60_schema", "Cosmos-Reason2-8B, grammar, JSON-only prompt", "8B, grammar"),
@@ -167,7 +167,7 @@ h1{font-size:2rem;margin:.3rem 0 .6rem}h2{font-size:1.35rem;margin:2.4rem 0 .6re
 th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left;white-space:normal}th{color:var(--muted);font-weight:600;background:#17223a}
 a{color:var(--accent)}.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:16px;margin:16px 0}.charts figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto}
 .charts svg{max-width:100%;height:auto}figcaption{font-size:.82rem;color:var(--muted);margin-top:6px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:.75rem;color:var(--muted);margin-right:6px}
-.warn{color:var(--warn)}.risk{color:var(--risk)}.good{color:var(--good)}footer{margin-top:40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:16px}
+.warn{color:var(--warn)}.risk{color:var(--risk)}.good{color:var(--good)}.muted{color:var(--muted)}tr.failure td{color:var(--muted);font-style:italic}footer{margin-top:40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:16px}
 """
 
 
@@ -196,12 +196,12 @@ def build_page(rows: list[dict], charts: dict[str, str], repo_url: str) -> str:
         for r in mock
     )
     model_rows = "".join(
-        f"<tr><td>{html.escape(r['caption'])}<br><small>{link(r)}</small></td><td>{fmt(r['frames'])}</td>"
+        f"<tr class=\"{'failure' if r['name'].endswith('_v1prompt') else ''}\"><td>{html.escape(r['caption'])}<br><small>{link(r)}</small></td><td>{fmt(r['frames'])}</td>"
         f"<td>{fmt(r['inf_p50'], 2)}</td><td>{fmt(r['inf_p95'], 2)}</td><td>{fmt(r['inf_max'], 2)}</td>"
         f"<td>{fmt(r['fps'])}</td><td>{fmt(r['tokens_p50'], 0)}</td><td>{fmt(r['vin_p50'], 0)}</td><td>{fmt(r['vin_peak'], 0)}</td>"
         f"<td>{fmt(r['detections'])}</td><td class=\"{'warn' if r['out_of_vocab'] else 'good'}\">{fmt(r['out_of_vocab'])}</td>"
-        f"<td class=\"{'risk' if r['persons'] else 'good'}\">{fmt(r['persons'])}</td>"
-        f"<td class=\"{'risk' if r['events'] else 'good'}\">{fmt(r['events'])}</td></tr>"
+        f"<td class=\"{'risk' if r['persons'] else ('muted' if r['name'].endswith('_v1prompt') else 'good')}\">{fmt(r['persons'])}</td>"
+        f"<td class=\"{'risk' if r['events'] else ('muted' if r['name'].endswith('_v1prompt') else 'good')}\">{fmt(r['events'])}</td></tr>"
         for r in model
     )
     headline = next((r for r in mock if r["name"] == "mock_30fps_no_post"), None)
@@ -266,12 +266,18 @@ def main() -> int:
     charts_dir = args.reports / "charts"
     charts_dir.mkdir(parents=True, exist_ok=True)
     charts: dict[str, tuple[str, str]] = {}
-    if model:
-        cats = [r["short"] for r in model]
+    # The v1prompt run produced no output; its latency and power say nothing
+    # about inference and are left out of the speed and power charts.
+    charted = [r for r in rows if not r["name"].endswith("_v1prompt")]
+    model_charted = [r for r in model if not r["name"].endswith("_v1prompt")]
+    if model_charted:
+        cats = [r["short"] for r in model_charted]
         charts["model_latency"] = (
             bar_chart("Inference latency per frame, Cosmos-Reason2 on Thor",
-                      [("p50", [r["inf_p50"] for r in model]), ("p95", [r["inf_p95"] for r in model])], cats, "s"),
-            "Per-frame inference latency, p50 and p95, seconds. Reasoning length drives the tail; the grammar removes most of it.")
+                      [("p50", [r["inf_p50"] for r in model_charted]), ("p95", [r["inf_p95"] for r in model_charted])], cats, "s"),
+            "Per-frame inference latency, p50 and p95, seconds. Reasoning length drives the tail; the grammar removes most of it. The empty-output failure case is excluded.")
+    if model:
+        cats = [r["short"] for r in model]
         charts["model_quality"] = (
             bar_chart("Vocabulary and phantom persons on people-free footage",
                       [("out-of-vocab labels", [float(r["out_of_vocab"]) for r in model]),
@@ -284,9 +290,9 @@ def main() -> int:
             bar_chart("Worker throughput, mock adapter", [("frames/s", [r["fps"] for r in mock])], cats, "frames/s", log=True),
             "Achieved frames per second against a 30 fps source; the synchronous POST to the backend is the bottleneck, batching lifts it from 4.4 to 7.1.")
     charts["power"] = (
-        bar_chart("Board input power, VIN p50", [("VIN p50", [(r["vin_p50"] or 0) / 1000 if r["vin_p50"] else None for r in rows])],
-                  [r["short"] for r in rows], "W"),
-        "Board input power at p50 over each run, watts; about 24 W is the device's idle level.")
+        bar_chart("Board input power, VIN p50", [("VIN p50", [(r["vin_p50"] or 0) / 1000 if r["vin_p50"] else None for r in charted])],
+                  [r["short"] for r in charted], "W"),
+        "Board input power at p50 over each run, watts; about 24 W is the device's idle level. The empty-output failure case is excluded.")
     for name, (svg, _) in charts.items():
         (charts_dir / f"{name}.svg").write_text(svg + "\n")
     page = build_page(rows, charts, args.repo_url)

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { api, type Incident, type SafetyEvent } from "@/lib/api";
+import { api, evidenceFrameUrl, type Incident, type SafetyEvent } from "@/lib/api";
 import { usePoll } from "@/lib/hooks";
 import { cn, fmtPct, fmtTime, ruleLabel, shortId } from "@/lib/utils";
 import { Button, Card, Chip, Empty, Notice, Select } from "@/components/ui";
@@ -206,6 +206,18 @@ function EventRows({
                 <dd className="mono break-all">{e.evidence.source_uri}</dd>
                 <dt className="text-muted-foreground">frame hash</dt>
                 <dd className="mono break-all">{e.evidence.frame_hash}</dd>
+                <dt className="text-muted-foreground">frame</dt>
+                <dd>
+                  {/* Stored at event time by the worker; events from before that have no frame (404 → hidden). */}
+                  <a href={evidenceFrameUrl(e.evidence.frame_hash)} target="_blank" rel="noreferrer">
+                    <img
+                      src={evidenceFrameUrl(e.evidence.frame_hash)}
+                      alt="evidence frame"
+                      className="max-h-40 rounded border border-border bg-black"
+                      onError={(ev) => { (ev.currentTarget.parentElement as HTMLElement).replaceChildren(document.createTextNode("no frame stored")); }}
+                    />
+                  </a>
+                </dd>
               </dl>
               <div className="min-w-0 space-y-2">
                 <div className="label">evidence detections</div>

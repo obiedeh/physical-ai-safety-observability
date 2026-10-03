@@ -116,3 +116,20 @@ def test_legacy_registration_redacts_source_uri() -> None:
     assert r.status_code == 200
     assert r.json()["source_uri"] == "rtsp://***:***@192.0.2.9/s"
     assert "pw@" not in client.get("/cameras").text
+
+
+def test_test_connection_with_camera_id_uses_stored_password(monkeypatch) -> None:
+    seen: dict = {}
+
+    def fake_probe(url: str, transport: str) -> dict:
+        seen["url"] = url
+        return {"ok": True, "stage": "ok", "error": None, "masked_url": "m"}
+
+    monkeypatch.setattr(config_routes, "_probe", fake_probe)
+    cam = client.post("/config/cameras", json=TAPO).json()
+    r = client.post(
+        "/config/cameras/test",
+        json={**TAPO, "password": "", "host": "192.0.2.99", "camera_id": cam["camera_id"]},
+    )
+    assert r.status_code == 200 and r.json()["ok"]
+    assert seen["url"] == "rtsp://viewer:s3cret-pass@192.0.2.99:554/stream2"

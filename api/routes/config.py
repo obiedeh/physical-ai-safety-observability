@@ -89,21 +89,31 @@ def _probe(url: str, transport: str) -> dict:
     return data
 
 
+class CameraTestIn(CameraIn):
+    # Editing a saved camera with the password left blank: the stored one is used.
+    camera_id: str | None = None
+
+
 @router.post("/cameras/test")
-def test_unsaved_camera(req: CameraIn) -> dict:
+def test_unsaved_camera(req: CameraTestIn) -> dict:
     profile = get_profile(req.profile)
     if not profile.requires_host:
         return {"ok": True, "stage": "ok", "error": None, "masked_url": "",
                 "note": f"{profile.label} has no stream to probe."}
+    password = req.password
+    if not password and req.camera_id:
+        cfg = edge_service.store.get_camera_config(req.camera_id)
+        if cfg:
+            password = edge_service.secrets.decrypt(cfg.get("password_enc") or "")
     try:
         url = profile.build_url(
-            host=req.host, username=req.username or None, password=req.password or None,
+            host=req.host, username=req.username or None, password=password or None,
             port=req.port, channel=req.channel, quality=req.stream_quality,
             path=req.stream_path or None,
         )
     except CameraConfigError as exc:
         return {"ok": False, "stage": "url", "error": str(exc), "masked_url": ""}
-    REDACTOR.register(req.password)
+    REDACTOR.register(password)
     return _probe(url, req.rtsp_transport)
 
 
