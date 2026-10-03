@@ -1,22 +1,41 @@
 # Physical AI Safety Observability
 
-**Runtime safety layer for robots and industrial workcells: structured safety events, an operator review API, and telemetry hooks. Measured on Jetson AGX Thor: the pipeline's runtime overhead with a mock model, and per-frame inference cost with Cosmos-Reason2-2B served locally by vLLM. Detection quality is not measured; no labelled ground truth exists yet.**
+**Status: Functional. Under active field validation and tuning on live cameras.**
 
-The system turns camera or video input, safety rules, runtime telemetry, and model outputs into safety events an operator can review. The goal is operational review, not demo object detection. Nothing here acts autonomously.
+Runtime safety layer for robots and industrial workcells: cameras configured in a web UI, a vision-language model inspecting frames on the device, safety rules turning its output into structured events, and an operator console to review them. Measured on Jetson AGX Thor: the pipeline's runtime overhead with a mock model, per-frame inference cost with Cosmos-Reason2 served locally by vLLM, and the constrained-decoding guard against the real model server. Detection quality is not measured; no labelled ground truth exists yet.
+
+The goal is operational review, not demo object detection. Nothing here acts autonomously.
 
 ## Status at a Glance
 
 | Layer | State | What exists | What does not exist yet |
 |---|---|---|---|
-| Event model and API | Implemented | FastAPI backend for health, camera registration, event ingestion, incident timelines and metrics; SQLite persistence; Alembic migrations; OpenAPI docs | Operator dashboard |
-| Safety policy engine | Implemented | PPE, restricted zone, proximity risk and unsafe-event rules over structured detections | Zone geometry from camera calibration |
-| Edge worker | Implemented | Frame sampling from synthetic, video-file and RTSP-style sources; adapter interface for models | Live camera deployment |
-| Model adapters | **Measured** (inference cost), 2026-09-09, Jetson AGX Thor, Cosmos-Reason2-2B via vLLM | Deterministic mock adapter; OpenAI-compatible and Cosmos-Reason2 adapters, the latter run against a local vLLM server on device | Any detection-quality measurement (no ground truth) |
-| Telemetry | **Measured** (mock model), 2026-09-09, Jetson AGX Thor | Run artifacts under `reports/thor/` with device provenance, per-frame timings, event counts, process RSS and tegrastats | Any measurement with a real model |
-| Jetson path | **Measured**: worker, backend and a real model on Thor | Worker, FastAPI backend and Cosmos-Reason2-2B inference measured on Thor; see the section below | Sustained-runtime artifacts; live camera |
-| Evidence chain | Implemented | Hashing and evidence-chain helpers under `evidence/` | Artifacts produced through them |
+| Event model and API | Implemented | FastAPI backend for health, event ingestion, incident timelines and metrics; SQLite persistence; Alembic migrations | Authentication (intended for an internal edge network) |
+| Operator UI and configuration | Implemented | Web console served by the API: Live, Cameras, Model, Runs, Events. Cameras, model endpoint and inference cadence are set in the UI, stored in SQLite and applied without a restart | A committed live-camera run through it |
+| Safety policy engine | Implemented | PPE, restricted zone, proximity risk and unsafe-event rules over structured detections; zones drawn per camera in the UI | Zone geometry from camera calibration |
+| Live pipeline | Implemented | One capture thread per camera at native frame rate, an inference worker on its own cadence, and an asynchronous event poster; file and synthetic sources through the `edge.worker` CLI | Its capture rate and packet-to-event latency measured on the Thor |
+| Model adapters | **Measured** (inference cost), 2026-09-09, Jetson AGX Thor, Cosmos-Reason2 2B and 8B via vLLM | Deterministic mock adapter; chat-completions and Cosmos-Reason2 adapters run against a local vLLM server on device | Any detection-quality measurement (no ground truth) |
+| Constrained-mode guard | **Measured**, 2026-10-02, Jetson AGX Thor | Settings validation plus a live canary request that proves the server enforces the JSON schema before any worker uses it | n/a |
+| Telemetry | **Measured**, 2026-09-09, Jetson AGX Thor | Run artifacts under `reports/thor/` with device provenance, per-frame timings, event counts, process RSS and tegrastats, for the mock and the real models | Sustained-runtime measurement |
+| Evidence chain | Implemented | Frame hashing and evidence records on every event; the inference frame behind an event is kept and shown in the Events page | Incident export |
 
 Nothing in this repository measures detection quality. Every run artifact carries device, date, inputs and hashes.
+
+## What it does today
+
+Each item is on `main` and covered by the test suite or by code at the named path. None of it is a performance claim.
+
+**Configuration in the UI.** Cameras are added, edited, enabled, disabled and deleted in the Cameras page: vendor profile (Tapo, Hikvision, Dahua, Amcrest, Axis, Reolink, UniFi Protect, generic RTSP, HTTP MJPEG, browser webcam), host, port, credentials, stream path filled in from the profile, main or sub stream, restricted zones drawn on a snapshot, and which rules run on that camera (`edge/camera_profiles.py`, `api/routes/config.py`). Test connection decodes one frame and returns a thumbnail or a classified error: unreachable, authentication failed, wrong path, codec, timeout (`edge/probe.py`). Passwords are encrypted at rest with a key file outside the repository, are never returned by the API, are only reused for the host and port they were saved for, and are masked in logs, errors, events and run reports (`edge/secrets.py`, `edge/redaction.py`). The interactive command-line prompt is kept as an optional path over the same code (`edge/live_camera.py`).
+
+**Model selection.** The Model page lists the Cosmos-Reason2 containers the device can run, with a memory preflight, and starts or stops the chosen one (`edge/model_server.py`). The endpoint is editable. The container keeps running across API restarts and stopping it needs an explicit, logged confirmation.
+
+**Live pipeline.** Capture, inference and posting are three independent loops. A capture thread per camera decodes at the camera's native rate and streams MJPEG to the browser (`edge/capture.py`). An inference worker samples the latest frame on its own interval, runs the model and the rules (`edge/service.py`). Events and feedback go to an asynchronous poster: a bounded queue drained by its own thread, with retries, a drop counter, and latency measured from frame capture to the backend's acknowledgement (`edge/poster.py`). A model outage shows "inference unavailable" while video keeps playing; no event is invented.
+
+**Constrained decoding is enforced, not documented.** Saving constrained mode against a server started with a reasoning parser is refused, and before any worker uses constrained mode a canary request must prove the server honours the schema (`edge/model_guard.py`). See the measured probe below.
+
+**Measured runs from the UI.** The Runs page records a run and writes a `run-report-v1` artifact under `reports/<host>/` in the same shape as the committed Thor runs, with capture, transport and model-server blocks added. A run refuses to start when the model server is not ready and aborts, marked failed, if the server stays down mid-run.
+
+**Deployment.** A systemd user unit runs the API and UI with a persistent log (`deploy/physical-ai-safety.service`).
 
 ## Measured on Jetson AGX Thor, 2026-09-09
 
@@ -36,7 +55,7 @@ The mock adapter returns fixed detections at microsecond cost, so these figures 
 | unpaced, no posting | 500 | 3078 frames/s | 0.1648 / 0.2257 / 0.2874 ms | n/a | run too short to sample | [`reports/thor/mock_no_post.json`](reports/thor/mock_no_post.json) |
 
 - At camera-rate pacing the worker keeps up: 28.588 frames/s against a 30 frames/s source, rule evaluation under 1.2 ms p99, board power at the device's idle level (about 24 W).
-- The synchronous POST to the backend is the bottleneck. Per-event posting costs 161 ms p50 per frame for four events and caps throughput at 4.357 frames/s. Batching the frame's events into one `/events/batch` request (one transaction) cuts that to 68 ms p50 and lifts throughput to 7.075 frames/s, still far from the 30 frames/s source: the remaining cost is per-event incident grouping inside SQLite. Asynchronous posting off the capture thread is the next runtime fix.
+- In these runs the synchronous POST to the backend is the bottleneck. Per-event posting costs 161 ms p50 per frame for four events and caps throughput at 4.357 frames/s. Batching the frame's events into one `/events/batch` request (one transaction) cuts that to 68 ms p50 and lifts throughput to 7.075 frames/s, still far from the 30 frames/s source: the remaining cost is per-event incident grouping inside SQLite. Posting is now asynchronous and off the capture and inference threads (`edge/poster.py`); its effect has not been measured on the Thor, so these synchronous figures remain the only committed numbers.
 - Peak process RSS 0.061 GB; junction temperature peak 40.8 C. These are 60 to 90 second runs, not sustained validation.
 - Event counts are exactly four per frame because the mock detections trip every rule on every frame.
 
@@ -60,7 +79,7 @@ What these numbers say, and do not say:
 - Latency is dominated by reasoning length: the three slowest frames produced 977, 825 and 815 completion tokens at a steady 61 tokens/s. A 2B reasoning model on this device costs 3 to 15 s per frame with this prompt, so it is a periodic review model, not a per-frame detector. Capping `max_tokens` or disabling the think block is the obvious next measurement.
 - The model does not hold the label vocabulary: 12 of the detections are a literal echo of the schema string and 47 use labels outside the schema (sphere 28, cube 15, ball 3, square 1) for the game pieces, 59 of 97 in all. The parser accepted them; the policy engine ignored them because none is a person. This is recorded, not hidden, and it is why no accuracy is claimed.
 - Board power under a real model is 67 W p50 against about 24 W idle for the mock path. The first attempt at this run failed on a 60 s adapter timeout at frame 26 ([log](reports/thor/cosmos2b_video_60_attempt1_timeout.log)); the timeout is now a command-line option and a failed run writes a partial artifact with the error.
-- No ground truth exists for this footage, so nothing here is precision or recall. That measurement needs the authored simulation scenes with known PPE and zone states; see Next Work.
+- No ground truth exists for this footage, so nothing here is precision or recall. That measurement needs the authored simulation scenes with known PPE and zone states; see Planned upgrades.
 
 Four runs on the same 60 frames, same server, same device. Each column is one artifact under `reports/thor/`.
 
@@ -84,6 +103,21 @@ What the four columns say together:
 - Constrained output exposes the real problem: on footage with no people, the model labelled six detections "person", and five of those tripped PPE and proximity rules, seven false safety events. Vocabulary compliance is not detection quality. Only labelled ground truth can turn this into a precision and recall number, which is why that is the next step.
 - A server detail worth recording: with vLLM 0.14's `--reasoning-parser qwen3` enabled, `response_format` JSON schema is accepted but not enforced. The two constrained runs used a second container without the parser (`cosmos2b-vllm-noreason`), otherwise identical. This is now enforced in code and measured: [`reports/thor/constrained_guard_probe.json`](reports/thor/constrained_guard_probe.json) (2026-10-02) shows the reasoning-parser container answering an enum-constrained canary with `banana` and the guard refusing constrained mode, and the no-reasoning container honouring the grammar.
 - Evidence caveats for this table: every artifact records `git_sha 254ef27` because the recorder stores `HEAD`, but the `--report`, `--post-batch`, `--no-think`, `--max-tokens` and `--json-schema` flags used to produce them were committed afterwards (cd27117, 5c5bfb3, 54ef84b); the runs came from a working tree ahead of that commit. The run log of the JSON-only constrained run was not captured; the file that carried its name was a byte-for-byte copy of the failure case's log and has been removed. The JSON artifact and its tegrastats sidecar are the record for that run.
+
+#### Constrained-mode guard, measured 2026-10-02
+
+The application now starts the model container itself and refuses constrained runs against a server that would ignore the schema. `scripts/guard_probe.py` drove the API on the Thor against the real vLLM 0.14 containers; the result is committed as [`reports/thor/constrained_guard_probe.json`](reports/thor/constrained_guard_probe.json).
+
+| Step | Result |
+|---|---|
+| Start the reasoning-parser container with constrained mode requested | Refused, HTTP 422 |
+| Start the reasoning-parser container in think mode | Ready after 55.6 s |
+| Save model settings with constrained mode and the reasoning-parser flag set | Refused, HTTP 422 |
+| Canary request against the reasoning-parser server, parser flag left unknown | Server answered `banana` instead of the only value the schema allows; guard refused constrained mode |
+| Start the container without the reasoning parser, constrained mode requested | Ready after 55.6 s |
+| Canary request against that server | Schema value returned; constrained mode allowed |
+
+The canary is one request whose schema permits a single value while the prompt asks for a different word. This confirms on the device what the table above could only state: vLLM 0.14 accepts a JSON schema but does not enforce it when the reasoning parser is on. No camera input was involved in this probe.
 
 #### Model size: Cosmos-Reason2-8B on the same frames
 
@@ -113,7 +147,7 @@ docker run -d --name cosmos2b-vllm --runtime=nvidia --network host --ipc host \
   vllm serve /models/cosmos-reason2-2b --served-model-name nvidia/cosmos-reason2-2b \
   --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.25 --max-model-len 8192 --reasoning-parser qwen3
 python -m edge.worker --source examples/thor_video_source.json --adapter cosmos-reason2 \
-  --adapter-endpoint http://127.0.0.1:8000/v1 --model nvidia/cosmos-reason2-2b \
+  --adapter-endpoint http://localhost:8000/v1 --model nvidia/cosmos-reason2-2b \
   --inference-timeout-seconds 240 --no-post --once --report reports/thor/cosmos2b_video_60.json
 # constrained run: start the server WITHOUT --reasoning-parser, then add --no-think --max-tokens 512 --json-schema
 ```
@@ -127,29 +161,40 @@ python -m edge.worker --source examples/synthetic_30fps_source.json --adapter mo
 ## Architecture
 
 ```text
-Camera / Video Source
-        |
-        v
-Edge Worker -> VLM Adapter -> Safety Policy Engine -> FastAPI Backend
-        |                                                |
-        v                                                v
- Runtime Telemetry                              Operator/Event APIs
+ camera (RTSP / HTTP MJPEG / browser webcam)        video file / synthetic source
+        |                                                     |
+        v                                                     v
+ capture thread per camera -> latest-frame slot        edge.worker CLI
+        |                          |                          |
+        v                          v (inference interval)     |
+ MJPEG to the Live page     vision-language model  <----------+
+                            (Cosmos-Reason2 via vLLM, or mock)
+                                   |
+                                   v
+                          safety policy engine
+                                   |
+                                   v
+                 asynchronous poster -> FastAPI backend -> SQLite
+                                                |
+                                                v
+                     operator console: Live, Cameras, Model, Runs, Events
 ```
-
-Diagrams: [system](docs/diagrams/system-architecture.mmd), [runtime flow](docs/diagrams/runtime-flow.mmd), [data flow](docs/diagrams/data-flow.mmd), [deployment view](docs/diagrams/deployment-view.mmd). Overview: [docs/architecture.md](docs/architecture.md).
 
 ## Repository Layout
 
 ```text
 api/          FastAPI application and API routes
-edge/         Edge worker, frame sampling, model adapter interfaces
-rules/        Safety policy evaluation logic
-telemetry/    Runtime metrics and observability helpers
-evidence/     Hashing and evidence-chain helpers
-configs/      Local and Jetson-oriented config examples
-examples/     Demo events and sample video-source inputs
-docs/         Architecture, deployment, schemas, roadmap
-tests/        Unit tests for API and safety logic
+edge/         capture, live service, async poster, model server and guard,
+              camera profiles, probe, secrets, redaction, worker CLI, adapters
+rules/        safety policy evaluation logic
+spatial/      zones and polygon tests
+telemetry/    runtime metrics, run reports
+evidence/     hashing and evidence records
+web/          operator console (Vite, React, TypeScript)
+deploy/       systemd unit
+scripts/      evidence page generator, guard probe
+reports/      committed run artifacts and the generated evidence page
+tests/        API, configuration, redaction, guard, poster and live-service tests
 ```
 
 ## Quick Start
@@ -159,20 +204,24 @@ git clone https://github.com/obiedeh/physical-ai-safety-observability.git
 cd physical-ai-safety-observability
 python -m venv .venv
 source .venv/bin/activate
-pip install -e .[dev]
-uvicorn api.main:app --reload --port 8080
+pip install -e ".[dev]"
+
+cd web && pnpm install && pnpm build && cd ..
+uvicorn api.main:app --port 8080
 ```
 
-In another terminal:
+Open `http://localhost:8080`. Add a camera in Cameras (the "Synthetic test feed" profile needs no hardware), press Test connection, save. Choose the model in Model. Watch Live and Events. With no model server the default mock adapter produces fixed detections, labelled as such.
+
+The file and synthetic worker still runs from the command line:
 
 ```bash
 python -m edge.worker \
   --config configs/local.json \
   --source examples/sample_source.json \
-  --backend http://127.0.0.1:8080
+  --backend http://localhost:8080 --once
 ```
 
-Open `http://127.0.0.1:8080/health`, `/docs`, and `/metrics`. Apply migrations manually when needed:
+Run as a service on the device: see the header of [`deploy/physical-ai-safety.service`](deploy/physical-ai-safety.service). API docs are at `/docs`, Prometheus metrics at `/metrics`. Apply migrations manually when needed:
 
 ```bash
 PHYSICAL_AI_CONFIG=configs/local.json alembic upgrade head
@@ -193,44 +242,36 @@ Each event carries camera ID, timestamp, rule ID, severity, confidence, evidence
 
 ## Model Integration
 
-The VLM adapter is intentionally mocked so the event model, policy engine and review flow can be tested deterministically. Real adapters sit behind the same interface: NVIDIA Cosmos Reasoning or VLM endpoints, Gemma-style multimodal endpoints, local vLLM OpenAI-compatible APIs, Jetson-hosted inference services. Cosmos-Reason2 through NVIDIA NIM's OpenAI-compatible API is the intended first real backend:
+The mock adapter is the default so the event model, policy engine and review flow can be tested deterministically. Real models sit behind the same interface: the Cosmos-Reason2 adapter and a generic chat-completions adapter, both measured or exercised against a local vLLM server on the Thor. In the UI the model is chosen in the Model page; from the command line:
 
 ```bash
 python -m edge.worker \
   --config configs/cosmos_reasoning.json \
   --source examples/sample_source.json \
-  --backend http://127.0.0.1:8080 \
+  --backend http://localhost:8080 \
   --adapter cosmos-reason2 \
-  --adapter-endpoint http://127.0.0.1:8000/v1 \
-  --model nvidia/cosmos-reason2-2b
+  --adapter-endpoint http://localhost:8000/v1 \
+  --model nvidia/cosmos-reason2-2b --once
 ```
 
-Video or RTSP input needs the optional OpenCV dependency (`pip install -e .[opencv]`); set `source_type` to `video_file` or `rtsp` in the source JSON.
+Live cameras are decoded with PyAV, a core dependency. The `edge.worker` CLI reads video files through the optional OpenCV dependency (`pip install -e ".[opencv]"`).
 
-## Runtime Paths
+## Not yet measured
 
-- **Demo path, today:** Linux local development with the deterministic mock model.
-- **Jetson path:** `PHYSICAL_AI_CONFIG=configs/jetson.json` with the same commands. This is a deployment shape, not hardware performance evidence. Latency, memory and sustained-runtime artifacts must be committed before any measured Jetson readiness is claimed.
-- **Real VLM path:** `configs/cosmos_reasoning.json` with `COSMOS_API_KEY` set.
+The system runs end to end on the device, but none of the following has a committed measurement.
 
-## What Is Not Established
+- **Live-camera latency and power on the Thor.** Every real-model run above used simulation footage read from a file. No run through a live camera has been committed, so capture rate, dropped frames, packet-to-event latency and board power with a camera attached are unknown. The asynchronous poster's effect on throughput is likewise unmeasured.
+- **Rule accuracy against known scenes.** There is no labelled ground truth, so no precision or recall for any rule. The constrained 2B run reported people in people-free footage; only ground truth can turn that into a rate.
+- **Calibration error.** Zones are drawn by hand on a snapshot and the proximity rule uses a fixed pixel distance. Neither is derived from camera calibration, and the error this introduces has not been characterised. This system does not estimate speed.
+- **Long-run stability.** The committed runs last 60 to 390 seconds. Behaviour over hours or days (reconnects, memory, store growth) has not been measured.
 
-- No model has been run against real camera input in this repository; the real-model run used simulation footage.
-- No detection-quality measurement exists: no labelled ground truth, so no precision or recall for any rule. The constrained run shows false positives (people reported in people-free footage) that only ground truth can quantify.
-- The measured runs are 60 to 390 seconds, not sustained operation.
-- No operator dashboard exists; review is through the API.
-- No zone geometry is derived from calibration; rules use configured regions.
+## Planned upgrades
 
-## Next Work, in Order
+Not built or not run yet:
 
-1. Done 2026-09-09: mock path on Jetson AGX Thor with run artifacts under `reports/thor/`.
-2. Done 2026-09-09: Cosmos-Reason2-2B through a local vLLM server on Thor, inference cost and power measured on simulation footage.
-2b. Done 2026-09-09: batched posting measured at 7.1 frames/s (from 4.4); asynchronous posting is next.
-2c. Done 2026-09-09: no-think halves p95; JSON-schema grammar removes all out-of-vocabulary labels and drops p95 to 3.4 s, but the 2B then reports people that are not there (7 false events on 60 frames).
-2d. Done 2026-09-09: Cosmos-Reason2-8B under the same grammar and prompt reports no phantom people on this footage at about 2.6x the latency. Next: labelled ground truth so both sizes get a precision and recall, not a count on one video.
-3. RTSP camera source and calibration-derived zones.
-4. Operator dashboard and human-in-the-loop review workflow.
-5. Incident export and audit trails through the evidence chain.
+- A live-camera evidence run on the Thor, committed under `reports/thor/` in the existing run-report format
+- Cosmos-Reason2-8B on live video
+- Simulated scenes with ground truth for people, PPE and zone states, giving per-rule precision and recall. These results will be labelled simulation.
 
 ## Related
 
