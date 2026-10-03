@@ -309,7 +309,9 @@ class EdgeService:
         for camera_id in list(self.workers):
             self._stop_camera(camera_id)
         self.poster.stop()
-        self.model_server.stop()
+        # The model server may be shared with another app on the device; an API
+        # restart must not take it down. Explicit stop is POST /models/server/stop.
+        self.model_server.detach()
 
     # ── cameras ───────────────────────────────────────────────────────────────
 
