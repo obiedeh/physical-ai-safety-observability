@@ -467,6 +467,9 @@ export interface Incident {
 
 // ── API surface ───────────────────────────────────────────────────────────────
 
+export const evidenceFrameUrl = (frameHash: string) =>
+  `/evidence/frames/${encodeURIComponent(frameHash)}.jpg`;
+
 export const api = {
   cameras: {
     profiles: () => get<CameraProfile[]>("/config/profiles"),
@@ -477,7 +480,8 @@ export const api = {
     remove: (id: string) => del(`/config/cameras/${enc(id)}`),
     setEnabled: (id: string, enabled: boolean) =>
       post<Camera>(`/config/cameras/${enc(id)}/enabled`, { enabled }),
-    testUnsaved: (body: CameraIn) => post<CameraTestResult>("/config/cameras/test", body),
+    testUnsaved: (body: CameraIn & { camera_id?: string }) =>
+      post<CameraTestResult>("/config/cameras/test", body),
     testSaved: (id: string) => post<CameraTestResult>(`/config/cameras/${enc(id)}/test`),
   },
 

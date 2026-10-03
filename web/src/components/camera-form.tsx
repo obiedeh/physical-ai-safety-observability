@@ -171,13 +171,10 @@ export function CameraForm({
     setTest(null);
     setError(null);
     try {
-      // Unsaved form values are probed as-is; a blank password on an existing
-      // camera cannot be used by the unsaved probe (the server never returns
-      // it), so fall back to the saved-camera test in that case.
-      const useSaved = initial && needsHost && !values.password && initial.has_password;
-      const res = useSaved
-        ? await api.cameras.testSaved(initial.camera_id)
-        : await api.cameras.testUnsaved(payload());
+      // Unsaved form values are probed as-is. With the password left blank on an
+      // existing camera the server uses the stored (encrypted) one for this
+      // camera_id, so edited host/path values are still what gets probed.
+      const res = await api.cameras.testUnsaved({ ...payload(), camera_id: initial?.camera_id });
       setTest(res);
     } catch (err) {
       setError(apiErrorMessage(err, "Test failed"));
