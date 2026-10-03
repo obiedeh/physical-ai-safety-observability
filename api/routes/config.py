@@ -103,8 +103,20 @@ def test_unsaved_camera(req: CameraTestIn) -> dict:
     password = req.password
     if not password and req.camera_id:
         cfg = edge_service.store.get_camera_config(req.camera_id)
-        if cfg:
-            password = edge_service.secrets.decrypt(cfg.get("password_enc") or "")
+        if cfg is None:
+            return {"ok": False, "stage": "url", "masked_url": "",
+                    "error": f"Camera '{req.camera_id}' is not saved; enter the password."}
+        # The stored password is only ever sent to the host it was saved for.
+        saved_port = cfg.get("port") or profile.default_port
+        if (cfg.get("host"), saved_port) != (req.host, req.port):
+            return {
+                "ok": False, "stage": "url", "masked_url": "",
+                "error": (
+                    "Host or port differs from the saved camera, so the stored password "
+                    "cannot be reused. Enter the password to test the new address."
+                ),
+            }
+        password = edge_service.secrets.decrypt(cfg.get("password_enc") or "")
     try:
         url = profile.build_url(
             host=req.host, username=req.username or None, password=password or None,
