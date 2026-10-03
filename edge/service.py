@@ -159,10 +159,12 @@ class CameraWorker(threading.Thread):
                     self.inference_failures += 1
                     self.consecutive_failures += 1
                     self.last_error = REDACTOR.redact(f"{type(exc).__name__}: {exc}")
+                    self.service.report_inference_result(False, self.last_error)
                     self.service.publish_status(self.camera.camera_id, "inference_unavailable", self)
                     continue
             self.consecutive_failures = 0
             self.last_error = None
+            self.service.report_inference_result(True)
             self.runtime.inference_latency_ms = inference_timer.elapsed_ms
             self.runtime.record_latency(inference_timer.elapsed_ms)
             detections = list(analysis.get("detections", []) or [])
@@ -292,6 +294,10 @@ class EdgeService:
         self.cameras: dict[str, CameraRecord] = {}
         self._recorders: dict[str, RunRecorder] = {}
         self._run: dict[str, Any] | None = None
+        # Model-server events (starts, stops, outages) with timestamps; the
+        # window overlapping a run is copied into that run's report.
+        self.server_events: list[dict[str, Any]] = []
+        self._outage_started: float | None = None
         self._lock = threading.RLock()
         self.started_at: float | None = None
 
@@ -552,6 +558,46 @@ class EdgeService:
             },
         )
 
+    # ── model-server events / outages ─────────────────────────────────────────
+
+    def note_server_event(self, kind: str, **detail: Any) -> None:
+        event = {"at": datetime.now(UTC).isoformat(), "kind": kind, **detail}
+        self.server_events.append(event)
+        if len(self.server_events) > 500:
+            del self.server_events[: len(self.server_events) - 500]
+        logger.warning("model server event: %s", event)
+
+    def report_inference_result(self, ok: bool, error: str | None = None) -> None:
+        """Called by workers; opens/closes an outage window and aborts a run if needed."""
+        now = time.time()
+        if ok:
+            if self._outage_started is not None:
+                self.note_server_event(
+                    "outage ended", duration_s=round(now - self._outage_started, 1)
+                )
+                self._outage_started = None
+            return
+        if self._outage_started is None:
+            self._outage_started = now
+            self.note_server_event("outage started", error=error)
+        elif self._run is not None and now - self._outage_started > self.outage_abort_s:
+            self.abort_run(f"model server down for {int(now - self._outage_started)} s: {error}")
+
+    outage_abort_s: float = 60.0
+
+    def abort_run(self, reason: str) -> None:
+        with self._lock:
+            if self._run is None:
+                return
+            recorder = self._recorders.get(self._run["camera_id"])
+            if recorder is not None:
+                recorder.error = reason
+            logger.error("aborting run: %s", reason)
+            try:
+                self.stop_run()
+            except RuntimeError:
+                pass
+
     # ── evidence frames ───────────────────────────────────────────────────────
 
     def save_evidence_frame(self, frame_hash: str, jpeg: bytes) -> None:
@@ -583,6 +629,12 @@ class EdgeService:
                 raise KeyError(camera_id)
             camera = self.cameras[camera_id]
             settings = self.model_settings
+            if settings.backend != "mock":
+                guard = self.run_guard()
+                if not guard.ok:
+                    raise RuntimeError(f"model server not ready, refusing to record: {guard.message}")
+                if settings.json_schema and not self.constrained_allowed():
+                    raise RuntimeError("constrained mode is not enforced by the server; refusing")
             recorder = RunRecorder(
                 adapter_name=getattr(self.adapter, "adapter_name", type(self.adapter).__name__),
                 model_version=str(getattr(self.adapter, "model_version", "unknown")),
@@ -619,6 +671,7 @@ class EdgeService:
                 "name": _slug(name),
                 "camera_id": camera_id,
                 "started_at": time.time(),
+                "started_iso": datetime.now(UTC).isoformat(),
                 "poster_baseline": self.poster.stats(),
                 "capture_baseline": dict(self.sessions[camera_id].stats.to_dict()),
             }
@@ -657,6 +710,13 @@ class EdgeService:
                     "managed": self.model_server.status(),
                     "guard": self.guard.to_dict() if self.guard else None,
                     "reasoning_parser": self.model_settings.reasoning_parser,
+                    "events_during_run": [
+                        e for e in self.server_events if e["at"] >= run["started_iso"]
+                    ],
+                    "outage_open_at_stop": (
+                        datetime.fromtimestamp(self._outage_started, tz=UTC).isoformat()
+                        if self._outage_started else None
+                    ),
                 },
             }
             host = platform.node() or "host"
