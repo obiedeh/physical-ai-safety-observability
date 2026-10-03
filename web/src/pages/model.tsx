@@ -88,7 +88,14 @@ function HostCard({ host, error }: { host: CatalogHost | null; error: string | n
 function ServerPanel({ server, error, onChanged }: { server: ModelServerStatus | null; error: string | null; onChanged: () => void }) {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [armed, setArmed] = useState(false);
   const stop = async () => {
+    // Two-step: the container may be serving another app on this device.
+    if (!armed) {
+      setArmed(true);
+      return;
+    }
+    setArmed(false);
     setBusy(true);
     setErr(null);
     try {
@@ -108,9 +115,12 @@ function ServerPanel({ server, error, onChanged }: { server: ModelServerStatus |
         </span>
       }
       actions={
-        <Button size="sm" variant="danger" busy={busy} disabled={!server || server.state === "stopped"} onClick={() => void stop()}>
-          <Square className="h-3.5 w-3.5" /> Stop
-        </Button>
+        <span className="flex items-center gap-2">
+          {armed && <span className="text-xs text-destructive">Stops the shared model server for every app. Click again to confirm.</span>}
+          <Button size="sm" variant="danger" busy={busy} disabled={!server || server.state === "stopped"} onClick={() => void stop()}>
+            <Square className="h-3.5 w-3.5" /> {armed ? "Confirm stop" : "Stop"}
+          </Button>
+        </span>
       }
       bodyClassName="p-0"
     >
