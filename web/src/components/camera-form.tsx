@@ -212,7 +212,7 @@ export function CameraForm({
       {needsHost && (
         <div className="grid gap-4 sm:grid-cols-[1fr_8rem]">
           <Field label="Host">
-            <Input value={values.host} onChange={(e) => set("host", e.target.value)} placeholder="192.168.1.20" />
+            <Input value={values.host} onChange={(e) => set("host", e.target.value)} placeholder="192.0.2.20" />
           </Field>
           <Field label="Port">
             <Input
