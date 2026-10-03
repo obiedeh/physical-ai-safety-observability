@@ -5,7 +5,7 @@ import asyncio
 import json
 
 from fastapi import APIRouter, HTTPException, Request
-from fastapi.responses import StreamingResponse
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from api.services.edge import edge_service
@@ -16,6 +16,15 @@ router = APIRouter(tags=["runtime"])
 @router.get("/runtime/status")
 def runtime_status() -> dict:
     return edge_service.status()
+
+
+@router.get("/evidence/frames/{frame_hash}.jpg")
+def evidence_frame(frame_hash: str) -> FileResponse:
+    """The inference frame behind a SafetyEvent (evidence.frame_hash), when it was stored."""
+    path = edge_service.evidence_frame_path(frame_hash)
+    if path is None:
+        raise HTTPException(status_code=404, detail="no frame stored for this hash")
+    return FileResponse(str(path), media_type="image/jpeg", headers={"Cache-Control": "no-store"})
 
 
 @router.get("/live/latest")

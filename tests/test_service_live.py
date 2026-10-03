@@ -122,6 +122,10 @@ def test_synthetic_camera_to_events_to_async_backend(service: EdgeService) -> No
     rules = {e["rule_id"] for e in backend.events}
     assert "PPE_MISSING" in rules and "RESTRICTED_ZONE_ENTRY" in rules
     assert backend.batches >= 1  # posted as one batch per frame
+    # The frame behind the event is kept, keyed by evidence.frame_hash.
+    frame_hash = backend.events[0]["evidence"]["frame_hash"]
+    assert service.evidence_frame_path(frame_hash) is not None
+    assert service.evidence_frame_path("../etc/passwd") is None
     assert any(f["message"] == "Person Detected with No PPE" for f in backend.feedback)
     latest = service.hub.latest[cam.camera_id]
     assert latest["status"] == "ok" and latest["detections"][0]["bbox"][0] == pytest.approx(0.4, abs=0.01)

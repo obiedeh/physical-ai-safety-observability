@@ -190,6 +190,8 @@ class CameraWorker(threading.Thread):
                     else:
                         for payload in payloads:
                             self.service.poster.enqueue(PostJob("event", payload, captured_mono))
+            if payloads:
+                self.service.save_evidence_frame(str(frame_context["frame_hash"]), frame_bytes)
             self.events_emitted += len(payloads)
             self.last_result_at = time.time()
             capture_to_result_ms = (time.monotonic() - captured_mono) * 1000
@@ -274,6 +276,10 @@ class EdgeService:
         self.backend = backend
         self.post_enabled = post_enabled
         self.reports_dir = Path(reports_dir)
+        db = getattr(store, "database_path", ":memory:")
+        self.evidence_dir = (
+            Path(db).parent / "evidence" if db != ":memory:" else Path("data") / "evidence"
+        )
         self.hub = ResultHub()
         self.poster = AsyncPoster(backend)
         self.model_server = ModelServerManager()
@@ -543,6 +549,24 @@ class EdgeService:
                 "guard": self.guard.to_dict() if self.guard else None,
             },
         )
+
+    # ── evidence frames ───────────────────────────────────────────────────────
+
+    def save_evidence_frame(self, frame_hash: str, jpeg: bytes) -> None:
+        """Keep the inference frame behind a SafetyEvent, keyed by its evidence.frame_hash."""
+        try:
+            self.evidence_dir.mkdir(parents=True, exist_ok=True)
+            path = self.evidence_dir / f"{frame_hash}.jpg"
+            if not path.exists():
+                path.write_bytes(jpeg)
+        except OSError as exc:
+            logger.warning("could not store evidence frame: %s", exc)
+
+    def evidence_frame_path(self, frame_hash: str) -> Path | None:
+        if not re.fullmatch(r"[0-9a-f]{16,128}", frame_hash or ""):
+            return None
+        path = self.evidence_dir / f"{frame_hash}.jpg"
+        return path if path.is_file() else None
 
     # ── measured runs ─────────────────────────────────────────────────────────
 
