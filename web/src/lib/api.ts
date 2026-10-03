@@ -502,7 +502,8 @@ export const api = {
         "/models/server/start",
         body
       ),
-    stop: () => post<ModelServerStatus>("/models/server/stop"),
+    stop: (reason = "stopped from the Model page") =>
+      post<ModelServerStatus>("/models/server/stop", { confirm: true, reason }),
   },
 
   stream: {
