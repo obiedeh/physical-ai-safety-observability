@@ -19,6 +19,9 @@ import json
 import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from ee_theme import apply_theme
+
 SCHEMA_LABELS = {"person", "robot", "pallet", "cart", "box", "unsafe_event"}
 
 # Display order and captions; anything not listed is appended with its file name.
@@ -114,7 +117,7 @@ def row_view(run: dict) -> dict:
 
 
 def bar_chart(title: str, series: list[tuple[str, list[float | None]]], categories: list[str],
-              unit: str, width: int = 720, colors: tuple[str, ...] = ("#38bdf8", "#f59e0b", "#ef4444"),
+              unit: str, width: int = 720, colors: tuple[str, ...] = ("#68b7ff", "#ff9c59", "#ff7a6b"),
               log: bool = False) -> str:
     """Grouped horizontal bar chart. ``series`` is [(legend, values per category)]."""
     import math
@@ -135,27 +138,27 @@ def bar_chart(title: str, series: list[tuple[str, list[float | None]]], categori
 
     out = [(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
             f'font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">'),
-           f'<rect width="{width}" height="{height}" fill="#121a2c"/>',
-           f'<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">{html.escape(title)}</text>']
+           f'<rect width="{width}" height="{height}" fill="#181b1d"/>',
+           f'<text x="16" y="24" fill="#eef1e8" font-size="15" font-weight="700">{html.escape(title)}</text>']
     lx = 16
     for i, (legend, _) in enumerate(series):
         out.append(f'<rect x="{lx}" y="34" width="10" height="10" fill="{colors[i % len(colors)]}"/>')
-        out.append(f'<text x="{lx + 14}" y="43" fill="#9fb0ca">{html.escape(legend)}</text>')
+        out.append(f'<text x="{lx + 14}" y="43" fill="#a3aa9c">{html.escape(legend)}</text>')
         lx += 14 + 7 * len(legend) + 18
     for ci, cat in enumerate(categories):
         y0 = top + ci * row_h
-        out.append(f'<text x="{left - 10}" y="{y0 + row_h / 2 + 4}" fill="#9fb0ca" text-anchor="end">{html.escape(cat)}</text>')
+        out.append(f'<text x="{left - 10}" y="{y0 + row_h / 2 + 4}" fill="#a3aa9c" text-anchor="end">{html.escape(cat)}</text>')
         for si, (_, vs) in enumerate(series):
             v = vs[ci]
             y = y0 + 6 + si * 18
             if v is None:
-                out.append(f'<text x="{left + 4}" y="{y + 11}" fill="#5f6f8a" font-size="11">not measured</text>')
+                out.append(f'<text x="{left + 4}" y="{y + 11}" fill="#7c8378" font-size="11">not measured</text>')
                 continue
             w = max(1.0, x_of(v))
             out.append(f'<rect x="{left}" y="{y}" width="{w:.1f}" height="12" fill="{colors[si % len(colors)]}"/>')
             label = f"{v:,.3g}" if v < 100 else f"{v:,.0f}"
-            out.append(f'<text x="{left + w + 6}" y="{y + 10}" fill="#eef4ff" font-size="11">{label} {unit}</text>')
-    out.append(f'<text x="{width - 16}" y="{height - 10}" fill="#5f6f8a" text-anchor="end" font-size="10">'
+            out.append(f'<text x="{left + w + 6}" y="{y + 10}" fill="#eef1e8" font-size="11">{label} {unit}</text>')
+    out.append(f'<text x="{width - 16}" y="{height - 10}" fill="#7c8378" text-anchor="end" font-size="10">'
                f'{"log scale, " if log else ""}values from reports/thor/*.json</text>')
     out.append("</svg>")
     return "\n".join(out)
@@ -166,15 +169,15 @@ def bar_chart(title: str, series: list[tuple[str, list[float | None]]], categori
 # ---------------------------------------------------------------------------
 
 CSS = """
-:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2c;--line:#293653;--text:#eef4ff;--muted:#9fb0ca;--accent:#38bdf8;--good:#22c55e;--warn:#f59e0b;--risk:#ef4444}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#13223d 0,var(--bg) 34rem);color:var(--text);font:16px/1.55 Inter,ui-sans-serif,system-ui,sans-serif}
+:root{color-scheme:dark;--bg:#202224;--panel:#181b1d;--line:#393d3f;--text:#eef1e8;--muted:#a3aa9c;--accent:#68b7ff;--good:#b7f34a;--warn:#ff9c59;--risk:#ff7a6b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#202224 0,var(--bg) 34rem);color:var(--text);font:16px/1.55 "Helvetica Neue",Helvetica,Arial,sans-serif}
 main{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:40px 0 64px}
 .eyebrow{color:var(--accent);font-weight:700;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em}
 h1{font-size:2rem;margin:.3rem 0 .6rem}h2{font-size:1.35rem;margin:2.4rem 0 .6rem}p,li{color:var(--muted)}p.lead{font-size:1.05rem}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:18px 0}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}.card strong{display:block;font-size:1.5rem;color:var(--text)}.card span{font-size:.85rem;color:var(--muted)}
 .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}table{border-collapse:collapse;width:100%;font-size:.88rem}
-th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left;white-space:normal}th{color:var(--muted);font-weight:600;background:#17223a}
+th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left;white-space:normal}th{color:var(--muted);font-weight:600;background:#1c1f21}
 a{color:var(--accent)}.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:16px;margin:16px 0}.charts figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto}
 .charts svg{max-width:100%;height:auto}figcaption{font-size:.82rem;color:var(--muted);margin-top:6px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:.75rem;color:var(--muted);margin-right:6px}
 .warn{color:var(--warn)}.risk{color:var(--risk)}.good{color:var(--good)}.muted{color:var(--muted)}tr.failure td{color:var(--muted);font-style:italic}footer{margin-top:40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:16px}
@@ -305,7 +308,8 @@ def main() -> int:
         "Board input power at p50 over each run, watts; about 24 W is the device's idle level. The empty-output failure case is excluded.")
     for name, (svg, _) in charts.items():
         (charts_dir / f"{name}.svg").write_text(svg + "\n")
-    page = build_page(rows, charts, args.repo_url)
+    page = apply_theme(build_page(rows, charts, args.repo_url), repo_url=args.repo_url,
+                       dark={}, force_dark=False)
     out = args.reports / "index.html"
     out.write_text(page)
     print(f"wrote {out} and {len(charts)} charts to {charts_dir} from {len(rows)} artifacts")

@@ -1,20 +1,31 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Physical AI Safety Observability: Thor evidence</title><style>
-:root{color-scheme:dark;--bg:#0b1020;--panel:#121a2c;--line:#293653;--text:#eef4ff;--muted:#9fb0ca;--accent:#38bdf8;--good:#22c55e;--warn:#f59e0b;--risk:#ef4444}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#13223d 0,var(--bg) 34rem);color:var(--text);font:16px/1.55 Inter,ui-sans-serif,system-ui,sans-serif}
+:root{color-scheme:dark;--bg:#202224;--panel:#181b1d;--line:#393d3f;--text:#eef1e8;--muted:#a3aa9c;--accent:#68b7ff;--good:#b7f34a;--warn:#ff9c59;--risk:#ff7a6b}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top left,#202224 0,var(--bg) 34rem);color:var(--text);font:16px/1.55 "Helvetica Neue",Helvetica,Arial,sans-serif}
 main{width:min(1180px,calc(100% - 32px));margin:0 auto;padding:40px 0 64px}
 .eyebrow{color:var(--accent);font-weight:700;text-transform:uppercase;font-size:.78rem;letter-spacing:.08em}
 h1{font-size:2rem;margin:.3rem 0 .6rem}h2{font-size:1.35rem;margin:2.4rem 0 .6rem}p,li{color:var(--muted)}p.lead{font-size:1.05rem}
 .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:18px 0}
 .card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px}.card strong{display:block;font-size:1.5rem;color:var(--text)}.card span{font-size:.85rem;color:var(--muted)}
 .table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--panel)}table{border-collapse:collapse;width:100%;font-size:.88rem}
-th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left;white-space:normal}th{color:var(--muted);font-weight:600;background:#17223a}
+th,td{padding:9px 11px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left;white-space:normal}th{color:var(--muted);font-weight:600;background:#1c1f21}
 a{color:var(--accent)}.charts{display:grid;grid-template-columns:repeat(auto-fit,minmax(480px,1fr));gap:16px;margin:16px 0}.charts figure{margin:0;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;overflow-x:auto}
 .charts svg{max-width:100%;height:auto}figcaption{font-size:.82rem;color:var(--muted);margin-top:6px}.pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:2px 9px;font-size:.75rem;color:var(--muted);margin-right:6px}
 .warn{color:var(--warn)}.risk{color:var(--risk)}.good{color:var(--good)}.muted{color:var(--muted)}tr.failure td{color:var(--muted);font-style:italic}footer{margin-top:40px;color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:16px}
+</style><style id="ee-theme">:root,:root:not([data-theme="light"]),:root[data-theme="dark"]{color-scheme:dark}h1,h2,h3{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:500;letter-spacing:-.02em}h1{letter-spacing:-.035em}
+body{margin:0}
+.ee-band{background:#181b1d;border-bottom:1px solid #393d3f;color:#eef1e8;font:14px/1.4 "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;z-index:50}
+.ee-band .ee-in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between}
+.ee-band a{color:#a3aa9c;text-decoration:none}.ee-band a:hover{color:#eef1e8}
+.ee-band .ee-mark{display:inline-flex;align-items:center;gap:8px;color:#eef1e8;font-weight:600;letter-spacing:-.01em}
+.ee-band .ee-mark i{display:inline-block;width:14px;height:14px;border-radius:2px;background:linear-gradient(135deg,#b7f34a 0 50%,#68b7ff 50% 100%)}
+.ee-band .ee-mark span{color:#a3aa9c;font-weight:400}.ee-band nav{display:flex;gap:16px}
+.ee-foot{border-top:1px solid #393d3f;background:#181b1d;color:#7c8378;font:13px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif}
+.ee-foot .ee-in{max-width:1120px;margin:0 auto;padding:14px 20px}.ee-foot a{color:#a3aa9c}
+@media print{.ee-band,.ee-foot{background:#fff;color:#5d6459;border-color:#d8dbd2}.ee-band .ee-mark{color:#1a1c1e}}
 </style></head>
-<body><main>
+<body><div class="ee-band"><div class="ee-in"><a class="ee-mark" href="https://embodiededge.ai"><i></i>EmbodiedEdge <span>Labs · Evidence</span></a><nav><a href="https://github.com/obiedeh/physical-ai-safety-observability">Repository</a><a href="https://embodiededge.ai">Lab</a><a href="https://github.com/obiedeh">Obinna Edeh</a></nav></div></div><main>
 <div class="eyebrow">Measured evidence · Jetson AGX Thor</div>
 <h1>Physical AI Safety Observability</h1>
 <p class="lead">Every number on this page is read from a run artifact under <a href="https://github.com/obiedeh/physical-ai-safety-observability/tree/main/reports/thor">reports/thor/</a>; each row links to its JSON. Device: jetsonthor, tegra264, # R38 (release), REVISION: 4.0, GCID: 43443517, BOARD: generic, EABI: aarch64, DATE: Wed Dec 31 00:15:19 UTC 2025, NV Power Mode: 120W 1. Runs on 2026-09-09, repository commit 254ef27 as recorded by the artifacts (0b3d9d0 on main today, identical tree). These are runtime-overhead and inference-cost measurements on simulation footage; none is a detection-quality number.</p>
@@ -29,140 +40,140 @@ a{color:var(--accent)}.charts{display:grid;grid-template-columns:repeat(auto-fit
 <div class="table-wrap"><table><thead><tr><th>Run</th><th>Frames</th><th>p50, s</th><th>p95, s</th><th>max, s</th><th>Frames/s</th><th>Completion tokens p50</th><th>VIN p50, mW</th><th>VIN peak, mW</th><th>Detections</th><th>Out-of-vocab labels</th><th>Phantom persons</th><th>Events</th></tr></thead><tbody><tr class=""><td>Cosmos-Reason2-2B, think block, 4096 cap<br><small><a href="thor/cosmos2b_video_60.json">cosmos2b_video_60.json</a></small></td><td>60</td><td>4.35</td><td>12.85</td><td>15.41</td><td>0.154</td><td>260</td><td>66,568</td><td>107,102</td><td>97</td><td class="warn">59</td><td class="good">0</td><td class="good">0</td></tr><tr class=""><td>Cosmos-Reason2-2B, no think, 512 cap<br><small><a href="thor/cosmos2b_video_60_nothink.json">cosmos2b_video_60_nothink.json</a></small></td><td>60</td><td>3.57</td><td>6.58</td><td>9.35</td><td>0.241</td><td>157</td><td>60,338</td><td>105,206</td><td>106</td><td class="warn">57</td><td class="good">0</td><td class="good">0</td></tr><tr class="failure"><td>Cosmos-Reason2-2B, grammar, original prompt — FAILURE CASE: empty output on every frame; latency and frames/s are the cost of generating nothing<br><small><a href="thor/cosmos2b_video_60_schema_v1prompt.json">cosmos2b_video_60_schema_v1prompt.json</a></small></td><td>60</td><td>0.31</td><td>0.33</td><td>4.19</td><td>2.303</td><td>7</td><td>37,052</td><td>101,448</td><td>0</td><td class="good">0</td><td class="muted">0</td><td class="muted">0</td></tr><tr class=""><td>Cosmos-Reason2-2B, grammar, JSON-only prompt<br><small><a href="thor/cosmos2b_video_60_schema.json">cosmos2b_video_60_schema.json</a></small></td><td>60</td><td>2.69</td><td>3.36</td><td>8.03</td><td>0.367</td><td>135</td><td>62,522</td><td>83,120</td><td>193</td><td class="good">0</td><td class="risk">6</td><td class="risk">7</td></tr><tr class=""><td>Cosmos-Reason2-8B, no think, 512 cap<br><small><a href="thor/cosmos8b_video_60_nothink.json">cosmos8b_video_60_nothink.json</a></small></td><td>60</td><td>8.29</td><td>27.78</td><td>33.67</td><td>0.098</td><td>126</td><td>69,136</td><td>108,376</td><td>81</td><td class="warn">20</td><td class="good">0</td><td class="good">0</td></tr><tr class=""><td>Cosmos-Reason2-8B, grammar, JSON-only prompt<br><small><a href="thor/cosmos8b_video_60_schema.json">cosmos8b_video_60_schema.json</a></small></td><td>60</td><td>3.2</td><td>8.26</td><td>14.96</td><td>0.234</td><td>47</td><td>65,976</td><td>131,582</td><td>74</td><td class="good">0</td><td class="good">0</td><td class="good">0</td></tr></tbody></table></div>
 
 <div class="charts"><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 336" width="720" height="336" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
-<rect width="720" height="336" fill="#121a2c"/>
-<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">Inference latency per frame, Cosmos-Reason2 on Thor</text>
-<rect x="16" y="34" width="10" height="10" fill="#38bdf8"/>
-<text x="30" y="43" fill="#9fb0ca">p50</text>
-<rect x="69" y="34" width="10" height="10" fill="#f59e0b"/>
-<text x="83" y="43" fill="#9fb0ca">p95</text>
-<text x="180" y="85.0" fill="#9fb0ca" text-anchor="end">2B, think</text>
-<rect x="190" y="62" width="68.9" height="12" fill="#38bdf8"/>
-<text x="264.9395864847576" y="72" fill="#eef4ff" font-size="11">4.35 s</text>
-<rect x="190" y="80" width="203.5" height="12" fill="#f59e0b"/>
-<text x="399.54855359191134" y="90" fill="#eef4ff" font-size="11">12.9 s</text>
-<text x="180" y="135.0" fill="#9fb0ca" text-anchor="end">2B, no think</text>
-<rect x="190" y="112" width="56.5" height="12" fill="#38bdf8"/>
-<text x="252.50175458950537" y="122" fill="#eef4ff" font-size="11">3.57 s</text>
-<rect x="190" y="130" width="104.3" height="12" fill="#f59e0b"/>
-<text x="300.2770981670112" y="140" fill="#eef4ff" font-size="11">6.58 s</text>
-<text x="180" y="185.0" fill="#9fb0ca" text-anchor="end">2B, grammar</text>
-<rect x="190" y="162" width="42.6" height="12" fill="#38bdf8"/>
-<text x="238.58003219277853" y="172" fill="#eef4ff" font-size="11">2.69 s</text>
-<rect x="190" y="180" width="53.3" height="12" fill="#f59e0b"/>
-<text x="249.2714010297387" y="190" fill="#eef4ff" font-size="11">3.36 s</text>
-<text x="180" y="235.0" fill="#9fb0ca" text-anchor="end">8B, no think</text>
-<rect x="190" y="212" width="131.3" height="12" fill="#38bdf8"/>
-<text x="327.33429027351593" y="222" fill="#eef4ff" font-size="11">8.29 s</text>
-<rect x="190" y="230" width="440.0" height="12" fill="#f59e0b"/>
-<text x="636.0" y="240" fill="#eef4ff" font-size="11">27.8 s</text>
-<text x="180" y="285.0" fill="#9fb0ca" text-anchor="end">8B, grammar</text>
-<rect x="190" y="262" width="50.7" height="12" fill="#38bdf8"/>
-<text x="246.69749628344124" y="272" fill="#eef4ff" font-size="11">3.2 s</text>
-<rect x="190" y="280" width="130.8" height="12" fill="#f59e0b"/>
-<text x="326.7782791452853" y="290" fill="#eef4ff" font-size="11">8.26 s</text>
-<text x="704" y="326" fill="#5f6f8a" text-anchor="end" font-size="10">values from reports/thor/*.json</text>
+<rect width="720" height="336" fill="#181b1d"/>
+<text x="16" y="24" fill="#eef1e8" font-size="15" font-weight="700">Inference latency per frame, Cosmos-Reason2 on Thor</text>
+<rect x="16" y="34" width="10" height="10" fill="#68b7ff"/>
+<text x="30" y="43" fill="#a3aa9c">p50</text>
+<rect x="69" y="34" width="10" height="10" fill="#ff9c59"/>
+<text x="83" y="43" fill="#a3aa9c">p95</text>
+<text x="180" y="85.0" fill="#a3aa9c" text-anchor="end">2B, think</text>
+<rect x="190" y="62" width="68.9" height="12" fill="#68b7ff"/>
+<text x="264.9395864847576" y="72" fill="#eef1e8" font-size="11">4.35 s</text>
+<rect x="190" y="80" width="203.5" height="12" fill="#ff9c59"/>
+<text x="399.54855359191134" y="90" fill="#eef1e8" font-size="11">12.9 s</text>
+<text x="180" y="135.0" fill="#a3aa9c" text-anchor="end">2B, no think</text>
+<rect x="190" y="112" width="56.5" height="12" fill="#68b7ff"/>
+<text x="252.50175458950537" y="122" fill="#eef1e8" font-size="11">3.57 s</text>
+<rect x="190" y="130" width="104.3" height="12" fill="#ff9c59"/>
+<text x="300.2770981670112" y="140" fill="#eef1e8" font-size="11">6.58 s</text>
+<text x="180" y="185.0" fill="#a3aa9c" text-anchor="end">2B, grammar</text>
+<rect x="190" y="162" width="42.6" height="12" fill="#68b7ff"/>
+<text x="238.58003219277853" y="172" fill="#eef1e8" font-size="11">2.69 s</text>
+<rect x="190" y="180" width="53.3" height="12" fill="#ff9c59"/>
+<text x="249.2714010297387" y="190" fill="#eef1e8" font-size="11">3.36 s</text>
+<text x="180" y="235.0" fill="#a3aa9c" text-anchor="end">8B, no think</text>
+<rect x="190" y="212" width="131.3" height="12" fill="#68b7ff"/>
+<text x="327.33429027351593" y="222" fill="#eef1e8" font-size="11">8.29 s</text>
+<rect x="190" y="230" width="440.0" height="12" fill="#ff9c59"/>
+<text x="636.0" y="240" fill="#eef1e8" font-size="11">27.8 s</text>
+<text x="180" y="285.0" fill="#a3aa9c" text-anchor="end">8B, grammar</text>
+<rect x="190" y="262" width="50.7" height="12" fill="#68b7ff"/>
+<text x="246.69749628344124" y="272" fill="#eef1e8" font-size="11">3.2 s</text>
+<rect x="190" y="280" width="130.8" height="12" fill="#ff9c59"/>
+<text x="326.7782791452853" y="290" fill="#eef1e8" font-size="11">8.26 s</text>
+<text x="704" y="326" fill="#7c8378" text-anchor="end" font-size="10">values from reports/thor/*.json</text>
 </svg><figcaption>Per-frame inference latency, p50 and p95, seconds. Reasoning length drives the tail; the grammar removes most of it. The empty-output failure case is excluded.</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 494" width="720" height="494" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
-<rect width="720" height="494" fill="#121a2c"/>
-<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">Vocabulary and phantom persons on people-free footage</text>
-<rect x="16" y="34" width="10" height="10" fill="#38bdf8"/>
-<text x="30" y="43" fill="#9fb0ca">out-of-vocab labels</text>
-<rect x="181" y="34" width="10" height="10" fill="#f59e0b"/>
-<text x="195" y="43" fill="#9fb0ca">phantom persons</text>
-<rect x="318" y="34" width="10" height="10" fill="#ef4444"/>
-<text x="332" y="43" fill="#9fb0ca">false events</text>
-<text x="180" y="94.0" fill="#9fb0ca" text-anchor="end">2B, think</text>
-<rect x="190" y="62" width="440.0" height="12" fill="#38bdf8"/>
-<text x="636.0" y="72" fill="#eef4ff" font-size="11">59 </text>
-<rect x="190" y="80" width="1.0" height="12" fill="#f59e0b"/>
-<text x="197.0" y="90" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="98" width="1.0" height="12" fill="#ef4444"/>
-<text x="197.0" y="108" fill="#eef4ff" font-size="11">0 </text>
-<text x="180" y="162.0" fill="#9fb0ca" text-anchor="end">2B, no think</text>
-<rect x="190" y="130" width="425.1" height="12" fill="#38bdf8"/>
-<text x="621.0847457627119" y="140" fill="#eef4ff" font-size="11">57 </text>
-<rect x="190" y="148" width="1.0" height="12" fill="#f59e0b"/>
-<text x="197.0" y="158" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="166" width="1.0" height="12" fill="#ef4444"/>
-<text x="197.0" y="176" fill="#eef4ff" font-size="11">0 </text>
-<text x="180" y="230.0" fill="#9fb0ca" text-anchor="end">2B, grammar, old prompt (empty)</text>
-<rect x="190" y="198" width="1.0" height="12" fill="#38bdf8"/>
-<text x="197.0" y="208" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="216" width="1.0" height="12" fill="#f59e0b"/>
-<text x="197.0" y="226" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="234" width="1.0" height="12" fill="#ef4444"/>
-<text x="197.0" y="244" fill="#eef4ff" font-size="11">0 </text>
-<text x="180" y="298.0" fill="#9fb0ca" text-anchor="end">2B, grammar</text>
-<rect x="190" y="266" width="1.0" height="12" fill="#38bdf8"/>
-<text x="197.0" y="276" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="284" width="44.7" height="12" fill="#f59e0b"/>
-<text x="240.74576271186442" y="294" fill="#eef4ff" font-size="11">6 </text>
-<rect x="190" y="302" width="52.2" height="12" fill="#ef4444"/>
-<text x="248.20338983050848" y="312" fill="#eef4ff" font-size="11">7 </text>
-<text x="180" y="366.0" fill="#9fb0ca" text-anchor="end">8B, no think</text>
-<rect x="190" y="334" width="149.2" height="12" fill="#38bdf8"/>
-<text x="345.1525423728814" y="344" fill="#eef4ff" font-size="11">20 </text>
-<rect x="190" y="352" width="1.0" height="12" fill="#f59e0b"/>
-<text x="197.0" y="362" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="370" width="1.0" height="12" fill="#ef4444"/>
-<text x="197.0" y="380" fill="#eef4ff" font-size="11">0 </text>
-<text x="180" y="434.0" fill="#9fb0ca" text-anchor="end">8B, grammar</text>
-<rect x="190" y="402" width="1.0" height="12" fill="#38bdf8"/>
-<text x="197.0" y="412" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="420" width="1.0" height="12" fill="#f59e0b"/>
-<text x="197.0" y="430" fill="#eef4ff" font-size="11">0 </text>
-<rect x="190" y="438" width="1.0" height="12" fill="#ef4444"/>
-<text x="197.0" y="448" fill="#eef4ff" font-size="11">0 </text>
-<text x="704" y="484" fill="#5f6f8a" text-anchor="end" font-size="10">values from reports/thor/*.json</text>
+<rect width="720" height="494" fill="#181b1d"/>
+<text x="16" y="24" fill="#eef1e8" font-size="15" font-weight="700">Vocabulary and phantom persons on people-free footage</text>
+<rect x="16" y="34" width="10" height="10" fill="#68b7ff"/>
+<text x="30" y="43" fill="#a3aa9c">out-of-vocab labels</text>
+<rect x="181" y="34" width="10" height="10" fill="#ff9c59"/>
+<text x="195" y="43" fill="#a3aa9c">phantom persons</text>
+<rect x="318" y="34" width="10" height="10" fill="#ff7a6b"/>
+<text x="332" y="43" fill="#a3aa9c">false events</text>
+<text x="180" y="94.0" fill="#a3aa9c" text-anchor="end">2B, think</text>
+<rect x="190" y="62" width="440.0" height="12" fill="#68b7ff"/>
+<text x="636.0" y="72" fill="#eef1e8" font-size="11">59 </text>
+<rect x="190" y="80" width="1.0" height="12" fill="#ff9c59"/>
+<text x="197.0" y="90" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="98" width="1.0" height="12" fill="#ff7a6b"/>
+<text x="197.0" y="108" fill="#eef1e8" font-size="11">0 </text>
+<text x="180" y="162.0" fill="#a3aa9c" text-anchor="end">2B, no think</text>
+<rect x="190" y="130" width="425.1" height="12" fill="#68b7ff"/>
+<text x="621.0847457627119" y="140" fill="#eef1e8" font-size="11">57 </text>
+<rect x="190" y="148" width="1.0" height="12" fill="#ff9c59"/>
+<text x="197.0" y="158" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="166" width="1.0" height="12" fill="#ff7a6b"/>
+<text x="197.0" y="176" fill="#eef1e8" font-size="11">0 </text>
+<text x="180" y="230.0" fill="#a3aa9c" text-anchor="end">2B, grammar, old prompt (empty)</text>
+<rect x="190" y="198" width="1.0" height="12" fill="#68b7ff"/>
+<text x="197.0" y="208" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="216" width="1.0" height="12" fill="#ff9c59"/>
+<text x="197.0" y="226" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="234" width="1.0" height="12" fill="#ff7a6b"/>
+<text x="197.0" y="244" fill="#eef1e8" font-size="11">0 </text>
+<text x="180" y="298.0" fill="#a3aa9c" text-anchor="end">2B, grammar</text>
+<rect x="190" y="266" width="1.0" height="12" fill="#68b7ff"/>
+<text x="197.0" y="276" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="284" width="44.7" height="12" fill="#ff9c59"/>
+<text x="240.74576271186442" y="294" fill="#eef1e8" font-size="11">6 </text>
+<rect x="190" y="302" width="52.2" height="12" fill="#ff7a6b"/>
+<text x="248.20338983050848" y="312" fill="#eef1e8" font-size="11">7 </text>
+<text x="180" y="366.0" fill="#a3aa9c" text-anchor="end">8B, no think</text>
+<rect x="190" y="334" width="149.2" height="12" fill="#68b7ff"/>
+<text x="345.1525423728814" y="344" fill="#eef1e8" font-size="11">20 </text>
+<rect x="190" y="352" width="1.0" height="12" fill="#ff9c59"/>
+<text x="197.0" y="362" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="370" width="1.0" height="12" fill="#ff7a6b"/>
+<text x="197.0" y="380" fill="#eef1e8" font-size="11">0 </text>
+<text x="180" y="434.0" fill="#a3aa9c" text-anchor="end">8B, grammar</text>
+<rect x="190" y="402" width="1.0" height="12" fill="#68b7ff"/>
+<text x="197.0" y="412" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="420" width="1.0" height="12" fill="#ff9c59"/>
+<text x="197.0" y="430" fill="#eef1e8" font-size="11">0 </text>
+<rect x="190" y="438" width="1.0" height="12" fill="#ff7a6b"/>
+<text x="197.0" y="448" fill="#eef1e8" font-size="11">0 </text>
+<text x="704" y="484" fill="#7c8378" text-anchor="end" font-size="10">values from reports/thor/*.json</text>
 </svg><figcaption>Counts over 60 frames. Zero out-of-vocabulary labels under the grammar; the 2B then reports people that are not there, the 8B does not.</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 214" width="720" height="214" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
-<rect width="720" height="214" fill="#121a2c"/>
-<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">Worker throughput, mock adapter</text>
-<rect x="16" y="34" width="10" height="10" fill="#38bdf8"/>
-<text x="30" y="43" fill="#9fb0ca">frames/s</text>
-<text x="180" y="76.0" fill="#9fb0ca" text-anchor="end">mock, no post</text>
-<rect x="190" y="62" width="156.2" height="12" fill="#38bdf8"/>
-<text x="352.16634082161954" y="72" fill="#eef4ff" font-size="11">28.6 frames/s</text>
-<text x="180" y="108.0" fill="#9fb0ca" text-anchor="end">mock, per-event POST</text>
-<rect x="190" y="94" width="42.0" height="12" fill="#38bdf8"/>
-<text x="238.04798824512656" y="104" fill="#eef4ff" font-size="11">4.36 frames/s</text>
-<text x="180" y="140.0" fill="#9fb0ca" text-anchor="end">mock, batched POST</text>
-<rect x="190" y="126" width="71.5" height="12" fill="#38bdf8"/>
-<text x="267.4561424425321" y="136" fill="#eef4ff" font-size="11">7.08 frames/s</text>
-<text x="180" y="172.0" fill="#9fb0ca" text-anchor="end">mock, unpaced</text>
-<rect x="190" y="158" width="440.0" height="12" fill="#38bdf8"/>
-<text x="636.0" y="168" fill="#eef4ff" font-size="11">3,078 frames/s</text>
-<text x="704" y="204" fill="#5f6f8a" text-anchor="end" font-size="10">log scale, values from reports/thor/*.json</text>
+<rect width="720" height="214" fill="#181b1d"/>
+<text x="16" y="24" fill="#eef1e8" font-size="15" font-weight="700">Worker throughput, mock adapter</text>
+<rect x="16" y="34" width="10" height="10" fill="#68b7ff"/>
+<text x="30" y="43" fill="#a3aa9c">frames/s</text>
+<text x="180" y="76.0" fill="#a3aa9c" text-anchor="end">mock, no post</text>
+<rect x="190" y="62" width="156.2" height="12" fill="#68b7ff"/>
+<text x="352.16634082161954" y="72" fill="#eef1e8" font-size="11">28.6 frames/s</text>
+<text x="180" y="108.0" fill="#a3aa9c" text-anchor="end">mock, per-event POST</text>
+<rect x="190" y="94" width="42.0" height="12" fill="#68b7ff"/>
+<text x="238.04798824512656" y="104" fill="#eef1e8" font-size="11">4.36 frames/s</text>
+<text x="180" y="140.0" fill="#a3aa9c" text-anchor="end">mock, batched POST</text>
+<rect x="190" y="126" width="71.5" height="12" fill="#68b7ff"/>
+<text x="267.4561424425321" y="136" fill="#eef1e8" font-size="11">7.08 frames/s</text>
+<text x="180" y="172.0" fill="#a3aa9c" text-anchor="end">mock, unpaced</text>
+<rect x="190" y="158" width="440.0" height="12" fill="#68b7ff"/>
+<text x="636.0" y="168" fill="#eef1e8" font-size="11">3,078 frames/s</text>
+<text x="704" y="204" fill="#7c8378" text-anchor="end" font-size="10">log scale, values from reports/thor/*.json</text>
 </svg><figcaption>Achieved frames per second against a 30 fps source; the synchronous POST to the backend is the bottleneck, batching lifts it from 4.4 to 7.1.</figcaption></figure><figure><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 374" width="720" height="374" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12">
-<rect width="720" height="374" fill="#121a2c"/>
-<text x="16" y="24" fill="#eef4ff" font-size="15" font-weight="700">Board input power, VIN p50</text>
-<rect x="16" y="34" width="10" height="10" fill="#38bdf8"/>
-<text x="30" y="43" fill="#9fb0ca">VIN p50</text>
-<text x="180" y="76.0" fill="#9fb0ca" text-anchor="end">mock, no post</text>
-<rect x="190" y="62" width="156.6" height="12" fill="#38bdf8"/>
-<text x="352.58643832446194" y="72" fill="#eef4ff" font-size="11">24.6 W</text>
-<text x="180" y="108.0" fill="#9fb0ca" text-anchor="end">mock, per-event POST</text>
-<rect x="190" y="94" width="162.7" height="12" fill="#38bdf8"/>
-<text x="358.7343207590835" y="104" fill="#eef4ff" font-size="11">25.6 W</text>
-<text x="180" y="140.0" fill="#9fb0ca" text-anchor="end">mock, batched POST</text>
-<rect x="190" y="126" width="160.1" height="12" fill="#38bdf8"/>
-<text x="356.1122425364499" y="136" fill="#eef4ff" font-size="11">25.2 W</text>
-<text x="180" y="172.0" fill="#9fb0ca" text-anchor="end">mock, unpaced</text>
-<text x="194" y="169" fill="#5f6f8a" font-size="11">not measured</text>
-<text x="180" y="204.0" fill="#9fb0ca" text-anchor="end">2B, think</text>
-<rect x="190" y="190" width="423.7" height="12" fill="#38bdf8"/>
-<text x="619.6565609812544" y="200" fill="#eef4ff" font-size="11">66.6 W</text>
-<text x="180" y="236.0" fill="#9fb0ca" text-anchor="end">2B, no think</text>
-<rect x="190" y="222" width="384.0" height="12" fill="#38bdf8"/>
-<text x="580.0071742652165" y="232" fill="#eef4ff" font-size="11">60.3 W</text>
-<text x="180" y="268.0" fill="#9fb0ca" text-anchor="end">2B, grammar</text>
-<rect x="190" y="254" width="397.9" height="12" fill="#38bdf8"/>
-<text x="593.906734552187" y="264" fill="#eef4ff" font-size="11">62.5 W</text>
-<text x="180" y="300.0" fill="#9fb0ca" text-anchor="end">8B, no think</text>
-<rect x="190" y="286" width="440.0" height="12" fill="#38bdf8"/>
-<text x="636.0" y="296" fill="#eef4ff" font-size="11">69.1 W</text>
-<text x="180" y="332.0" fill="#9fb0ca" text-anchor="end">8B, grammar</text>
-<rect x="190" y="318" width="419.9" height="12" fill="#38bdf8"/>
-<text x="615.8889146031011" y="328" fill="#eef4ff" font-size="11">66 W</text>
-<text x="704" y="364" fill="#5f6f8a" text-anchor="end" font-size="10">values from reports/thor/*.json</text>
+<rect width="720" height="374" fill="#181b1d"/>
+<text x="16" y="24" fill="#eef1e8" font-size="15" font-weight="700">Board input power, VIN p50</text>
+<rect x="16" y="34" width="10" height="10" fill="#68b7ff"/>
+<text x="30" y="43" fill="#a3aa9c">VIN p50</text>
+<text x="180" y="76.0" fill="#a3aa9c" text-anchor="end">mock, no post</text>
+<rect x="190" y="62" width="156.6" height="12" fill="#68b7ff"/>
+<text x="352.58643832446194" y="72" fill="#eef1e8" font-size="11">24.6 W</text>
+<text x="180" y="108.0" fill="#a3aa9c" text-anchor="end">mock, per-event POST</text>
+<rect x="190" y="94" width="162.7" height="12" fill="#68b7ff"/>
+<text x="358.7343207590835" y="104" fill="#eef1e8" font-size="11">25.6 W</text>
+<text x="180" y="140.0" fill="#a3aa9c" text-anchor="end">mock, batched POST</text>
+<rect x="190" y="126" width="160.1" height="12" fill="#68b7ff"/>
+<text x="356.1122425364499" y="136" fill="#eef1e8" font-size="11">25.2 W</text>
+<text x="180" y="172.0" fill="#a3aa9c" text-anchor="end">mock, unpaced</text>
+<text x="194" y="169" fill="#7c8378" font-size="11">not measured</text>
+<text x="180" y="204.0" fill="#a3aa9c" text-anchor="end">2B, think</text>
+<rect x="190" y="190" width="423.7" height="12" fill="#68b7ff"/>
+<text x="619.6565609812544" y="200" fill="#eef1e8" font-size="11">66.6 W</text>
+<text x="180" y="236.0" fill="#a3aa9c" text-anchor="end">2B, no think</text>
+<rect x="190" y="222" width="384.0" height="12" fill="#68b7ff"/>
+<text x="580.0071742652165" y="232" fill="#eef1e8" font-size="11">60.3 W</text>
+<text x="180" y="268.0" fill="#a3aa9c" text-anchor="end">2B, grammar</text>
+<rect x="190" y="254" width="397.9" height="12" fill="#68b7ff"/>
+<text x="593.906734552187" y="264" fill="#eef1e8" font-size="11">62.5 W</text>
+<text x="180" y="300.0" fill="#a3aa9c" text-anchor="end">8B, no think</text>
+<rect x="190" y="286" width="440.0" height="12" fill="#68b7ff"/>
+<text x="636.0" y="296" fill="#eef1e8" font-size="11">69.1 W</text>
+<text x="180" y="332.0" fill="#a3aa9c" text-anchor="end">8B, grammar</text>
+<rect x="190" y="318" width="419.9" height="12" fill="#68b7ff"/>
+<text x="615.8889146031011" y="328" fill="#eef1e8" font-size="11">66 W</text>
+<text x="704" y="364" fill="#7c8378" text-anchor="end" font-size="10">values from reports/thor/*.json</text>
 </svg><figcaption>Board input power at p50 over each run, watts; about 24 W is the device&#x27;s idle level. The empty-output failure case is excluded.</figcaption></figure></div>
 
 <h2>What is not established</h2>
@@ -173,4 +184,4 @@ a{color:var(--accent)}.charts{display:grid;grid-template-columns:repeat(auto-fit
 <li>Sixty frames of one video is a signal about the 8B, not a rate.</li>
 </ul>
 <footer>Generated by <code>scripts/build_evidence_pages.py</code> from the committed artifacts. Repository: <a href="https://github.com/obiedeh/physical-ai-safety-observability">https://github.com/obiedeh/physical-ai-safety-observability</a>. Case study: <a href="https://obiedeh.github.io/physical-ai-safety-observability.html">obiedeh.github.io</a>.</footer>
-</main></body></html>
+</main><div class="ee-foot"><div class="ee-in">An <a href="https://embodiededge.ai">EmbodiedEdge Labs</a> project. Measured on real hardware, published as found.</div></div></body></html>
