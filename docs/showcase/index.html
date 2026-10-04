@@ -1,8 +1,5 @@
 <title>Physical AI Safety Observability</title>
 <meta name="description" content="Runtime safety observability for robot workcells on Jetson AGX Thor: PPE, restricted zone and proximity rules over a vision-language model, an operator console, and measured Thor evidence.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Saira+Semi+Condensed:wght@500;600;700&family=Source+Sans+3:wght@400;500;600&family=Red+Hat+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: a workcell safety inspection sheet. Plan of the cell on top, rules keyed by ISO 7010 sign shape, then the measured record from the Thor, the console, and the open items. */
 :root{
@@ -145,9 +142,18 @@ figcaption b{color:var(--ink);font-weight:600}
 .never b{color:var(--proh)}
 footer{border-top:1px solid var(--rule);padding-top:18px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between;font-size:13.5px;color:var(--ink-3)}
 footer nav{display:flex;flex-wrap:wrap;gap:6px 18px}
-</style>
-
-<div class="wrap">
+</style><style id="ee-theme">:root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#202224;--plate:#181b1d;--ink:#eef1e8;--ink-2:#c9cfc2;--ink-3:#a3aa9c;--rule:#393d3f;--floor:#26292b;--floor-line:#393d3f;--grid:#2c2f31;--mand:#68b7ff;--safe:#b7f34a;--safe-bg:#b7f34a1f;--proh:#ff7a6b;--warn:#f0b52e;--warn-ink:#f0b52e;--warn-bg:#30260c;--s1:#68b7ff;--s2:#ff9c59;--f-display:"Helvetica Neue",Helvetica,Arial,sans-serif;--f-body:"Helvetica Neue",Helvetica,Arial,sans-serif;--f-mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color-scheme:dark}h1,h2,h3{font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-weight:500;letter-spacing:-.02em}h1{letter-spacing:-.035em}:root[data-theme="light"]{--bg:#f6f7f3;--plate:#ffffff;--ink:#1a1c1e;--ink-2:#3d4239;--ink-3:#5d6459;--rule:#d8dbd2;--floor:#eceee8;--floor-line:#c9cdc3;--grid:#e6e8e2;--mand:#1f6fd1;--safe:#4d7c0f;--safe-bg:#e6f1d3;--proh:#b4261f;--warn:#e0a400;--warn-ink:#7a5600;--warn-bg:#f9efcf;--s1:#1f6fd1;--s2:#c2560c;--f-display:"Helvetica Neue",Helvetica,Arial,sans-serif;--f-body:"Helvetica Neue",Helvetica,Arial,sans-serif;--f-mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color-scheme:light}@media print{:root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#f6f7f3;--plate:#ffffff;--ink:#1a1c1e;--ink-2:#3d4239;--ink-3:#5d6459;--rule:#d8dbd2;--floor:#eceee8;--floor-line:#c9cdc3;--grid:#e6e8e2;--mand:#1f6fd1;--safe:#4d7c0f;--safe-bg:#e6f1d3;--proh:#b4261f;--warn:#e0a400;--warn-ink:#7a5600;--warn-bg:#f9efcf;--s1:#1f6fd1;--s2:#c2560c;--f-display:"Helvetica Neue",Helvetica,Arial,sans-serif;--f-body:"Helvetica Neue",Helvetica,Arial,sans-serif;--f-mono:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color-scheme:light}}
+body{margin:0}
+.ee-band{background:#181b1d;border-bottom:1px solid #393d3f;color:#eef1e8;font:14px/1.4 "Helvetica Neue",Helvetica,Arial,sans-serif;position:relative;z-index:50}
+.ee-band .ee-in{max-width:1120px;margin:0 auto;padding:10px 20px;display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;justify-content:space-between}
+.ee-band a{color:#a3aa9c;text-decoration:none}.ee-band a:hover{color:#eef1e8}
+.ee-band .ee-mark{display:inline-flex;align-items:center;gap:8px;color:#eef1e8;font-weight:600;letter-spacing:-.01em}
+.ee-band .ee-mark i{display:inline-block;width:14px;height:14px;border-radius:2px;background:linear-gradient(135deg,#b7f34a 0 50%,#68b7ff 50% 100%)}
+.ee-band .ee-mark span{color:#a3aa9c;font-weight:400}.ee-band nav{display:flex;gap:16px}
+.ee-foot{border-top:1px solid #393d3f;background:#181b1d;color:#7c8378;font:13px/1.5 "Helvetica Neue",Helvetica,Arial,sans-serif}
+.ee-foot .ee-in{max-width:1120px;margin:0 auto;padding:14px 20px}.ee-foot a{color:#a3aa9c}
+@media print{.ee-band,.ee-foot{background:#fff;color:#5d6459;border-color:#d8dbd2}.ee-band .ee-mark{color:#1a1c1e}}
+</style><div class="ee-band"><div class="ee-in"><a class="ee-mark" href="https://embodiededge.ai"><i></i>EmbodiedEdge <span>Labs · Evidence</span></a><nav><a href="https://github.com/obiedeh/physical-ai-safety-observability">Repository</a><a href="https://embodiededge.ai">Lab</a><a href="https://github.com/obiedeh">Obinna Edeh</a></nav></div></div><div class="wrap">
 
 <header>
   <div class="top">
@@ -399,3 +405,4 @@ confidence = highest among those people</div>
 </footer>
 
 </div>
+<div class="ee-foot"><div class="ee-in">An <a href="https://embodiededge.ai">EmbodiedEdge Labs</a> project. Measured on real hardware, published as found.</div></div>
