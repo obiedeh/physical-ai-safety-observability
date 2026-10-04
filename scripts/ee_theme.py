@@ -85,8 +85,9 @@ def apply_theme(html: str, *, repo_url: str, dark: dict[str, str], light: dict[s
     m = re.search(r"<body[^>]*>", html)
     if m:  # a page with head and body: theme last in the head, band first in the body
         html = html.replace("</head>", style + "</head>", 1) if "</head>" in html else html
-        m = re.search(r"<body[^>]*>", html)
-        html = html[:m.end()] + band_html(repo_url) + html[m.end():]
+        body = re.search(r"<body[^>]*>", html)
+        if body:
+            html = html[:body.end()] + band_html(repo_url) + html[body.end():]
     else:  # a page without head/body tags: theme and band just before the first content block
         c = re.search(r"<(?:div|main|header|section|nav|article)\b", html)
         pos = c.start() if c else len(html)
