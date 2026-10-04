@@ -309,7 +309,8 @@ def main() -> int:
     for name, (svg, _) in charts.items():
         (charts_dir / f"{name}.svg").write_text(svg + "\n")
     page = apply_theme(build_page(rows, charts, args.repo_url), repo_url=args.repo_url,
-                       dark={}, force_dark=False)
+                       dark={}, force_dark=False,
+                       typeset={"eyebrow": ".eyebrow", "accents": [("Physical AI", "g"), ("Observability", "b")]})
     out = args.reports / "index.html"
     out.write_text(page)
     print(f"wrote {out} and {len(charts)} charts to {charts_dir} from {len(rows)} artifacts")
