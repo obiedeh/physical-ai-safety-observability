@@ -8,6 +8,7 @@ version = "0.1.0"
 description = "Runtime-aware Physical AI safety observability pipeline"
 readme = "README.md"
 requires-python = ">=3.11"
+license = {text = "MIT"}
 dependencies = [
   "alembic>=1.13",
   "av>=12",
