@@ -281,3 +281,7 @@ Not built or not run yet:
 ## Related
 
 Project overview: [showcase](https://obiedeh.github.io/physical-ai-safety-observability/docs/showcase/). Sibling systems: [jetson-edge-ai-security](https://github.com/obiedeh/jetson-edge-ai-security) (measured Thor inference and power evidence for a defensive telemetry runtime) and the [Physical AI case study](https://obiedeh.github.io/physical-ai-jetson-robotics.html).
+
+## License
+
+MIT. See [LICENSE](LICENSE).
