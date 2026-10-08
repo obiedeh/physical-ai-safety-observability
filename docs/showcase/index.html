@@ -161,7 +161,7 @@ body{margin:0}
     <span class="status"><i></i>Functional · live-camera validation in progress</span>
   </div>
   <h1><span class="ee-g">Physical AI</span> Safety <span class="ee-b">Observability</span></h1>
-  <p class="lede">Cameras watch a robot workcell. A vision-language model on the device reports who is in the frame and what they are wearing, safety rules turn that into structured events, and an operator reviews them. It measures what it costs to run, and it records what the model gets wrong.</p>
+  <p class="lede">Cameras watch a robot workcell: network cameras, a pasted RTSP link, a USB camera, an uploaded video or a browser's camera. A vision-language model on the device reports who is in the frame and what they are wearing, safety rules turn that into structured events, and an operator reviews them. It measures what it costs to run, records what the model gets wrong, and labels footage that is not a live camera everywhere it appears.</p>
   <div class="spec">
     <div><span class="label">Device</span><b>Jetson AGX Thor</b><span>L4T R38.4.0, 120 W mode</span></div>
     <div><span class="label">Model</span><b>Cosmos-Reason2 2B and 8B</b><span>served on device by vLLM 0.14</span></div>
@@ -238,7 +238,7 @@ body{margin:0}
     <h2 id="flow-h">Three loops that never wait on each other</h2>
   </div>
   <div class="flow">
-    <div><span class="label">Capture</span><b>Native frame rate</b><p>One thread per camera decodes the stream and keeps the newest frame. The console shows that video at the camera's own rate.</p></div>
+    <div><span class="label">Capture</span><b>Native frame rate</b><p>One thread per camera decodes the feed and keeps the newest frame: network stream, USB device, uploaded file or browser camera. The console shows that video at the camera's own rate.</p></div>
     <div><span class="label">Inference</span><b>On its own interval</b><p>A worker samples the newest frame, asks the model for people, objects and PPE, and runs the rules bound to that camera.</p></div>
     <div><span class="label">Posting</span><b>Asynchronous</b><p>Events go to a bounded queue drained by its own thread, with retries, a drop counter, and latency measured from frame capture to the backend's acknowledgement.</p></div>
   </div>
@@ -352,7 +352,8 @@ confidence = highest among those people</div>
   <div class="trust">
     <div><b>Every number has a file</b><p>Each run writes one artifact with the device, date, inputs, per-frame timings, token use, event counts, peak memory and a 1 Hz tegrastats record.</p></div>
     <div><b>Failures are kept</b><p>A timed-out run, an empty-output run and a model echoing its own schema are all committed and labelled, not edited out.</p></div>
-    <div><b>Cameras set up in the UI</b><p>Ten vendor profiles, a connection test that decodes one frame or names the problem, and zones drawn on a live snapshot.</p></div>
+    <div><b>Cameras set up in the UI</b><p>Five feed connectors: nine vendor profiles, a pasted RTSP link, USB cameras, uploaded video at native rate and a browser camera. A connection test decodes one frame or names the problem; zones are drawn on a live snapshot.</p></div>
+    <div><b>Live and recorded never mix</b><p>Every event and run report records where its frames came from: live network, USB, browser, uploaded recording, generated footage or the synthetic feed. Non-live evidence carries a visible note.</p></div>
     <div><b>Credentials stay put</b><p>Passwords are encrypted at rest, never returned by the API, only reused for the host they were saved for, and masked in logs, events and reports.</p></div>
     <div><b>Shared model server guarded</b><p>The model container keeps running across restarts. Stopping it needs an explicit, logged confirmation.</p></div>
     <div><b>Nothing acts on its own</b><p>The system flags and records. It never stops a robot or a line; a person decides.</p></div>
@@ -371,6 +372,7 @@ confidence = highest among those people</div>
         <li><span class="mk ok"></span><span><b>Runs end to end</b> from camera setup to events in the console, and is deployed on the Thor as a service.</span></li>
         <li><span class="mk ok"></span><span><b>Runtime cost measured</b>: pipeline overhead, model latency, power and temperature for 2B and 8B.</span></li>
         <li><span class="mk ok"></span><span><b>Constrained-mode guard measured</b> against the real containers.</span></li>
+        <li><span class="mk ok"></span><span><b>Five feed connectors</b>: vendor RTSP and HTTP profiles, a pasted RTSP link, USB cameras, uploaded video and a browser camera from a laptop or phone (HTTPS front door, opt-in), with every event labelled by source.</span></li>
         <li><span class="mk ok"></span><span><b>Tests and CI</b> on every push to main.</span></li>
       </ul>
     </div>

@@ -15,7 +15,8 @@ from urllib.parse import urlparse
 
 from edge.redaction import REDACTOR, mask_url
 
-ProbeStage = str  # "reachability" | "auth" | "path" | "codec" | "timeout" | "decode" | "ok"
+# "reachability" | "auth" | "path" | "codec" | "timeout" | "decode" | "device" | "ok"
+ProbeStage = str
 
 
 @dataclass
@@ -47,6 +48,14 @@ class ProbeResult:
 def classify_error(message: str) -> tuple[ProbeStage, str]:
     """Map libav/socket error text onto an operator-readable category."""
     text = (message or "").lower()
+    if "resource busy" in text:
+        return "device", "The device is busy: another program (or camera entry) is using it."
+    if "no such file or directory" in text or "no such device" in text:
+        return "device", "No camera at this device path. It may have been unplugged or renumbered."
+    if "inappropriate ioctl" in text:
+        return "device", "This node is not a video capture device (it may be the metadata node)."
+    if "permission denied" in text and "/dev/" in text:
+        return "device", "Permission denied opening the device. Add the user to the video group."
     if "401" in text or "unauthorized" in text or "authentication" in text or "403" in text:
         return "auth", "Authentication failed — check the username and password."
     if "404" in text or "not found" in text or "stream not found" in text:
@@ -83,12 +92,19 @@ def probe_stream(
     timeout_s: float = 8.0,
     rtsp_transport: str = "tcp",
     thumbnail_width: int = 320,
+    input_format: str | None = None,
+    input_options: dict[str, str] | None = None,
 ) -> ProbeResult:
+    """Decode one frame from ``url`` (a stream URL or, with ``input_format``, a device).
+
+    Network URLs get a quick TCP reachability check first so an unplugged
+    camera fails in seconds with a clear reason instead of a decoder timeout.
+    """
     masked = mask_url(url)
     parsed = urlparse(url)
     host = parsed.hostname or ""
     port = parsed.port or (554 if parsed.scheme.startswith("rtsp") else 80)
-    if host:
+    if host and input_format is None:
         reach_err = tcp_reachable(host, port, timeout=min(3.0, timeout_s))
         if reach_err:
             return ProbeResult(
@@ -100,7 +116,10 @@ def probe_stream(
 
     def worker() -> None:
         try:
-            result["value"] = _decode_one(url, timeout_s, rtsp_transport, thumbnail_width, masked)
+            result["value"] = _decode_one(
+                url, timeout_s, rtsp_transport, thumbnail_width, masked,
+                input_format=input_format, input_options=input_options,
+            )
         except Exception as exc:  # pragma: no cover - defensive; _decode_one catches its own
             result["value"] = ProbeResult(
                 ok=False, stage="decode", error=REDACTOR.redact(str(exc)), masked_url=masked
@@ -119,21 +138,31 @@ def probe_stream(
 
 
 def _decode_one(
-    url: str, timeout_s: float, rtsp_transport: str, thumbnail_width: int, masked: str
+    url: str,
+    timeout_s: float,
+    rtsp_transport: str,
+    thumbnail_width: int,
+    masked: str,
+    *,
+    input_format: str | None = None,
+    input_options: dict[str, str] | None = None,
 ) -> ProbeResult:
     import time
 
     import av
 
-    options = {}
+    options: dict[str, str] = dict(input_options or {})
     if url.startswith("rtsp"):
-        options = {
+        options.update({
             "rtsp_transport": rtsp_transport or "tcp",
             "stimeout": str(int(timeout_s * 1_000_000)),
-        }
+        })
+    open_kwargs: dict[str, Any] = {"options": options, "timeout": timeout_s}
+    if input_format:
+        open_kwargs["format"] = input_format
     started = time.perf_counter()
     try:
-        container = av.open(url, options=options, timeout=timeout_s)
+        container = av.open(url, **open_kwargs)
     except Exception as exc:
         stage, message = classify_error(str(exc))
         return ProbeResult(ok=False, stage=stage, error=message, masked_url=masked)
