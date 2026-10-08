@@ -10,11 +10,20 @@ cameras, runs a rule engine, groups events into incidents, and stores evidence c
 ```
 edge/service.py         ← EdgeService: one CameraWorker thread per enabled camera
                            (latest frame → VLM adapter → rules → AsyncPoster); run recorder
-edge/capture.py         ← PyAV CameraSession per camera, native-rate latest-frame slot
+edge/capture.py         ← PyAV CameraSession per camera, native-rate latest-frame slot;
+                           Stream (RTSP/HTTP), Usb (V4L2), File (uploads, loop/once),
+                           Push (browser), Synthetic sessions
+edge/rtsp_url.py        ← pasted RTSP links: parse, strip credentials, rebuild for the decoder
+edge/usb_devices.py     ← /dev/video* enumeration with V4L2 ioctls (names, modes)
+edge/uploads.py         ← upload validation (type, signature, size), PyAV probe
+edge/evidence_label.py  ← source_kind notes and the banner stamped on non-live evidence
+api/tls_proxy.py        ← optional HTTPS front door (opt-in) for LAN browser cameras
 edge/poster.py          ← AsyncPoster: queue + thread, retries, packet-to-event latency
 edge/model_guard.py     ← server check + json_schema canary (refuses reasoning-parser servers)
 edge/model_server.py    ← catalog + app-managed Cosmos vLLM container (docker) on Jetson
-edge/camera_profiles.py ← vendor profiles (main/sub paths); edge/probe.py decodes one frame
+edge/camera_profiles.py ← vendor profiles (main/sub paths) and connector profiles
+                           (rtsp_url, usb, uploaded_video, browser, synthetic);
+                           source_kind_for(); edge/probe.py decodes one frame
 edge/secrets.py         ← Fernet encryption for stored credentials; edge/redaction.py masks
 edge/worker.py          ← file/synthetic worker CLI (unchanged contract)
 edge/live_camera.py     ← optional CLI over EdgeService (UI is the primary path)
@@ -95,6 +104,12 @@ Implement `VLMAdapter.analyze_frame(frame_context) -> dict` returning:
 - No new top-level packages without explicit approval (approved 2026-10-02: `web/`)
 - No new dependencies without explicit approval (approved 2026-10-02: av, Pillow,
   cryptography; opencv stays optional for `edge.worker` file sources)
+- Every camera has a `source_kind` (live_rtsp, usb, browser, uploaded_recorded,
+  uploaded_generated, synthetic). Workers stamp it on results and SafetyEvents;
+  evidence frames from non-live sources get a visible banner. Never drop it.
+- Schema changes are additive: camera fields live in the JSON payload with defaults,
+  new tables come as Alembic migrations with `if_not_exists`; `tests/test_store_upgrade.py`
+  must keep passing. Uploads, certificates and keys live outside the repo (gitignored).
 - No secrets, credentials, or real deployment topology in this repo (public).
   Camera passwords and API keys are entered in the UI and Fernet-encrypted in
   SQLite; the key file lives outside the repo. Tests use TEST-NET addresses.
