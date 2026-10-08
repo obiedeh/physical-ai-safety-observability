@@ -32,21 +32,26 @@ from api.services.store import SQLiteStore
 from edge.adapters.base import VLMAdapter
 from edge.adapters.mock_vlm import MockVLMAdapter
 from edge.adapters.openai_compatible import CosmosReason2Adapter, OpenAICompatibleAdapter
-from edge.camera_profiles import CameraConfigError, get_profile
+from edge.camera_profiles import CameraConfigError, get_profile, source_kind_for
 from edge.capture import (
     CameraSession,
+    FileCameraSession,
     PushCameraSession,
     StreamCameraSession,
     SyntheticCameraSession,
+    UsbCameraSession,
 )
 from edge.config_models import CameraIn, CameraRecord, InferenceSettings, ModelSettings
+from edge.evidence_label import evidence_note, stamp_evidence
 from edge.model_guard import GuardResult, check_server, probe_constrained
 from edge.model_server import ModelServerManager
 from edge.poster import AsyncPoster, PostJob
 from edge.redaction import REDACTOR, mask_url
 from edge.results import ResultHub
+from edge.rtsp_url import with_credentials
 from edge.secrets import SecretBox
 from edge.worker import build_person_ppe_feedback
+from events.schemas import SafetyEvent
 from evidence.hashing import hash_bytes
 from rules.engine import SafetyPolicyEngine
 from spatial.zones import Zone
@@ -139,6 +144,7 @@ class CameraWorker(threading.Thread):
                 "frame_hash": hash_bytes(frame_bytes),
                 "metadata": {
                     "source_type": self.session.kind,
+                    "source_kind": self.camera.source_kind,
                     "capture_seq": record.seq,
                     "width": width,
                     "height": height,
@@ -177,6 +183,8 @@ class CameraWorker(threading.Thread):
                 )
             if self.camera.rules:
                 events = [e for e in events if e.rule_id in set(self.camera.rules)]
+            # Stamp where the frames came from; non-live sources also get an evidence note.
+            events = [_label_event(e, self.camera.source_kind) for e in events]
             self.runtime.rule_eval_latency_ms = rule_timer.elapsed_ms
             payloads = [e.model_dump(mode="json") for e in events]
             feedback = build_person_ppe_feedback(frame_context=frame_context, detections=detections)
@@ -193,7 +201,11 @@ class CameraWorker(threading.Thread):
                         for payload in payloads:
                             self.service.poster.enqueue(PostJob("event", payload, captured_mono))
             if payloads:
-                self.service.save_evidence_frame(str(frame_context["frame_hash"]), frame_bytes)
+                # Evidence from uploaded or synthetic footage carries a visible banner.
+                self.service.save_evidence_frame(
+                    str(frame_context["frame_hash"]),
+                    stamp_evidence(frame_bytes, self.camera.source_kind),
+                )
             self.events_emitted += len(payloads)
             self.last_result_at = time.time()
             capture_to_result_ms = (time.monotonic() - captured_mono) * 1000
@@ -218,6 +230,7 @@ class CameraWorker(threading.Thread):
                 {
                     "camera_id": self.camera.camera_id,
                     "status": "ok",
+                    "source_kind": self.camera.source_kind,
                     "frame_id": frame_context["frame_id"],
                     "capture_seq": record.seq,
                     "timestamp": timestamp.isoformat(),
@@ -406,6 +419,19 @@ class EdgeService:
             return SyntheticCameraSession(camera.camera_id, **kw)
         if camera.profile == "browser_webrtc":
             return PushCameraSession(camera.camera_id, **kw)
+        if camera.connector == "usb":
+            return UsbCameraSession(
+                camera.camera_id, camera.device, width=camera.capture_width,
+                height=camera.capture_height, fps=camera.capture_fps,
+                pixel_format=camera.capture_format or None, **kw,
+            )
+        if camera.connector == "upload":
+            path = (
+                self.store.upload_path(camera.upload) if camera.upload is not None
+                else self.store.upload_dir / f"{camera.upload_id}.missing"
+            )
+            return FileCameraSession(camera.camera_id, path, loop=camera.playback == "loop", **kw)
+        # vendor profiles, HTTP MJPEG and pasted RTSP links all decode from a URL
         return StreamCameraSession(
             camera.camera_id, self.feed_url(camera.camera_id),
             rtsp_transport=camera.rtsp_transport, **kw,
@@ -431,6 +457,10 @@ class EdgeService:
         payload.pop("enabled", None)
         payload["password_enc"] = enc
         _validate_url(data, password)
+        if get_profile(data.profile).connector == "upload" and (
+            self.store.get_upload(data.upload_id) is None
+        ):
+            raise ValueError(f"Uploaded video '{data.upload_id}' not found. Upload it first.")
         return payload
 
     def _record(self, cfg: dict[str, Any]) -> CameraRecord:
@@ -441,8 +471,12 @@ class EdgeService:
             profile.stream_path(quality, channel) if profile.requires_host else ""
         )
         masked = ""
-        if profile.requires_host and cfg.get("host"):
+        has_url = (profile.requires_host and cfg.get("host")) or (
+            profile.connector == "rtsp_url" and cfg.get("source_url")
+        )
+        if has_url:
             masked = mask_url(_build_url(cfg, "x" if cfg.get("password_enc") else ""))
+        upload = self.store.get_upload(cfg["upload_id"]) if cfg.get("upload_id") else None
         return CameraRecord(
             camera_id=cfg["camera_id"],
             name=cfg.get("name") or cfg["camera_id"],
@@ -463,6 +497,19 @@ class EdgeService:
             masked_url=masked,
             created_at=cfg.get("created_at"),
             updated_at=cfg.get("updated_at"),
+            connector=profile.connector,
+            source_url=cfg.get("source_url") or "",
+            device=cfg.get("device") or "",
+            capture_width=cfg.get("capture_width"),
+            capture_height=cfg.get("capture_height"),
+            capture_fps=cfg.get("capture_fps"),
+            capture_format=cfg.get("capture_format") or "",
+            upload_id=cfg.get("upload_id") or "",
+            playback="once" if cfg.get("playback") == "once" else "loop",
+            upload=upload,
+            source_kind=source_kind_for(
+                profile.model_type, upload.source_kind if upload else None
+            ),
         )
 
     def _unique_id(self, base: str) -> str:
@@ -549,6 +596,7 @@ class EdgeService:
             {
                 "camera_id": camera_id,
                 "status": status,
+                "source_kind": worker.camera.source_kind,
                 "timestamp": datetime.now(UTC).isoformat(),
                 "detections": [],
                 "events": [],
@@ -642,6 +690,10 @@ class EdgeService:
                 source_info={
                     "camera_id": camera_id,
                     "source_type": self.sessions[camera_id].kind,
+                    # Where the frames came from; non-live footage is labelled so a run
+                    # on a recording is never read as a live-camera run.
+                    "source_kind": camera.source_kind,
+                    "evidence_note": evidence_note(camera.source_kind),
                     "profile": camera.profile,
                     "stream_quality": camera.stream_quality,
                     "masked_url": camera.masked_url,
@@ -757,6 +809,7 @@ class EdgeService:
                     "host": path.parent.name,
                     "status": data.get("status"),
                     "started_at": data.get("started_at"),
+                    "source_kind": (data.get("source") or {}).get("source_kind"),
                     "frames": data.get("frames_processed"),
                     "fps": data.get("frames_per_second"),
                     "model": (data.get("adapter") or {}).get("model_version"),
@@ -778,6 +831,7 @@ class EdgeService:
                     **session.status(),
                     "name": camera.name if camera else camera_id,
                     "profile": camera.profile if camera else None,
+                    "source_kind": camera.source_kind if camera else None,
                     "worker": worker.status() if worker else None,
                 }
             )
@@ -808,8 +862,20 @@ def _slug(text: str) -> str:
     return slug or f"run-{uuid.uuid4().hex[:6]}"
 
 
+def _label_event(event: SafetyEvent, source_kind: str) -> SafetyEvent:
+    """Return ``event`` with ``source_kind`` set and, for non-live sources, an evidence note."""
+    note = evidence_note(source_kind)
+    evidence = event.evidence.model_copy(update={"evidence_note": note}) if note else event.evidence
+    return event.model_copy(update={"source_kind": source_kind, "evidence": evidence})
+
+
 def _build_url(cfg: dict[str, Any], password: str) -> str:
+    """Credentialed feed URL for a stored camera; pasted links get their credentials back."""
     profile = get_profile(cfg.get("profile") or "generic_rtsp")
+    if profile.connector == "rtsp_url":
+        return with_credentials(
+            cfg.get("source_url") or "", cfg.get("username") or None, password or None
+        )
     return profile.build_url(
         host=cfg.get("host") or "",
         username=cfg.get("username") or None,

@@ -8,7 +8,9 @@
 #   loginctl enable-linger $USER      # keep it running without a login session
 #
 # Camera credentials are entered in the UI and stored encrypted; the key file
-# lives under ~/.config/physical-ai-safety/ (never in the repo).
+# lives under ~/.config/physical-ai-safety/ (never in the repo). Uploaded videos
+# live next to the database. For HTTPS on the LAN (phone cameras) see
+# physical-ai-safety-tls.service.
 [Unit]
 Description=Physical AI Safety Observability API and operator UI
 After=network-online.target docker.service

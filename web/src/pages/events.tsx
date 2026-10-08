@@ -5,6 +5,7 @@ import { usePoll } from "@/lib/hooks";
 import { cn, fmtPct, fmtTime, ruleLabel, shortId } from "@/lib/utils";
 import { Button, Card, Chip, Empty, Notice, Select } from "@/components/ui";
 import { SeverityChip } from "@/components/status-chip";
+import { SourceKindBadge, evidenceNote } from "@/components/source-kind-badge";
 
 type Tab = "events" | "incidents";
 
@@ -177,7 +178,7 @@ function EventRows({
         <td className="px-3 py-2 whitespace-nowrap text-muted-foreground tabular-nums">{fmtTime(e.timestamp)}</td>
         <td className="px-3 py-2"><SeverityChip severity={e.severity} /></td>
         <td className="px-3 py-2 whitespace-nowrap font-medium">{ruleLabel(e.rule_id)}</td>
-        <td className="px-3 py-2 whitespace-nowrap">{cameraName(e.camera_id)}</td>
+        <td className="px-3 py-2 whitespace-nowrap"><span className="flex items-center gap-2">{cameraName(e.camera_id)}<SourceKindBadge kind={e.source_kind} /></span></td>
         <td className="px-3 py-2 text-right tabular-nums">{fmtPct(e.confidence)}</td>
         <td className="px-3 py-2">{e.human_review_required ? <Chip tone="warn">required</Chip> : <span className="text-muted-foreground text-xs">—</span>}</td>
         <td className="px-3 py-2 text-muted-foreground">{e.summary}</td>
@@ -204,10 +205,15 @@ function EventRows({
                 <dd className="mono">{e.evidence.rule_version}</dd>
                 <dt className="text-muted-foreground">source</dt>
                 <dd className="mono break-all">{e.evidence.source_uri}</dd>
+                <dt className="text-muted-foreground">source kind</dt>
+                <dd className="flex items-center gap-2"><SourceKindBadge kind={e.source_kind} />{!e.source_kind && <span className="text-muted-foreground">not recorded (older event)</span>}</dd>
                 <dt className="text-muted-foreground">frame hash</dt>
                 <dd className="mono break-all">{e.evidence.frame_hash}</dd>
                 <dt className="text-muted-foreground">frame</dt>
-                <dd>
+                <dd className="space-y-1">
+                  {(e.evidence.evidence_note || evidenceNote(e.source_kind)) && (
+                    <div className="rounded border border-warn/40 bg-warn/10 px-2 py-1 text-xs text-warn">{e.evidence.evidence_note ?? evidenceNote(e.source_kind)}</div>
+                  )}
                   {/* Stored at event time by the worker; events from before that have no frame (404 → hidden). */}
                   <a href={evidenceFrameUrl(e.evidence.frame_hash)} target="_blank" rel="noreferrer">
                     <img

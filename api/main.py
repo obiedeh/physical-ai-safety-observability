@@ -2,8 +2,10 @@ import os
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import FastAPI
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, Request
+from fastapi.encoders import jsonable_encoder
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
 from api.routes import cameras, config, events, health, models, runtime, stream
@@ -25,9 +27,22 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="Physical AI Safety Observability",
     description="Runtime-aware evidence pipeline for Physical AI safety events.",
-    version="0.2.0",
+    version="0.3.0",
     lifespan=lifespan,
 )
+
+
+@app.exception_handler(RequestValidationError)
+async def _validation_error(request: Request, exc: RequestValidationError) -> JSONResponse:
+    """Standard 422 body, except camera routes drop the echoed input.
+
+    A rejected camera payload may hold a password or a pasted RTSP link with
+    credentials; those must never come back in a response.
+    """
+    errors = exc.errors()
+    if request.url.path.startswith("/config/cameras"):
+        errors = [{k: v for k, v in e.items() if k not in {"input", "url", "ctx"}} for e in errors]
+    return JSONResponse(status_code=422, content={"detail": jsonable_encoder(errors)})
 
 app.include_router(health.router)
 app.include_router(cameras.router)
