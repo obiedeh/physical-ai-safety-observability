@@ -8,8 +8,11 @@ publishes it to a latest-frame slot. Two independent consumers read the slot:
   they arrive (the video loop), and
 * the inference loop, which samples the latest frame on its own cadence.
 
-The model server is never in the video path, so stopping it cannot stall the
-Live page. Errors are redacted before they are stored or logged.
+Sessions exist for network streams (RTSP, RTSPS, HTTP MJPEG), local USB
+cameras (V4L2 through the same PyAV path), uploaded video files played at
+their native rate, frames pushed from a browser, and a synthetic test
+pattern. The model server is never in the video path, so stopping it cannot
+stall the Live page. Errors are redacted before they are stored or logged.
 """
 from __future__ import annotations
 
@@ -24,6 +27,7 @@ from typing import Any
 from PIL import Image, ImageDraw
 
 from edge.redaction import REDACTOR, mask_url
+from edge.usb_devices import describe_device_error, v4l2_options
 
 logger = logging.getLogger(__name__)
 
@@ -42,12 +46,15 @@ class FrameRecord:
 
 @dataclass
 class SessionStats:
-    state: str = "starting"  # starting | connecting | streaming | reconnecting | error | stopped
+    # starting | connecting | streaming | reconnecting | error | stopped | ended
+    # ("ended": a play-once video reached its last frame)
+    state: str = "starting"
     frames_decoded: int = 0
     frames_published: int = 0
     frames_dropped: int = 0  # decoded but not encoded because the encoder fell behind
     decode_errors: int = 0
     reconnects: int = 0
+    loops: int = 0  # times an uploaded video wrapped around to its first frame
     fps: float = 0.0
     codec: str | None = None
     source_width: int | None = None
@@ -67,6 +74,7 @@ class SessionStats:
             "frames_dropped": self.frames_dropped,
             "decode_errors": self.decode_errors,
             "reconnects": self.reconnects,
+            "loops": self.loops,
             "fps": round(self.fps, 2),
             "codec": self.codec,
             "source_width": self.source_width,
@@ -150,10 +158,10 @@ class CameraSession:
         except Exception as exc:  # pragma: no cover - last-resort guard
             self._set_error(exc)
         finally:
-            if not self._stop.is_set():
-                self.stats.state = "error"
-            else:
+            if self._stop.is_set():
                 self.stats.state = "stopped"
+            elif self.stats.state != "ended":
+                self.stats.state = "error"
 
     def _run(self) -> None:  # pragma: no cover - abstract
         raise NotImplementedError
@@ -245,16 +253,10 @@ class StreamCameraSession(CameraSession):
         attempt = 0
         while not self._stop.is_set():
             self.stats.state = "connecting" if attempt == 0 else "reconnecting"
-            options: dict[str, str] = {}
-            if self._url.startswith("rtsp"):
-                options = {
-                    "rtsp_transport": self._rtsp_transport or "tcp",
-                    "stimeout": str(int(self._open_timeout_s * 1_000_000)),
-                }
             try:
-                container = av.open(self._url, options=options, timeout=self._open_timeout_s)
+                container = self._open_container(av)
             except Exception as exc:
-                self._set_error(exc)
+                self._set_error(self._describe_open_error(exc))
                 if self._sleep_backoff(attempt):
                     return
                 attempt += 1
@@ -278,6 +280,20 @@ class StreamCameraSession(CameraSession):
             if self._sleep_backoff(attempt):
                 return
             attempt += 1
+
+    def _open_container(self, av: Any) -> Any:
+        """Open the network stream; RTSP gets the transport and socket-timeout options."""
+        options: dict[str, str] = {}
+        if self._url.startswith("rtsp"):
+            options = {
+                "rtsp_transport": self._rtsp_transport or "tcp",
+                "stimeout": str(int(self._open_timeout_s * 1_000_000)),
+            }
+        return av.open(self._url, options=options, timeout=self._open_timeout_s)
+
+    def _describe_open_error(self, exc: BaseException) -> BaseException | str:
+        """Hook for subclasses to turn a libav open error into operator-readable text."""
+        return exc
 
     def _sleep_backoff(self, attempt: int) -> bool:
         """Sleep the backoff for ``attempt``; return True if stop was requested."""
@@ -310,6 +326,124 @@ class StreamCameraSession(CameraSession):
             image = frame.to_image()
             self.publish_image(image, source_size=(frame.width, frame.height))
             last_encode = now
+
+
+class UsbCameraSession(StreamCameraSession):
+    """Local V4L2 camera (``/dev/videoN``) decoded with PyAV, reconnecting like a stream.
+
+    The requested size, pixel format and rate are passed as libav input
+    options; blank values leave the driver default. Open errors are mapped to
+    clear messages (device missing, busy, permission, metadata node).
+    """
+
+    kind = "usb"
+
+    def __init__(
+        self,
+        camera_id: str,
+        device: str,
+        *,
+        width: int | None = None,
+        height: int | None = None,
+        fps: float | None = None,
+        pixel_format: str | None = None,
+        **kw: Any,
+    ) -> None:
+        super().__init__(camera_id, device, **kw)
+        self.device = device
+        self._options = v4l2_options(width, height, fps, pixel_format)
+        self.masked_url = device
+
+    def _open_container(self, av: Any) -> Any:
+        return av.open(
+            self.device, format="v4l2", options=self._options, timeout=self._open_timeout_s
+        )
+
+    def _describe_open_error(self, exc: BaseException) -> BaseException | str:
+        return describe_device_error(exc)
+
+
+class FileCameraSession(CameraSession):
+    """Uploaded video played at the file's native frame rate, looped or once.
+
+    Frames are released on the file's own timestamps so a 25 fps recording
+    plays at 25 fps whatever the decoder speed. When ``loop`` is set the file
+    restarts at its last frame and ``stats.loops`` counts the wrap-arounds;
+    otherwise the session reports the ``ended`` state and stops.
+    """
+
+    kind = "file"
+
+    def __init__(self, camera_id: str, path: str | Any, *, loop: bool = True, **kw: Any) -> None:
+        super().__init__(camera_id, **kw)
+        self.path = str(path)
+        self.loop = loop
+
+    def _run(self) -> None:
+        import av
+
+        while not self._stop.is_set():
+            try:
+                container = av.open(self.path)
+            except Exception as exc:
+                self._set_error(f"cannot open the video file: {exc}")
+                return
+            try:
+                self._play_once(container)
+            except Exception as exc:
+                if self._stop.is_set():
+                    return
+                self.stats.decode_errors += 1
+                self._set_error(exc)
+                return
+            finally:
+                try:
+                    container.close()
+                except Exception:
+                    pass
+            if self._stop.is_set():
+                return
+            if not self.loop:
+                self.stats.state = "ended"
+                return
+            self.stats.loops += 1
+
+    def _play_once(self, container: Any) -> None:
+        stream = next(iter(container.streams.video), None)
+        if stream is None:
+            raise RuntimeError("no video stream in the file")
+        stream.thread_type = "AUTO"
+        self.stats.codec = stream.codec_context.name
+        self.stats.source_width = stream.codec_context.width or None
+        self.stats.source_height = stream.codec_context.height or None
+        self.stats.source_fps = float(stream.average_rate) if stream.average_rate else None
+        self.stats.connected_at = self.stats.connected_at or time.time()
+        self.stats.last_error = None
+        fps = self.stats.source_fps or 25.0
+        frame_interval = 1.0 / fps
+        wall_start = time.monotonic()
+        first_t: float | None = None
+        index = 0
+        for frame in container.decode(stream):
+            if self._stop.is_set():
+                return
+            self.stats.frames_decoded += 1
+            t = frame.time if frame.time is not None else index / fps
+            if first_t is None:
+                first_t = t
+            due = wall_start + (t - first_t)
+            now = time.monotonic()
+            if due > now:
+                if self._stop.wait(due - now):
+                    return
+            elif now - due > frame_interval and self.stats.frames_published:
+                # Encoding fell behind the file's clock: skip this frame rather than
+                # slow the playback down; skips are counted and reported.
+                self.stats.frames_dropped += 1
+                index += 1
+                continue
+            self.publish_image(frame.to_image(), source_size=(frame.width, frame.height))
+            index += 1
 
 
 class PushCameraSession(CameraSession):

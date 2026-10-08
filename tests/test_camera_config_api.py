@@ -149,3 +149,16 @@ def test_test_connection_refuses_stored_password_for_other_host(monkeypatch) -> 
     assert called == []
     r = client.post("/config/cameras/test", json={**TAPO, "password": "", "camera_id": "nope"})
     assert r.json()["ok"] is False and "not saved" in r.json()["error"]
+
+
+def test_connector_profiles_and_source_kinds() -> None:
+    from edge.camera_profiles import CONNECTORS, SOURCE_KINDS, source_kind_for
+
+    by_type = {p["model_type"]: p for p in client.get("/config/profiles").json()}
+    assert {"rtsp_url", "usb", "uploaded_video", "browser_webrtc", "synthetic"} <= set(by_type)
+    assert by_type["rtsp_url"]["connector"] == "rtsp_url"
+    assert by_type["usb"]["connector"] == "usb" and not by_type["usb"]["requires_host"]
+    assert by_type["uploaded_video"]["connector"] == "upload"
+    assert by_type["tapo"]["connector"] == "network"
+    assert {p["connector"] for p in by_type.values()} == set(CONNECTORS)
+    assert {source_kind_for(p) for p in by_type} <= set(SOURCE_KINDS)

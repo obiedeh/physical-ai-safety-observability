@@ -34,13 +34,34 @@ class WorkerSettings(BaseModel):
     clean_feedback_terminal: bool = True
 
 
+class UploadSettings(BaseModel):
+    """Limits for video files uploaded from the Cameras page.
+
+    ``max_bytes`` defaults to 2 GiB and can be overridden with
+    ``PHYSICAL_AI_UPLOAD_MAX_BYTES``. Files are stored next to the SQLite
+    database unless ``dir`` (or ``PHYSICAL_AI_UPLOAD_DIR``) points elsewhere.
+    """
+
+    max_bytes: int = Field(default=2 * 1024**3, ge=1024)
+    dir: str | None = None
+
+
 class RuntimeSettings(BaseModel):
     app: AppSettings = Field(default_factory=AppSettings)
     worker: WorkerSettings = Field(default_factory=WorkerSettings)
+    uploads: UploadSettings = Field(default_factory=UploadSettings)
+
+
+_UPLOAD_ENV_KEYS = {"PHYSICAL_AI_UPLOAD_MAX_BYTES": "max_bytes", "PHYSICAL_AI_UPLOAD_DIR": "dir"}
 
 
 def load_settings(path: str | Path | None = None) -> RuntimeSettings:
     config_path = path or os.getenv("PHYSICAL_AI_CONFIG")
-    if not config_path:
-        return RuntimeSettings()
-    return RuntimeSettings.model_validate(load_json(config_path))
+    raw = load_json(config_path) if config_path else {}
+    uploads = dict(raw.get("uploads") or {})
+    for env_key, field in _UPLOAD_ENV_KEYS.items():
+        value = os.getenv(env_key)
+        if value:
+            uploads[field] = value
+    raw["uploads"] = uploads
+    return RuntimeSettings.model_validate(raw)

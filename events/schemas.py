@@ -34,8 +34,12 @@ class RuntimeContext(BaseModel):
 
 
 class Evidence(BaseModel):
+    """What the event was decided on. ``evidence_note`` is set when the frames did
+    not come from a live camera (uploaded recording, generated footage, synthetic)."""
+
     frame_hash: str
     source_uri: str
+    evidence_note: str | None = None
     adapter_name: str
     model_version: str
     rule_version: str
@@ -45,8 +49,16 @@ class Evidence(BaseModel):
 
 
 class SafetyEvent(BaseModel):
+    """One rule hit on one frame.
+
+    ``source_kind`` says where the frames came from: ``live_rtsp``, ``usb``,
+    ``browser``, ``uploaded_recorded``, ``uploaded_generated`` or ``synthetic``.
+    It is ``None`` only on events written before the field existed.
+    """
+
     event_id: str = Field(default_factory=lambda: str(uuid4()))
     camera_id: str
+    source_kind: str | None = None
     timestamp: datetime = Field(default_factory=lambda: datetime.now(UTC))
     rule_id: str
     severity: Severity

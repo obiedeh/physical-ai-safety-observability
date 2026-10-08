@@ -7,6 +7,7 @@ from typing import Any
 
 from api.models.camera import Camera, CameraRegistration
 from api.services.migrations import run_migrations
+from edge.config_models import UploadRecord
 from edge.redaction import mask_url
 from events.lifecycle import can_group_event, merge_event_into_incident
 from events.schemas import Incident, PersonPPEFeedback, SafetyEvent
@@ -23,6 +24,13 @@ class SQLiteStore:
         self.incident_window_seconds = (
             incident_window_seconds or settings.app.incident_window_seconds
         )
+        # Uploaded video files live next to the database, never in the repository.
+        if settings.uploads.dir:
+            self.upload_dir = Path(settings.uploads.dir)
+        elif self.database_path != ":memory:":
+            self.upload_dir = Path(self.database_path).parent / "uploads"
+        else:
+            self.upload_dir = Path("data") / "uploads"
         self._lock = Lock()
         self._initialize()
 
@@ -87,6 +95,22 @@ class SQLiteStore:
                     key TEXT PRIMARY KEY,
                     value TEXT NOT NULL,
                     updated_at TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS uploads (
+                    id TEXT PRIMARY KEY,
+                    filename TEXT NOT NULL,
+                    stored_name TEXT NOT NULL,
+                    content_type TEXT NOT NULL,
+                    size_bytes INTEGER NOT NULL,
+                    sha256 TEXT NOT NULL,
+                    source_kind TEXT NOT NULL DEFAULT 'recorded',
+                    duration_s REAL,
+                    width INTEGER,
+                    height INTEGER,
+                    fps REAL,
+                    codec TEXT,
+                    frames INTEGER,
+                    created_at TEXT NOT NULL
                 );
                 """
             )
@@ -185,6 +209,68 @@ class SQLiteStore:
                 "DELETE FROM camera_configs WHERE camera_id = ?", (camera_id,)
             )
             return cursor.rowcount > 0
+
+    # ── Uploaded videos ───────────────────────────────────────────────────────
+
+    def upload_path(self, record: UploadRecord) -> Path:
+        """Where the bytes of ``record`` live on disk."""
+        return self.upload_dir / (record.stored_name or record.id)
+
+    def list_uploads(self) -> list[UploadRecord]:
+        with self._lock, self._connect() as connection:
+            rows = connection.execute("SELECT * FROM uploads ORDER BY created_at DESC").fetchall()
+            users = self._upload_users(connection)
+        return [UploadRecord(**dict(row), camera_ids=users.get(row["id"], [])) for row in rows]
+
+    def get_upload(self, upload_id: str) -> UploadRecord | None:
+        with self._lock, self._connect() as connection:
+            row = connection.execute("SELECT * FROM uploads WHERE id = ?", (upload_id,)).fetchone()
+            if row is None:
+                return None
+            users = self._upload_users(connection, upload_id)
+        return UploadRecord(**dict(row), camera_ids=users.get(upload_id, []))
+
+    def add_upload(self, record: UploadRecord) -> UploadRecord:
+        """Insert (or replace, same id means same bytes) an upload row."""
+        data = record.model_dump(exclude={"camera_ids"})
+        data["created_at"] = data.get("created_at") or datetime.now(UTC).isoformat()
+        columns = ", ".join(data)
+        placeholders = ", ".join(f":{k}" for k in data)
+        with self._lock, self._connect() as connection:
+            connection.execute(
+                f"INSERT OR REPLACE INTO uploads ({columns}) VALUES ({placeholders})", data
+            )
+        saved = self.get_upload(record.id)
+        assert saved is not None
+        return saved
+
+    def delete_upload(self, upload_id: str) -> UploadRecord | None:
+        """Remove the row and the file. Returns the record, or None if it did not exist."""
+        record = self.get_upload(upload_id)
+        if record is None:
+            return None
+        with self._lock, self._connect() as connection:
+            connection.execute("DELETE FROM uploads WHERE id = ?", (upload_id,))
+        try:
+            self.upload_path(record).unlink(missing_ok=True)
+        except OSError:
+            pass
+        return record
+
+    def _upload_users(
+        self, connection: sqlite3.Connection, upload_id: str | None = None
+    ) -> dict[str, list[str]]:
+        """Map upload id -> camera ids whose stored payload plays that upload."""
+        rows = connection.execute("SELECT camera_id, payload FROM camera_configs").fetchall()
+        users: dict[str, list[str]] = {}
+        for row in rows:
+            try:
+                used = json.loads(row["payload"]).get("upload_id") or ""
+            except (TypeError, ValueError, AttributeError):
+                continue
+            if used and (upload_id is None or used == upload_id):
+                users.setdefault(str(used), []).append(str(row["camera_id"]))
+        return users
 
     # ── Runtime settings (key → JSON) ─────────────────────────────────────────
 
