@@ -1,10 +1,22 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Video, VideoOff } from "lucide-react";
+import { Lock, SwitchCamera, Video, VideoOff } from "lucide-react";
 import { api } from "@/lib/api";
-import { Button, Notice } from "./ui";
+import { Button, Notice, Select } from "./ui";
 
 const PUSH_FPS = 5;
 const MAX_WIDTH = 960;
+const HTTPS_PORT = 8444;
+
+/** Phones and tablets: offer front/back instead of a device list. */
+const IS_MOBILE = typeof navigator !== "undefined" && /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+
+/** Why the browser refuses camera access here, and the URL that fixes it. */
+export function insecureContextMessage(): string {
+  const host = window.location.hostname;
+  return `Camera access needs a secure context. Open this console over HTTPS at https://${host}:${HTTPS_PORT}/ (opt-in TLS front door, see the README section "Browser camera from another device"), or on the device itself at http://localhost:8081/.`;
+}
+
+export type Facing = "user" | "environment";
 
 /**
  * Browser webcam ingress for `browser_webrtc` cameras: capture getUserMedia
@@ -16,9 +28,23 @@ export function useWebcamPush(cameraId: string | null) {
   const [error, setError] = useState<string | null>(null);
   const [pushed, setPushed] = useState(0);
   const [failures, setFailures] = useState(0);
+  const [devices, setDevices] = useState<MediaDeviceInfo[]>([]);
+  const [deviceId, setDeviceId] = useState<string>("");
+  const [facing, setFacing] = useState<Facing>("environment");
+  const secure = typeof window !== "undefined" ? window.isSecureContext : true;
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const timer = useRef<number | null>(null);
   const inflight = useRef(false);
+
+  /** List video inputs; labels are only filled in once the page has camera permission. */
+  const loadDevices = useCallback(async () => {
+    if (!navigator.mediaDevices?.enumerateDevices) return;
+    try {
+      const all = await navigator.mediaDevices.enumerateDevices();
+      setDevices(all.filter((d) => d.kind === "videoinput"));
+    } catch { /* permission not granted yet */ }
+  }, []);
+  useEffect(() => { if (cameraId && secure) void loadDevices(); }, [cameraId, secure, loadDevices]);
 
   const stop = useCallback(() => {
     if (timer.current) window.clearInterval(timer.current);
@@ -29,25 +55,40 @@ export function useWebcamPush(cameraId: string | null) {
     });
   }, []);
 
-  const start = useCallback(async () => {
+  const start = useCallback(async (pick?: { deviceId?: string; facing?: Facing }) => {
     if (!cameraId) return;
     setError(null);
-    if (!navigator.mediaDevices?.getUserMedia) {
-      setError("getUserMedia is not available (requires HTTPS or localhost).");
+    if (!window.isSecureContext) {
+      setError(insecureContextMessage());
       return;
     }
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError("This browser does not expose the camera API.");
+      return;
+    }
+    const chosenId = pick?.deviceId ?? deviceId;
+    const chosenFacing = pick?.facing ?? facing;
     try {
-      const s = await navigator.mediaDevices.getUserMedia({
-        video: { width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false,
-      });
+      setStream((prev) => { prev?.getTracks().forEach((t) => t.stop()); return null; });
+      const video: MediaTrackConstraints = { width: { ideal: 1280 }, height: { ideal: 720 } };
+      if (chosenId) video.deviceId = { exact: chosenId };
+      else if (IS_MOBILE) video.facingMode = { ideal: chosenFacing };
+      const s = await navigator.mediaDevices.getUserMedia({ video, audio: false });
       setStream(s);
       setPushed(0);
       setFailures(0);
+      void loadDevices(); // labels become available once permission is granted
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Webcam access denied");
+      setError(err instanceof Error ? err.message : "Camera access denied");
     }
-  }, [cameraId]);
+  }, [cameraId, deviceId, facing, loadDevices]);
+
+  /** Switch to another camera while sharing (laptop device list or phone front/back). */
+  const switchTo = useCallback(async (pick: { deviceId?: string; facing?: Facing }) => {
+    if (pick.deviceId !== undefined) setDeviceId(pick.deviceId);
+    if (pick.facing) setFacing(pick.facing);
+    await start(pick);
+  }, [start]);
 
   // Attach the stream to the preview element once both exist.
   useEffect(() => {
@@ -113,7 +154,10 @@ export function useWebcamPush(cameraId: string | null) {
   // Stop on unmount / camera change.
   useEffect(() => stop, [stop, cameraId]);
 
-  return { videoRef, stream, active: !!stream, error, pushed, failures, start, stop };
+  return {
+    videoRef, stream, active: !!stream, error, pushed, failures, start, stop,
+    devices, deviceId, setDeviceId, facing, setFacing, switchTo, secure, isMobile: IS_MOBILE,
+  };
 }
 
 export function WebcamControls({
@@ -121,15 +165,45 @@ export function WebcamControls({
 }: {
   push: ReturnType<typeof useWebcamPush>;
 }) {
+  if (!push.secure) {
+    return (
+      <Notice kind="warn" className="text-xs flex items-start gap-2">
+        <Lock className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+        <span>{insecureContextMessage()}</span>
+      </Notice>
+    );
+  }
   return (
     <div className="flex items-center gap-2 flex-wrap">
+      {push.isMobile ? (
+        push.active ? (
+          <Button size="sm" onClick={() => void push.switchTo({ facing: push.facing === "user" ? "environment" : "user", deviceId: "" })} title="Switch between front and back camera">
+            <SwitchCamera className="h-3.5 w-3.5" /> Flip
+          </Button>
+        ) : (
+          <Select value={push.facing} onChange={(e) => push.setFacing(e.target.value as Facing)} className="w-auto" aria-label="Camera">
+            <option value="environment">Back camera</option>
+            <option value="user">Front camera</option>
+          </Select>
+        )
+      ) : push.devices.length > 0 && (
+        <Select
+          value={push.deviceId}
+          onChange={(e) => (push.active ? void push.switchTo({ deviceId: e.target.value }) : push.setDeviceId(e.target.value))}
+          className="w-auto max-w-[16rem]"
+          aria-label="Camera"
+        >
+          <option value="">Default camera</option>
+          {push.devices.map((d, i) => <option key={d.deviceId || i} value={d.deviceId}>{d.label || `Camera ${i + 1}`}</option>)}
+        </Select>
+      )}
       {push.active ? (
         <Button size="sm" variant="danger" onClick={push.stop}>
           <VideoOff className="h-3.5 w-3.5" /> Stop sharing
         </Button>
       ) : (
         <Button size="sm" variant="primary" onClick={() => void push.start()}>
-          <Video className="h-3.5 w-3.5" /> Share webcam
+          <Video className="h-3.5 w-3.5" /> Share camera
         </Button>
       )}
       {push.active && (
