@@ -27,15 +27,7 @@ Nothing in this repository measures detection quality. Every run artifact carrie
 
 Each item is on `main` and covered by the test suite or by code at the named path. None of it is a performance claim. A diagram of what each rule looks for in a workcell is in the [showcase](https://obiedeh.github.io/physical-ai-safety-observability/docs/showcase/#plan-h).
 
-**Configuration in the UI.** Cameras are added, edited, enabled, disabled and deleted in the Cameras page: vendor profile (Tapo, Hikvision, Dahua, Amcrest, Axis, Reolink, UniFi Protect, generic RTSP, HTTP MJPEG), host, port, credentials, stream path filled in from the profile, main or sub stream, restricted zones drawn on a snapshot, and which rules run on that camera (`edge/camera_profiles.py`, `api/routes/config.py`). Test connection decodes one frame and returns a thumbnail or a classified error: unreachable, authentication failed, wrong path, codec, timeout, device missing or busy (`edge/probe.py`).
-
-**Video feed connectors.** Besides the vendor profiles, the Cameras page offers four other ways to get video in, all through the same capture, rules and events path:
-
-- **RTSP URL.** Paste a complete `rtsp://` or `rtsps://` link, with optional username and password fields. Credentials embedded in the link are taken out, stored encrypted like any camera password, and the link is saved, shown and logged without them (`edge/rtsp_url.py`). Works with no credentials at all.
-- **USB camera.** `GET /config/usb-devices` lists the `/dev/video*` capture devices with their names and the sizes, pixel formats and frame rates they support (read with the V4L2 ioctls, no extra tools); the operator picks the device, resolution and rate. Capture runs through the same PyAV path as network streams (`edge/usb_devices.py`, `UsbCameraSession` in `edge/capture.py`). A missing, busy or unreadable device reports a plain-language error.
-- **Uploaded video.** Upload an MP4, MOV or MKV from the Cameras page (size limit configurable with `PHYSICAL_AI_UPLOAD_MAX_BYTES`, default 2 GB). Files are stored outside the repository next to the SQLite database and play at their native frame rate, looped or once; deleting an upload removes the file (`edge/uploads.py`, `FileCameraSession`). At upload time the operator declares whether the footage is **recorded** or **generated**, and that label follows every frame.
-- **Browser camera (computer or phone).** The Live page shares the browser's camera as JPEG frames with a camera picker: front or back on phones, a device list on laptops. Browsers only allow this on `localhost` or over HTTPS; the page says so and names the URL to use. See [Browser camera from another device](#browser-camera-from-another-device) for the optional HTTPS front door.
-- **Source labelling.** Every camera, live result, safety event and run report records `source_kind`: `live_rtsp`, `usb`, `browser`, `uploaded_recorded`, `uploaded_generated` or `synthetic`. Events and evidence frames from uploaded or synthetic sources carry a visible "not a live camera" note on Live, Events and in the run report (`edge/evidence_label.py`). Passwords are encrypted at rest with a key file outside the repository, are never returned by the API, are only reused for the host and port they were saved for, and are masked in logs, errors, events and run reports (`edge/secrets.py`, `edge/redaction.py`). The interactive command-line prompt is kept as an optional path over the same code (`edge/live_camera.py`).
+**Configuration in the UI.** Cameras are added, edited, enabled, disabled and deleted in the Cameras page: vendor profile (Tapo, Hikvision, Dahua, Amcrest, Axis, Reolink, UniFi Protect, generic RTSP, HTTP MJPEG, browser webcam), host, port, credentials, stream path filled in from the profile, main or sub stream, restricted zones drawn on a snapshot, and which rules run on that camera (`edge/camera_profiles.py`, `api/routes/config.py`). Test connection decodes one frame and returns a thumbnail or a classified error: unreachable, authentication failed, wrong path, codec, timeout (`edge/probe.py`). Passwords are encrypted at rest with a key file outside the repository, are never returned by the API, are only reused for the host and port they were saved for, and are masked in logs, errors, events and run reports (`edge/secrets.py`, `edge/redaction.py`). The interactive command-line prompt is kept as an optional path over the same code (`edge/live_camera.py`).
 
 **Model selection.** The Model page lists the Cosmos-Reason2 containers the device can run, with a memory preflight, and starts or stops the chosen one (`edge/model_server.py`). The endpoint is editable. The container keeps running across API restarts and stopping it needs an explicit, logged confirmation.
 
@@ -173,11 +165,10 @@ python -m edge.worker --source examples/synthetic_30fps_source.json --adapter mo
 The three loops and why they never wait on each other are summarised in the [showcase](https://obiedeh.github.io/physical-ai-safety-observability/docs/showcase/#flow-h).
 
 ```text
- camera (RTSP / RTSPS link / HTTP MJPEG / USB /        video file / synthetic source
-         uploaded video / browser camera)                     |
-        |                                                     v
-        v                                               edge.worker CLI
- capture thread per camera -> latest-frame slot
+ camera (RTSP / HTTP MJPEG / browser webcam)        video file / synthetic source
+        |                                                     |
+        v                                                     v
+ capture thread per camera -> latest-frame slot        edge.worker CLI
         |                          |                          |
         v                          v (inference interval)     |
  MJPEG to the Live page     vision-language model  <----------+
@@ -196,16 +187,15 @@ The three loops and why they never wait on each other are summarised in the [sho
 ## Repository Layout
 
 ```text
-api/          FastAPI application and API routes, optional TLS front door
+api/          FastAPI application and API routes
 edge/         capture, live service, async poster, model server and guard,
-              camera profiles and connectors (RTSP link, USB devices, uploads),
-              probe, secrets, redaction, evidence labels, worker CLI, adapters
+              camera profiles, probe, secrets, redaction, worker CLI, adapters
 rules/        safety policy evaluation logic
 spatial/      zones and polygon tests
 telemetry/    runtime metrics, run reports
 evidence/     hashing and evidence records
 web/          operator console (Vite, React, TypeScript)
-deploy/       systemd units (API, optional HTTPS front door)
+deploy/       systemd unit
 docs/         design notes; showcase/ holds the one-page project overview
 scripts/      evidence page generator, guard probe
 reports/      committed run artifacts and the generated evidence page
@@ -226,24 +216,6 @@ uvicorn api.main:app --port 8080
 ```
 
 Open `http://localhost:8080`. Add a camera in Cameras (the "Synthetic test feed" profile needs no hardware), press Test connection, save. Choose the model in Model. Watch Live and Events. With no model server the default mock adapter produces fixed detections, labelled as such.
-
-No network camera to hand: plug in a USB camera and pick the "USB camera" profile, upload a clip with "Uploaded video", or share your laptop camera with "Browser camera". Everything that is not a live camera is labelled as such on screen and in the data.
-
-### Browser camera from another device
-
-Browsers expose the camera only in a secure context: `http://localhost` on the device itself, or HTTPS anywhere else. To share a phone's or another computer's camera, enable the optional HTTPS front door. It adds an HTTPS listener on port 8444 that relays to the unchanged HTTP API, so every existing `http://` URL keeps working.
-
-```bash
-# 1. A local certificate for the names and addresses you open the console at
-.venv/bin/python -m api.local_cert 192.0.2.10 thor.local   # writes ~/.config/physical-ai-safety/tls/{cert,key}.pem
-#    or, with a locally trusted CA:  mkcert -install && mkcert -cert-file cert.pem -key-file key.pem 192.0.2.10 thor.local
-
-# 2. Run the front door (opt-in); defaults relay https://0.0.0.0:8444 -> http://127.0.0.1:8081
-.venv/bin/python -m api.tls_proxy --target 127.0.0.1:8080
-#    as a service: cp deploy/physical-ai-safety-tls.service ~/.config/systemd/user/ && systemctl --user enable --now physical-ai-safety-tls
-```
-
-Then open `https://192.0.2.10:8444/` on the phone, accept or install the certificate once, and press **Share camera** on the Live page. Certificates and keys live under `~/.config/physical-ai-safety/tls/` and are ignored by git. `PHYSICAL_AI_TLS_LISTEN`, `PHYSICAL_AI_TLS_TARGET`, `PHYSICAL_AI_TLS_CERT` and `PHYSICAL_AI_TLS_KEY` change ports or paths.
 
 The file and synthetic worker still runs from the command line:
 
@@ -267,7 +239,7 @@ make install-dev
 make verify
 ```
 
-The CI gate runs Ruff and the test suite on Ubuntu. Docker: `docker compose --profile demo up --build`. Besides the API, rules, guard, poster and live-service tests, the suite covers RTSP link parsing and credential stripping (a pasted link is never echoed or stored with its password), USB device listing against a mocked device tree and the busy/missing wording, upload validation, the size limit, loop and play-once playback at native rate, `source_kind` on live results, events, evidence and run reports, a database written by the previous release upgrading with its cameras unchanged, and the TLS front door.
+The CI gate runs Ruff and the test suite on Ubuntu. Docker: `docker compose --profile demo up --build`.
 
 ## Safety Event Model
 
@@ -287,7 +259,7 @@ python -m edge.worker \
   --model nvidia/cosmos-reason2-2b --once
 ```
 
-Live cameras, USB cameras and uploaded videos are decoded with PyAV, a core dependency. The `edge.worker` CLI reads video files through the optional OpenCV dependency (`pip install -e ".[opencv]"`).
+Live cameras are decoded with PyAV, a core dependency. The `edge.worker` CLI reads video files through the optional OpenCV dependency (`pip install -e ".[opencv]"`).
 
 ## Not yet measured
 

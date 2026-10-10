@@ -6,15 +6,6 @@ __pycache__/
 data/
 *.sqlite3
 output/
-# uploaded videos (stored next to the database), certificates and keys
-uploads/
-*.mp4
-*.mov
-*.mkv
-*.pem
-*.key
-*.crt
-tls/
 
 # Local benchmark inputs (videos copied from other repositories); not tracked here
 inputs/

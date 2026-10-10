@@ -9,7 +9,6 @@ const STAGE_HELP: Record<ProbeStage, string> = {
   codec: "Stream opened but the codec is not decodable. Switch the camera to H.264.",
   timeout: "Timed out waiting for frames. Try TCP transport or the sub stream.",
   decode: "Frames arrived but could not be decoded.",
-  device: "The USB device could not be opened: missing, busy, or not readable by this user.",
   url: "The URL could not be built from these settings.",
   ok: "Stream probed successfully.",
 };
