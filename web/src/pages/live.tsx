@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { AlertTriangle, Radio, WifiOff } from "lucide-react";
 import { api, type Camera, type InferenceResult, type RuntimeStatus, type SafetyEvent } from "@/lib/api";
 import { useElementSize, useLiveResults, usePoll } from "@/lib/hooks";
@@ -37,7 +37,10 @@ export function LivePage() {
     <div className="space-y-4">
       <div className="flex items-center gap-2 flex-wrap">
         {enabled.length === 0 && !cameras.loading && (
-          <span className="text-sm text-muted-foreground">No enabled cameras. Add one under Cameras.</span>
+          <span className="text-sm text-muted-foreground">
+            No enabled cameras. <Link to="/ui/cameras" className="text-primary underline underline-offset-2">Add one under Cameras</Link> or{" "}
+            <Link to="/ui/cameras?action=upload" className="text-primary underline underline-offset-2">upload a video</Link> to play as a camera.
+          </span>
         )}
         {enabled.map((c) => {
           const r = results[c.camera_id];
