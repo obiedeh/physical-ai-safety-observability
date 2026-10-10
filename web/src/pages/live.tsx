@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { AlertTriangle, Play, Radio, RotateCcw, WifiOff } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { AlertTriangle, Radio, WifiOff } from "lucide-react";
 import { api, type Camera, type InferenceResult, type RuntimeStatus, type SafetyEvent } from "@/lib/api";
 import { useElementSize, useLiveResults, usePoll } from "@/lib/hooks";
 import { cn, fmtClock, fmtMs, fmtNum, fmtPct, ruleLabel } from "@/lib/utils";
-import { Button, Card, Chip, Empty, Stat } from "@/components/ui";
+import { Card, Chip, Empty, Stat } from "@/components/ui";
 import { CameraStateChip, SeverityChip } from "@/components/status-chip";
 import { SourceKindBadge, evidenceNote } from "@/components/source-kind-badge";
 import { DetectionOverlay } from "@/components/detection-overlay";
@@ -37,10 +37,7 @@ export function LivePage() {
     <div className="space-y-4">
       <div className="flex items-center gap-2 flex-wrap">
         {enabled.length === 0 && !cameras.loading && (
-          <span className="text-sm text-muted-foreground">
-            No enabled cameras. <Link to="/ui/cameras" className="text-primary underline underline-offset-2">Add one under Cameras</Link> or{" "}
-            <Link to="/ui/cameras?action=upload" className="text-primary underline underline-offset-2">upload a video</Link> to play as a camera.
-          </span>
+          <span className="text-sm text-muted-foreground">No enabled cameras. Add one under Cameras.</span>
         )}
         {enabled.map((c) => {
           const r = results[c.camera_id];
@@ -79,7 +76,7 @@ export function LivePage() {
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="space-y-4 min-w-0">
           {selected ? (
-            <VideoPanel camera={selected} result={result} runtimeState={runtimeCam?.state ?? null} onReplayed={() => void runtime.refresh()} />
+            <VideoPanel camera={selected} result={result} />
           ) : (
             <Empty>Select a camera to view its feed.</Empty>
           )}
@@ -103,41 +100,12 @@ export function LivePage() {
   );
 }
 
-function VideoPanel({ camera, result, runtimeState, onReplayed }: { camera: Camera; result: InferenceResult | null; runtimeState: string | null; onReplayed: () => void }) {
+function VideoPanel({ camera, result }: { camera: Camera; result: InferenceResult | null }) {
   const { ref, size } = useElementSize<HTMLDivElement>();
   const isBrowser = camera.profile === "browser_webrtc";
-  const isClip = camera.connector === "upload";
-  const ended = isClip && runtimeState === "ended";
-  const [replaying, setReplaying] = useState(false);
-  const [replayError, setReplayError] = useState<string | null>(null);
-
-  /** Uploaded video: play the file again from its first frame and re-attach the stream. */
-  const replay = async () => {
-    setReplaying(true);
-    setReplayError(null);
-    try {
-      await api.cameras.restart(camera.camera_id);
-      setImgError(false);
-      setMjpegUrl(`${api.stream.mjpegUrl(camera.camera_id)}?t=${Date.now()}`);
-      onReplayed();
-    } catch (e) {
-      setReplayError(e instanceof Error ? e.message : "Could not start playback");
-    } finally {
-      setReplaying(false);
-    }
-  };
   const push = useWebcamPush(isBrowser ? camera.camera_id : null);
   const [imgError, setImgError] = useState(false);
   const [mjpegUrl, setMjpegUrl] = useState(() => api.stream.mjpegUrl(camera.camera_id));
-
-  // An MJPEG <img> holds its HTTP connection for as long as the element lives — even after it is
-  // removed from the DOM, until garbage collection. Browsers allow only ~6 connections per host,
-  // so release it explicitly whenever the stream element is replaced or the panel unmounts.
-  const imgRef = useRef<HTMLImageElement | null>(null);
-  useEffect(() => {
-    const el = imgRef.current;
-    return () => { if (el) el.src = ""; };
-  }, [mjpegUrl]);
 
   // Re-point the <img> when the camera changes; retry when the stream 404s
   // (camera starting) so the video returns without a reload.
@@ -201,32 +169,15 @@ function VideoPanel({ camera, result, runtimeState, onReplayed }: { camera: Came
         ) : (
           <img
             key={mjpegUrl}
-            ref={imgRef}
             src={mjpegUrl}
             alt={`${camera.name} live`}
             className="absolute inset-0 w-full h-full object-contain"
             onError={() => setImgError(true)}
           />
         )}
-        {imgError && !(isBrowser && push.active) && !ended && (
+        {imgError && !(isBrowser && push.active) && (
           <div className="absolute inset-0 grid place-items-center text-xs text-muted-foreground bg-background/60">
             Stream not available yet — retrying…
-          </div>
-        )}
-        {ended && (
-          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/70">
-            <Button variant="primary" busy={replaying} onClick={() => void replay()} title="Play the video again from the start">
-              <Play className="h-4 w-4" /> Play again
-            </Button>
-            <span className="text-xs text-muted-foreground">Clip finished. Set Playback to "loop" on the Cameras page to repeat automatically.</span>
-            {replayError && <span className="text-xs text-destructive">{replayError}</span>}
-          </div>
-        )}
-        {isClip && !ended && (
-          <div className="absolute top-2 right-2 z-10">
-            <Button size="sm" busy={replaying} onClick={() => void replay()} title="Play the video again from the start">
-              <RotateCcw className="h-3.5 w-3.5" /> Replay
-            </Button>
           </div>
         )}
         <div className="absolute" style={{ left: offsetX, top: offsetY, width: contentW, height: contentH }}>

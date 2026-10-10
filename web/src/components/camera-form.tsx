@@ -156,19 +156,13 @@ function UsbSection({ values, set }: { values: CameraFormValues; set: Setter }) 
 }
 
 /** Uploaded video: pick an existing upload or upload a new one, then loop or play once. */
-function UploadSection({ values, set, onUploaded, openFilePicker }: { values: CameraFormValues; set: Setter; onUploaded?: () => void; openFilePicker?: boolean }) {
+function UploadSection({ values, set, onUploaded }: { values: CameraFormValues; set: Setter; onUploaded?: () => void }) {
   const [uploads, setUploads] = useState<UploadRecord[]>([]);
   const [kind, setKind] = useState<UploadSourceKind>("recorded");
   const [file, setFile] = useState<File | null>(null);
   const [progress, setProgress] = useState<number | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement | null>(null);
-
-  // Opened from the "Upload video" button: go straight to the file chooser.
-  // The click still counts as the user's gesture, so the browser allows it.
-  useEffect(() => {
-    if (openFilePicker) fileRef.current?.click();
-  }, [openFilePicker]);
 
   const load = async () => {
     try { setUploads(await api.cameras.uploads.list()); }
@@ -254,8 +248,6 @@ export function CameraForm({
   onSaved,
   onCancel,
   onUploaded,
-  initialProfile,
-  openFilePicker,
 }: {
   profiles: CameraProfile[];
   initial: Camera | null;
@@ -263,13 +255,8 @@ export function CameraForm({
   onCancel: () => void;
   /** called after a successful upload so the parent can refresh its uploads list */
   onUploaded?: () => void;
-  /** profile to preselect when creating (e.g. "uploaded_video" from the Upload video button) */
-  initialProfile?: string;
-  /** open the file chooser as soon as the form shows (Upload video button) */
-  openFilePicker?: boolean;
 }) {
-  const blank = (): CameraFormValues => (initialProfile ? { ...EMPTY, profile: initialProfile } : EMPTY);
-  const [values, setValues] = useState<CameraFormValues>(initial ? fromCamera(initial) : blank());
+  const [values, setValues] = useState<CameraFormValues>(initial ? fromCamera(initial) : EMPTY);
   const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -277,10 +264,10 @@ export function CameraForm({
   const [test, setTest] = useState<CameraTestResult | null>(null);
 
   useEffect(() => {
-    setValues(initial ? fromCamera(initial) : blank());
+    setValues(initial ? fromCamera(initial) : EMPTY);
     setTest(null);
     setError(null);
-  }, [initial, initialProfile]);
+  }, [initial]);
 
   const profile = useMemo(
     () => profiles.find((p) => p.model_type === values.profile) ?? null,
@@ -443,7 +430,7 @@ export function CameraForm({
       )}
 
       {connector === "usb" && <UsbSection values={values} set={set} />}
-      {connector === "upload" && <UploadSection values={values} set={set} onUploaded={onUploaded} openFilePicker={!initial && openFilePicker} />}
+      {connector === "upload" && <UploadSection values={values} set={set} onUploaded={onUploaded} />}
       {connector === "browser" && (
         <Notice kind="info" className="text-sm space-y-1">
           <p>Open the Live page in the browser whose camera you want to share and press <b>Share camera</b>. On a laptop you pick the camera from a list; on a phone you choose front or back.</p>
