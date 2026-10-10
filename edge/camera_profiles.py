@@ -1,19 +1,9 @@
-"""Camera profiles: vendor stream paths and the non-network connectors.
+"""Camera vendor profiles: default ports and main/sub stream paths.
 
-A vendor profile turns ``host + port + credentials + quality`` into a feed
-URL. The stream path is auto-filled from the profile and may be overridden
-per camera (``stream_path``), which is how UniFi Protect's per-camera token
-path and odd firmware variants are handled.
-
-Each profile also names its ``connector``, which decides how the service
-captures frames and which ``source_kind`` is stamped on events:
-
-* ``network``   vendor RTSP/HTTP profiles built from host and path  (live_rtsp)
-* ``rtsp_url``  a complete pasted rtsp:// or rtsps:// link           (live_rtsp)
-* ``usb``       a local V4L2 device such as /dev/video0              (usb)
-* ``upload``    an uploaded MP4/MOV/MKV played at native rate        (uploaded_*)
-* ``browser``   the operator's browser camera pushed as JPEG frames  (browser)
-* ``synthetic`` generated frames for demos and tests                 (synthetic)
+A profile turns ``host + port + credentials + quality`` into a feed URL. The
+stream path is auto-filled from the profile and may be overridden per camera
+(``stream_path``), which is how UniFi Protect's per-camera token path and odd
+firmware variants are handled.
 """
 from __future__ import annotations
 
@@ -39,7 +29,6 @@ class CameraProfile:
     requires_auth: bool = True
     requires_host: bool = True
     notes: str = ""
-    connector: str = "network"
 
     def stream_path(self, quality: str = "main", channel: int = 1) -> str:
         template = self.main_path if quality != "sub" else self.sub_path
@@ -119,63 +108,19 @@ CAMERA_PROFILES: dict[str, CameraProfile] = {
         "http_mjpeg", "HTTP MJPEG", 80, "/video", "/video",
         protocol="http", requires_auth=False,
     ),
-    "rtsp_url": CameraProfile(
-        "rtsp_url", "RTSP URL", 554, "", "",
-        requires_auth=False, requires_host=False, connector="rtsp_url",
-        notes=(
-            "Paste the full rtsp:// or rtsps:// link. Credentials inside the link are "
-            "removed and stored encrypted; the link itself is never shown or logged with them."
-        ),
-    ),
-    "usb": CameraProfile(
-        "usb", "USB camera", 0, "", "",
-        requires_auth=False, requires_host=False, connector="usb",
-        notes="A camera plugged into this device (/dev/video*). Pick the device, size and rate.",
-    ),
-    "uploaded_video": CameraProfile(
-        "uploaded_video", "Uploaded video", 0, "", "",
-        requires_auth=False, requires_host=False, connector="upload",
-        notes=(
-            "Play an uploaded MP4, MOV or MKV at its own frame rate, looped or once. "
-            "Events from it are labelled as recorded or generated footage, never as live."
-        ),
-    ),
     "browser_webrtc": CameraProfile(
-        "browser_webrtc", "Browser camera (computer or phone)", 0, "", "",
-        requires_auth=False, requires_host=False, connector="browser",
-        notes=(
-            "The browser that opens the Live page shares its camera to this slot. "
-            "Phones and other devices need the HTTPS front door (see README)."
-        ),
+        "browser_webrtc", "Browser webcam (WebRTC)", 0, "", "",
+        requires_auth=False, requires_host=False,
+        notes="The operator's browser pushes webcam frames to this camera slot.",
     ),
     "synthetic": CameraProfile(
         "synthetic", "Synthetic test feed", 0, "", "",
-        requires_auth=False, requires_host=False, connector="synthetic",
+        requires_auth=False, requires_host=False,
         notes="Generated frames for demos and tests. Labelled synthetic everywhere.",
     ),
 }
 
 STREAM_QUALITIES = ("main", "sub")
-CONNECTORS = ("network", "rtsp_url", "usb", "upload", "browser", "synthetic")
-
-# ``source_kind`` values recorded on every event, live result and run report.
-SOURCE_KINDS = (
-    "live_rtsp", "usb", "browser", "uploaded_recorded", "uploaded_generated", "synthetic",
-)
-_CONNECTOR_SOURCE_KIND = {"usb": "usb", "browser": "browser", "synthetic": "synthetic"}
-
-
-def source_kind_for(model_type: str, upload_source_kind: str | None = None) -> str:
-    """Map a profile (and, for uploads, the chosen footage kind) onto a ``source_kind``.
-
-    Vendor profiles, HTTP MJPEG and pasted RTSP links are all live network
-    feeds and share ``live_rtsp``. Uploaded video is ``uploaded_recorded`` or
-    ``uploaded_generated`` depending on what the operator declared at upload.
-    """
-    connector = get_profile(model_type).connector
-    if connector == "upload":
-        return "uploaded_generated" if upload_source_kind == "generated" else "uploaded_recorded"
-    return _CONNECTOR_SOURCE_KIND.get(connector, "live_rtsp")
 
 
 def list_profiles() -> list[dict[str, Any]]:
@@ -194,6 +139,5 @@ def get_profile(model_type: str) -> CameraProfile:
 
 
 
-__all__ = ["CAMERA_PROFILES", "CONNECTORS", "SOURCE_KINDS", "STREAM_QUALITIES",
-           "CameraConfigError", "CameraProfile", "get_profile", "list_profiles", "mask_url",
-           "source_kind_for"]
+__all__ = ["CAMERA_PROFILES", "STREAM_QUALITIES", "CameraConfigError", "CameraProfile",
+           "get_profile", "list_profiles", "mask_url"]

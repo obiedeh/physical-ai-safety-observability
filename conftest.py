@@ -14,31 +14,3 @@ os.environ.setdefault("PHYSICAL_AI_SECRET_KEY_FILE", os.path.join(_TEST_DIR, "se
 os.environ.setdefault("PHYSICAL_AI_AUTOSTART", "0")
 os.environ.setdefault("PHYSICAL_AI_POST_EVENTS", "0")
 os.environ.setdefault("PHYSICAL_AI_REPORTS_DIR", os.path.join(_TEST_DIR, "reports"))
-
-
-import pytest
-
-
-@pytest.fixture
-def make_mp4(tmp_path):
-    """Factory writing a tiny MPEG-4 file (``frames`` frames at ``fps``) for upload tests."""
-
-    def _make(name: str = "clip.mp4", frames: int = 10, fps: int = 25, size=(64, 48)):
-        import av
-        from PIL import Image
-
-        path = tmp_path / name
-        container = av.open(str(path), "w")
-        stream = container.add_stream("mpeg4", rate=fps)
-        stream.width, stream.height, stream.pix_fmt = size[0], size[1], "yuv420p"
-        for i in range(frames):
-            shade = (i * 23) % 255
-            frame = av.VideoFrame.from_image(Image.new("RGB", size, (shade, shade, shade)))
-            for packet in stream.encode(frame):
-                container.mux(packet)
-        for packet in stream.encode():
-            container.mux(packet)
-        container.close()
-        return path
-
-    return _make

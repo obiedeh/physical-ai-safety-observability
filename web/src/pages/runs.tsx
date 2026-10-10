@@ -4,7 +4,6 @@ import { api, apiErrorMessage, type RunSummary } from "@/lib/api";
 import { usePoll } from "@/lib/hooks";
 import { fmtDuration, fmtMs, fmtNum, fmtTime } from "@/lib/utils";
 import { Button, Card, Chip, Empty, Field, Input, Notice, Select, Stat } from "@/components/ui";
-import { SourceKindBadge } from "@/components/source-kind-badge";
 
 export function RunsPage() {
   const status = usePoll(() => api.runs.status(), 2000);
@@ -163,7 +162,7 @@ function RunRow({ r }: { r: RunSummary }) {
         : "neutral";
   return (
     <tr className="hover:bg-secondary/30">
-      <td className="px-3 py-2 font-medium whitespace-nowrap"><span className="flex items-center gap-2">{r.name}<SourceKindBadge kind={r.source_kind} /></span></td>
+      <td className="px-3 py-2 font-medium whitespace-nowrap">{r.name}</td>
       <td className="px-3 py-2 text-muted-foreground">{r.host}</td>
       <td className="px-3 py-2 text-muted-foreground whitespace-nowrap">{fmtTime(r.started_at)}</td>
       <td className="px-3 py-2"><Chip tone={tone}>{r.status ?? "—"}</Chip></td>

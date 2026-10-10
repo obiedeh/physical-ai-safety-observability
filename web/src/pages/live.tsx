@@ -6,7 +6,6 @@ import { useElementSize, useLiveResults, usePoll } from "@/lib/hooks";
 import { cn, fmtClock, fmtMs, fmtNum, fmtPct, ruleLabel } from "@/lib/utils";
 import { Card, Chip, Empty, Stat } from "@/components/ui";
 import { CameraStateChip, SeverityChip } from "@/components/status-chip";
-import { SourceKindBadge, evidenceNote } from "@/components/source-kind-badge";
 import { DetectionOverlay } from "@/components/detection-overlay";
 import { useWebcamPush, WebcamControls } from "@/components/webcam-push";
 
@@ -63,7 +62,7 @@ export function LivePage() {
               />
               {c.name}
               {alert && <AlertTriangle className="h-3.5 w-3.5 text-warn" />}
-              <SourceKindBadge kind={c.source_kind} />
+              <span className="text-xs text-muted-foreground">{c.profile}</span>
             </button>
           );
         })}
@@ -146,7 +145,6 @@ function VideoPanel({ camera, result }: { camera: Camera; result: InferenceResul
       title={
         <span className="flex items-center gap-2">
           {camera.name}
-          <SourceKindBadge kind={camera.source_kind} />
           <span className="mono text-muted-foreground">{camera.camera_id}</span>
         </span>
       }
@@ -158,11 +156,6 @@ function VideoPanel({ camera, result }: { camera: Camera; result: InferenceResul
       }
       bodyClassName="p-0"
     >
-      {evidenceNote(camera.source_kind) && (
-        <div className="px-4 py-1.5 border-b border-warn/40 bg-warn/10 text-xs text-warn flex items-center gap-2">
-          <SourceKindBadge kind={camera.source_kind} /> {evidenceNote(camera.source_kind)} Events and evidence from this feed carry the same label.
-        </div>
-      )}
       <div ref={ref} className="relative bg-black aspect-video w-full overflow-hidden">
         {isBrowser && push.active ? (
           <video ref={push.videoRef} muted playsInline className="absolute inset-0 w-full h-full object-contain" />
@@ -276,7 +269,7 @@ function StatusStrip({
       <Stat
         label="Frames"
         value={cam?.frames_published ?? "—"}
-        sub={cam ? `${cam.frames_dropped} dropped · ${cam.kind === "file" ? `${cam.loops} loops` : `${cam.reconnects} reconnects`}` : undefined}
+        sub={cam ? `${cam.frames_dropped} dropped · ${cam.reconnects} reconnects` : undefined}
         tone={cam && cam.frames_dropped > 0 ? "warn" : undefined}
       />
       <Stat label="Model" value={modelText} sub={modelSub ?? undefined} tone={modelTone} className="col-span-2" />
@@ -314,10 +307,9 @@ function EventRow({ e }: { e: SafetyEvent }) {
         <span className="ml-auto mono text-muted-foreground">{fmtClock(e.timestamp)}</span>
       </div>
       <p className="text-muted-foreground line-clamp-2">{e.summary}</p>
-      <div className="flex gap-2 text-xs text-muted-foreground items-center flex-wrap">
+      <div className="flex gap-2 text-xs text-muted-foreground">
         <span>conf {fmtPct(e.confidence)}</span>
         {e.human_review_required && <span className="text-warn">review required</span>}
-        <SourceKindBadge kind={e.source_kind} />
       </div>
     </li>
   );

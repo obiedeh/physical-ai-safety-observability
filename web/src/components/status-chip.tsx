@@ -11,8 +11,6 @@ export function cameraStateTone(state: CameraState | string | null | undefined):
       return "warn";
     case "error":
       return "danger";
-    case "ended":
-      return "info";
     default:
       return "neutral";
   }

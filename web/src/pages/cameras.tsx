@@ -1,19 +1,17 @@
 import { useState } from "react";
-import { Film, Pencil, PlugZap, Plus, RotateCcw, Trash2 } from "lucide-react";
-import { api, apiErrorMessage, type Camera, type CameraTestResult, type UploadRecord } from "@/lib/api";
+import { Pencil, PlugZap, Plus, Trash2 } from "lucide-react";
+import { api, apiErrorMessage, type Camera, type CameraTestResult } from "@/lib/api";
 import { usePoll } from "@/lib/hooks";
 import { fmtNum } from "@/lib/utils";
 import { Button, Card, Chip, Empty, Notice, Toggle } from "@/components/ui";
 import { CameraStateChip } from "@/components/status-chip";
-import { SourceKindBadge } from "@/components/source-kind-badge";
-import { CameraForm, describeUpload } from "@/components/camera-form";
+import { CameraForm } from "@/components/camera-form";
 import { TestResultView } from "@/components/test-result";
 
 type Mode = { kind: "list" } | { kind: "new" } | { kind: "edit"; camera: Camera };
 
 export function CamerasPage() {
   const cameras = usePoll(() => api.cameras.list(), 4000);
-  const uploads = usePoll(() => api.cameras.uploads.list(), 10000);
   const profiles = usePoll(() => api.cameras.profiles(), 0);
   const [mode, setMode] = useState<Mode>({ kind: "list" });
   const [notice, setNotice] = useState<string | null>(null);
@@ -40,9 +38,7 @@ export function CamerasPage() {
                 setNotice(`${editing ? "Updated" : "Added"} ${cam.name}.`);
                 setMode({ kind: "list" });
                 void cameras.refresh();
-                void uploads.refresh();
               }}
-              onUploaded={() => void uploads.refresh()}
             />
           ) : (
             <p className="text-sm text-muted-foreground">{profiles.error ?? "Loading profiles…"}</p>
@@ -72,7 +68,7 @@ export function CamerasPage() {
       )}
       {cameras.error && <Notice kind="error">{cameras.error}</Notice>}
       {!cameras.loading && list.length === 0 && (
-        <Empty>No cameras configured. Add a network camera, paste an RTSP link, pick a USB camera, upload a video, share a browser camera, or add a synthetic feed to see the pipeline run without hardware.</Empty>
+        <Empty>No cameras configured. Add a synthetic feed to see the pipeline run without hardware.</Empty>
       )}
       <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
         {list.map((c) => (
@@ -80,69 +76,23 @@ export function CamerasPage() {
             key={c.camera_id}
             camera={c}
             onEdit={() => setMode({ kind: "edit", camera: c })}
-            onChanged={() => { void cameras.refresh(); void uploads.refresh(); }}
+            onChanged={() => void cameras.refresh()}
           />
         ))}
       </div>
-      {((uploads.data?.length ?? 0) > 0 || list.some((c) => c.connector === "upload")) && (
-        <UploadsCard uploads={uploads.data ?? []} cameras={list} onChanged={() => { void uploads.refresh(); void cameras.refresh(); }} />
-      )}
     </div>
   );
 }
 
-function UploadsCard({ uploads, cameras, onChanged }: { uploads: UploadRecord[]; cameras: Camera[]; onChanged: () => void }) {
-  const [busy, setBusy] = useState<string>("");
-  const [error, setError] = useState<string | null>(null);
-  const names = new Map(cameras.map((c) => [c.camera_id, c.name]));
-  const remove = async (u: UploadRecord) => {
-    setBusy(u.id);
-    setError(null);
-    try { await api.cameras.uploads.remove(u.id); onChanged(); }
-    catch (e) { setError(apiErrorMessage(e, "Delete failed")); }
-    finally { setBusy(""); }
-  };
-  return (
-    <Card
-      title={<span className="flex items-center gap-2"><Film className="h-4 w-4" /> Uploaded videos <span className="text-muted-foreground font-normal">({uploads.length})</span></span>}
-      actions={<span className="text-xs text-muted-foreground">stored next to the database, outside the repository · delete removes the file</span>}
-      bodyClassName="p-0"
-    >
-      {uploads.length === 0 ? (
-        <p className="p-4 text-sm text-muted-foreground">No uploads yet. Add a camera with the <b>Uploaded video</b> profile to upload an MP4, MOV or MKV.</p>
-      ) : (
-        <ul className="divide-y divide-border">
-          {uploads.map((u) => (
-            <li key={u.id} className="flex items-center gap-3 px-4 py-2 text-sm flex-wrap">
-              <SourceKindBadge kind={u.source_kind === "generated" ? "uploaded_generated" : "uploaded_recorded"} />
-              <span className="font-medium">{u.filename}</span>
-              <span className="text-muted-foreground text-xs tabular-nums">{describeUpload(u)}</span>
-              <span className="ml-auto text-xs text-muted-foreground">
-                {u.camera_ids.length ? `used by ${u.camera_ids.map((id) => names.get(id) ?? id).join(", ")}` : "not used"}
-              </span>
-              <Button size="sm" variant="ghost" className="text-destructive" busy={busy === u.id} disabled={u.camera_ids.length > 0} title={u.camera_ids.length ? "Delete or re-point the cameras using this file first" : "Delete the file"} onClick={() => void remove(u)}>
-                <Trash2 className="h-3.5 w-3.5" /> Delete
-              </Button>
-            </li>
-          ))}
-        </ul>
-      )}
-      {error && <Notice kind="error" className="m-3">{error}</Notice>}
-    </Card>
-  );
-}
-
 function CameraCard({ camera, onEdit, onChanged }: { camera: Camera; onEdit: () => void; onChanged: () => void }) {
-  const [busy, setBusy] = useState<"toggle" | "test" | "delete" | "restart" | null>(null);
+  const [busy, setBusy] = useState<"toggle" | "test" | "delete" | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [test, setTest] = useState<CameraTestResult | null>(null);
   const rt = camera.runtime;
-  const requiresHost = camera.connector === "network" || camera.connector === "rtsp_url";
-  const canTest = camera.connector !== "browser" && camera.connector !== "synthetic";
-  const canRestart = camera.enabled && (camera.connector === "upload" || rt?.state === "error" || rt?.state === "ended");
+  const requiresHost = !["synthetic", "browser_webrtc"].includes(camera.profile);
 
-  const run = async (kind: "toggle" | "test" | "delete" | "restart", fn: () => Promise<void>) => {
+  const run = async (kind: "toggle" | "test" | "delete", fn: () => Promise<void>) => {
     setBusy(kind);
     setError(null);
     try {
@@ -160,7 +110,6 @@ function CameraCard({ camera, onEdit, onChanged }: { camera: Camera; onEdit: () 
         <span className="flex items-center gap-2 min-w-0">
           <span className="truncate">{camera.name}</span>
           <Chip tone="neutral">{camera.profile}</Chip>
-          <SourceKindBadge kind={camera.source_kind} />
           {!camera.enabled && <Chip tone="neutral">disabled</Chip>}
         </span>
       }
@@ -188,7 +137,6 @@ function CameraCard({ camera, onEdit, onChanged }: { camera: Camera; onEdit: () 
             {rt.source_width && <span>{rt.source_width}×{rt.source_height}</span>}
             {rt.frames_dropped > 0 && <span className="text-warn">{rt.frames_dropped} dropped</span>}
             {rt.reconnects > 0 && <span className="text-warn">{rt.reconnects} reconnects</span>}
-            {camera.connector === "upload" && <span>{rt.loops} loops</span>}
             {rt.worker && <span>{rt.worker.events_emitted} events</span>}
           </>
         )}
@@ -202,18 +150,6 @@ function CameraCard({ camera, onEdit, onChanged }: { camera: Camera; onEdit: () 
             <dd className="mono break-all">{camera.masked_url || `${camera.host}:${camera.port ?? ""}${camera.effective_stream_path}`}</dd>
             <dt className="text-muted-foreground">auth</dt>
             <dd>{camera.username || "—"}{camera.has_password ? " · password stored" : ""} · {camera.rtsp_transport}</dd>
-          </>
-        )}
-        {camera.connector === "usb" && (
-          <>
-            <dt className="text-muted-foreground">device</dt>
-            <dd className="mono">{camera.device}{camera.capture_width ? ` · ${camera.capture_width}×${camera.capture_height}` : ""}{camera.capture_format ? ` ${camera.capture_format}` : ""}{camera.capture_fps ? ` @ ${camera.capture_fps} fps` : ""}</dd>
-          </>
-        )}
-        {camera.connector === "upload" && (
-          <>
-            <dt className="text-muted-foreground">video</dt>
-            <dd>{camera.upload ? `${camera.upload.filename} · ${describeUpload(camera.upload)}` : "upload missing"} · {camera.playback === "once" ? "play once" : "loop"}</dd>
           </>
         )}
         <dt className="text-muted-foreground">location</dt>
@@ -230,25 +166,18 @@ function CameraCard({ camera, onEdit, onChanged }: { camera: Camera; onEdit: () 
       {test && <TestResultView result={test} />}
 
       <div className="flex items-center gap-2 flex-wrap pt-1">
-        {canTest && (
-          <Button
-            size="sm"
-            busy={busy === "test"}
-            onClick={() =>
-              void run("test", async () => {
-                setTest(null);
-                setTest(await api.cameras.testSaved(camera.camera_id));
-              })
-            }
-          >
-            <PlugZap className="h-3.5 w-3.5" /> Test
-          </Button>
-        )}
-        {canRestart && (
-          <Button size="sm" busy={busy === "restart"} title={camera.connector === "upload" ? "Play the video again from the start" : "Reconnect now"} onClick={() => void run("restart", async () => { await api.cameras.restart(camera.camera_id); onChanged(); })}>
-            <RotateCcw className="h-3.5 w-3.5" /> {camera.connector === "upload" ? "Replay" : "Reconnect"}
-          </Button>
-        )}
+        <Button
+          size="sm"
+          busy={busy === "test"}
+          onClick={() =>
+            void run("test", async () => {
+              setTest(null);
+              setTest(await api.cameras.testSaved(camera.camera_id));
+            })
+          }
+        >
+          <PlugZap className="h-3.5 w-3.5" /> Test
+        </Button>
         <Button size="sm" onClick={onEdit}>
           <Pencil className="h-3.5 w-3.5" /> Edit
         </Button>
