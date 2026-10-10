@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { AlertTriangle, Radio, WifiOff } from "lucide-react";
+import { AlertTriangle, Play, Radio, RotateCcw, WifiOff } from "lucide-react";
 import { api, type Camera, type InferenceResult, type RuntimeStatus, type SafetyEvent } from "@/lib/api";
 import { useElementSize, useLiveResults, usePoll } from "@/lib/hooks";
 import { cn, fmtClock, fmtMs, fmtNum, fmtPct, ruleLabel } from "@/lib/utils";
-import { Card, Chip, Empty, Stat } from "@/components/ui";
+import { Button, Card, Chip, Empty, Stat } from "@/components/ui";
 import { CameraStateChip, SeverityChip } from "@/components/status-chip";
 import { SourceKindBadge, evidenceNote } from "@/components/source-kind-badge";
 import { DetectionOverlay } from "@/components/detection-overlay";
@@ -79,7 +79,7 @@ export function LivePage() {
       <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_22rem]">
         <div className="space-y-4 min-w-0">
           {selected ? (
-            <VideoPanel camera={selected} result={result} />
+            <VideoPanel camera={selected} result={result} runtimeState={runtimeCam?.state ?? null} onReplayed={() => void runtime.refresh()} />
           ) : (
             <Empty>Select a camera to view its feed.</Empty>
           )}
@@ -103,9 +103,29 @@ export function LivePage() {
   );
 }
 
-function VideoPanel({ camera, result }: { camera: Camera; result: InferenceResult | null }) {
+function VideoPanel({ camera, result, runtimeState, onReplayed }: { camera: Camera; result: InferenceResult | null; runtimeState: string | null; onReplayed: () => void }) {
   const { ref, size } = useElementSize<HTMLDivElement>();
   const isBrowser = camera.profile === "browser_webrtc";
+  const isClip = camera.connector === "upload";
+  const ended = isClip && runtimeState === "ended";
+  const [replaying, setReplaying] = useState(false);
+  const [replayError, setReplayError] = useState<string | null>(null);
+
+  /** Uploaded video: play the file again from its first frame and re-attach the stream. */
+  const replay = async () => {
+    setReplaying(true);
+    setReplayError(null);
+    try {
+      await api.cameras.restart(camera.camera_id);
+      setImgError(false);
+      setMjpegUrl(`${api.stream.mjpegUrl(camera.camera_id)}?t=${Date.now()}`);
+      onReplayed();
+    } catch (e) {
+      setReplayError(e instanceof Error ? e.message : "Could not start playback");
+    } finally {
+      setReplaying(false);
+    }
+  };
   const push = useWebcamPush(isBrowser ? camera.camera_id : null);
   const [imgError, setImgError] = useState(false);
   const [mjpegUrl, setMjpegUrl] = useState(() => api.stream.mjpegUrl(camera.camera_id));
@@ -178,9 +198,25 @@ function VideoPanel({ camera, result }: { camera: Camera; result: InferenceResul
             onError={() => setImgError(true)}
           />
         )}
-        {imgError && !(isBrowser && push.active) && (
+        {imgError && !(isBrowser && push.active) && !ended && (
           <div className="absolute inset-0 grid place-items-center text-xs text-muted-foreground bg-background/60">
             Stream not available yet — retrying…
+          </div>
+        )}
+        {ended && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-background/70">
+            <Button variant="primary" busy={replaying} onClick={() => void replay()} title="Play the video again from the start">
+              <Play className="h-4 w-4" /> Play again
+            </Button>
+            <span className="text-xs text-muted-foreground">Clip finished. Set Playback to "loop" on the Cameras page to repeat automatically.</span>
+            {replayError && <span className="text-xs text-destructive">{replayError}</span>}
+          </div>
+        )}
+        {isClip && !ended && (
+          <div className="absolute top-2 right-2 z-10">
+            <Button size="sm" busy={replaying} onClick={() => void replay()} title="Play the video again from the start">
+              <RotateCcw className="h-3.5 w-3.5" /> Replay
+            </Button>
           </div>
         )}
         <div className="absolute" style={{ left: offsetX, top: offsetY, width: contentW, height: contentH }}>
