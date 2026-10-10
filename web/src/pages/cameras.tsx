@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Film, Pencil, PlugZap, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { Film, Pencil, PlugZap, Plus, RotateCcw, Trash2, Upload } from "lucide-react";
 import { api, apiErrorMessage, type Camera, type CameraTestResult, type UploadRecord } from "@/lib/api";
 import { usePoll } from "@/lib/hooks";
 import { fmtNum } from "@/lib/utils";
@@ -9,7 +10,8 @@ import { SourceKindBadge } from "@/components/source-kind-badge";
 import { CameraForm, describeUpload } from "@/components/camera-form";
 import { TestResultView } from "@/components/test-result";
 
-type Mode = { kind: "list" } | { kind: "new" } | { kind: "edit"; camera: Camera };
+/** "upload" opens the add form with the Uploaded video profile preselected. */
+type Mode = { kind: "list" } | { kind: "new" } | { kind: "upload" } | { kind: "edit"; camera: Camera };
 
 export function CamerasPage() {
   const cameras = usePoll(() => api.cameras.list(), 4000);
@@ -17,6 +19,17 @@ export function CamerasPage() {
   const profiles = usePoll(() => api.cameras.profiles(), 0);
   const [mode, setMode] = useState<Mode>({ kind: "list" });
   const [notice, setNotice] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // /cameras?action=upload (linked from Live) opens the upload form directly.
+  useEffect(() => {
+    if (searchParams.get("action") === "upload") {
+      setMode({ kind: "upload" });
+      const next = new URLSearchParams(searchParams);
+      next.delete("action");
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const list = cameras.data ?? [];
 
@@ -25,7 +38,7 @@ export function CamerasPage() {
     return (
       <div className="space-y-4 max-w-4xl">
         <div className="flex items-center justify-between">
-          <h1 className="text-base font-semibold">{editing ? `Edit ${editing.name}` : "Add camera"}</h1>
+          <h1 className="text-base font-semibold">{editing ? `Edit ${editing.name}` : mode.kind === "upload" ? "Upload a video and play it as a camera" : "Add camera"}</h1>
           <Button variant="ghost" onClick={() => setMode({ kind: "list" })}>
             Back to list
           </Button>
@@ -33,8 +46,10 @@ export function CamerasPage() {
         <Card>
           {profiles.data ? (
             <CameraForm
+              key={mode.kind}
               profiles={profiles.data}
               initial={editing}
+              initialProfile={mode.kind === "upload" ? "uploaded_video" : undefined}
               onCancel={() => setMode({ kind: "list" })}
               onSaved={(cam) => {
                 setNotice(`${editing ? "Updated" : "Added"} ${cam.name}.`);
@@ -58,9 +73,14 @@ export function CamerasPage() {
         <h1 className="text-base font-semibold">
           Cameras <span className="text-muted-foreground font-normal">({list.length})</span>
         </h1>
-        <Button variant="primary" onClick={() => setMode({ kind: "new" })}>
-          <Plus className="h-4 w-4" /> Add camera
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button variant="primary" onClick={() => setMode({ kind: "upload" })} title="Upload an MP4, MOV or MKV and play it as a camera">
+            <Upload className="h-4 w-4" /> Upload video
+          </Button>
+          <Button variant="primary" onClick={() => setMode({ kind: "new" })}>
+            <Plus className="h-4 w-4" /> Add camera
+          </Button>
+        </div>
       </div>
       {notice && (
         <Notice kind="ok" className="flex justify-between">
@@ -72,7 +92,13 @@ export function CamerasPage() {
       )}
       {cameras.error && <Notice kind="error">{cameras.error}</Notice>}
       {!cameras.loading && list.length === 0 && (
-        <Empty>No cameras configured. Add a network camera, paste an RTSP link, pick a USB camera, upload a video, share a browser camera, or add a synthetic feed to see the pipeline run without hardware.</Empty>
+        <Empty>
+          <p>No cameras configured. Add a network camera, paste an RTSP link, pick a USB camera, upload a video, share a browser camera, or add a synthetic feed to see the pipeline run without hardware.</p>
+          <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
+            <Button variant="primary" onClick={() => setMode({ kind: "upload" })}><Upload className="h-4 w-4" /> Upload video</Button>
+            <Button onClick={() => setMode({ kind: "new" })}><Plus className="h-4 w-4" /> Add camera</Button>
+          </div>
+        </Empty>
       )}
       <div className="grid gap-3 md:grid-cols-2 2xl:grid-cols-3">
         {list.map((c) => (
@@ -84,14 +110,14 @@ export function CamerasPage() {
           />
         ))}
       </div>
-      {((uploads.data?.length ?? 0) > 0 || list.some((c) => c.connector === "upload")) && (
-        <UploadsCard uploads={uploads.data ?? []} cameras={list} onChanged={() => { void uploads.refresh(); void cameras.refresh(); }} />
+      {!cameras.loading && (
+        <UploadsCard uploads={uploads.data ?? []} cameras={list} onChanged={() => { void uploads.refresh(); void cameras.refresh(); }} onUpload={() => setMode({ kind: "upload" })} />
       )}
     </div>
   );
 }
 
-function UploadsCard({ uploads, cameras, onChanged }: { uploads: UploadRecord[]; cameras: Camera[]; onChanged: () => void }) {
+function UploadsCard({ uploads, cameras, onChanged, onUpload }: { uploads: UploadRecord[]; cameras: Camera[]; onChanged: () => void; onUpload: () => void }) {
   const [busy, setBusy] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const names = new Map(cameras.map((c) => [c.camera_id, c.name]));
@@ -105,11 +131,18 @@ function UploadsCard({ uploads, cameras, onChanged }: { uploads: UploadRecord[];
   return (
     <Card
       title={<span className="flex items-center gap-2"><Film className="h-4 w-4" /> Uploaded videos <span className="text-muted-foreground font-normal">({uploads.length})</span></span>}
-      actions={<span className="text-xs text-muted-foreground">stored next to the database, outside the repository · delete removes the file</span>}
+      actions={
+        <span className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">stored next to the database, outside the repository · delete removes the file</span>
+          <Button size="sm" onClick={onUpload}><Upload className="h-3.5 w-3.5" /> Upload video</Button>
+        </span>
+      }
       bodyClassName="p-0"
     >
       {uploads.length === 0 ? (
-        <p className="p-4 text-sm text-muted-foreground">No uploads yet. Add a camera with the <b>Uploaded video</b> profile to upload an MP4, MOV or MKV.</p>
+        <p className="p-4 text-sm text-muted-foreground">
+          No uploads yet. Click <button type="button" onClick={onUpload} className="text-primary underline underline-offset-2 font-medium">Upload video</button> to add an MP4, MOV or MKV and play it as a camera.
+        </p>
       ) : (
         <ul className="divide-y divide-border">
           {uploads.map((u) => (

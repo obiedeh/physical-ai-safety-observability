@@ -248,6 +248,7 @@ export function CameraForm({
   onSaved,
   onCancel,
   onUploaded,
+  initialProfile,
 }: {
   profiles: CameraProfile[];
   initial: Camera | null;
@@ -255,8 +256,11 @@ export function CameraForm({
   onCancel: () => void;
   /** called after a successful upload so the parent can refresh its uploads list */
   onUploaded?: () => void;
+  /** profile to preselect when creating (e.g. "uploaded_video" from the Upload video button) */
+  initialProfile?: string;
 }) {
-  const [values, setValues] = useState<CameraFormValues>(initial ? fromCamera(initial) : EMPTY);
+  const blank = (): CameraFormValues => (initialProfile ? { ...EMPTY, profile: initialProfile } : EMPTY);
+  const [values, setValues] = useState<CameraFormValues>(initial ? fromCamera(initial) : blank());
   const [showPassword, setShowPassword] = useState(false);
   const [saving, setSaving] = useState(false);
   const [testing, setTesting] = useState(false);
@@ -264,10 +268,10 @@ export function CameraForm({
   const [test, setTest] = useState<CameraTestResult | null>(null);
 
   useEffect(() => {
-    setValues(initial ? fromCamera(initial) : EMPTY);
+    setValues(initial ? fromCamera(initial) : blank());
     setTest(null);
     setError(null);
-  }, [initial]);
+  }, [initial, initialProfile]);
 
   const profile = useMemo(
     () => profiles.find((p) => p.model_type === values.profile) ?? null,
