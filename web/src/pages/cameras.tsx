@@ -50,6 +50,7 @@ export function CamerasPage() {
               profiles={profiles.data}
               initial={editing}
               initialProfile={mode.kind === "upload" ? "uploaded_video" : undefined}
+              openFilePicker={mode.kind === "upload"}
               onCancel={() => setMode({ kind: "list" })}
               onSaved={(cam) => {
                 setNotice(`${editing ? "Updated" : "Added"} ${cam.name}.`);
