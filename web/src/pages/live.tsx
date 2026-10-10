@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { AlertTriangle, Play, Radio, RotateCcw, WifiOff } from "lucide-react";
 import { api, type Camera, type InferenceResult, type RuntimeStatus, type SafetyEvent } from "@/lib/api";
@@ -130,6 +130,15 @@ function VideoPanel({ camera, result, runtimeState, onReplayed }: { camera: Came
   const [imgError, setImgError] = useState(false);
   const [mjpegUrl, setMjpegUrl] = useState(() => api.stream.mjpegUrl(camera.camera_id));
 
+  // An MJPEG <img> holds its HTTP connection for as long as the element lives — even after it is
+  // removed from the DOM, until garbage collection. Browsers allow only ~6 connections per host,
+  // so release it explicitly whenever the stream element is replaced or the panel unmounts.
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  useEffect(() => {
+    const el = imgRef.current;
+    return () => { if (el) el.src = ""; };
+  }, [mjpegUrl]);
+
   // Re-point the <img> when the camera changes; retry when the stream 404s
   // (camera starting) so the video returns without a reload.
   useEffect(() => {
@@ -192,6 +201,7 @@ function VideoPanel({ camera, result, runtimeState, onReplayed }: { camera: Came
         ) : (
           <img
             key={mjpegUrl}
+            ref={imgRef}
             src={mjpegUrl}
             alt={`${camera.name} live`}
             className="absolute inset-0 w-full h-full object-contain"
