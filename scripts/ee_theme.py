@@ -91,7 +91,7 @@ def _vars(tokens: dict[str, str]) -> str:
     return "".join(f"{k}:{v};" for k, v in tokens.items())
 
 
-def band_html(repo_url: str, label: str = "Labs · Evidence") -> str:
+def band_html(repo_url: str, label: str = "Evidence") -> str:
     return (f'<div class="ee-band"><div class="ee-in"><a class="ee-mark" href="{LAB_URL}"><i></i>EmbodiedEdge '
             f'<span>{label}</span></a><nav><a href="{repo_url}">Repository</a><a href="{LAB_URL}">Lab</a>'
             f'<a href="{PROFILE_URL}">Obinna Edeh</a></nav></div></div>')
