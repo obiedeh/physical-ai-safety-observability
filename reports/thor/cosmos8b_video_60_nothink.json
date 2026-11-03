@@ -7,7 +7,7 @@
   "finished_at": "2026-09-09T17:12:53.466782+00:00",
   "elapsed_s": 614.308,
   "device": {
-    "host": "jetsonthor",
+    "host": "jetson-agx-thor",
     "machine": "aarch64",
     "kernel": "6.8.12-tegra",
     "soc": "tegra264",

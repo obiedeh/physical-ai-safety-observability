@@ -1,0 +1,66 @@
+{
+  "date": "2026-11-03",
+  "note": "Machine names and a home-directory path in these committed records were replaced with board labels and <home>. sha256_as_measured is each file as first committed; reversing the substitution reproduces it exactly.",
+  "files": [
+    {
+      "path": "reports/index.html",
+      "sha256_as_measured": "c41851493eda7ff1b282b69bc1d54e4efa1c81d11585b1795ab61c10a551a4a7",
+      "sha256_scrubbed": "1243e48a3629f127db122234a127a45f451a265888dde5f45c63791d8ed6966d"
+    },
+    {
+      "path": "reports/thor/cosmos2b_video_60.json",
+      "sha256_as_measured": "49f3cab4de8d1e8815363444dba3334a10ceea840ba05bf83d1dcb843b325491",
+      "sha256_scrubbed": "5d003bdc5572c881c64d4861df076eeb4823e1ce5831b6b608a4354f0727277d"
+    },
+    {
+      "path": "reports/thor/cosmos2b_video_60_attempt1_timeout.log",
+      "sha256_as_measured": "8bf2194f4fd440d737aba711da906a1b3a49c29d510b31ad3aeb8d107c688c58",
+      "sha256_scrubbed": "562841448e14c0f3ce277a677efb4f20c0f0759e2f2f432a4cfb4190ee691839"
+    },
+    {
+      "path": "reports/thor/cosmos2b_video_60_nothink.json",
+      "sha256_as_measured": "e1af896c01a9e85fa105f25b2736ee61d24652d6107ac661db084c5ccc4609c2",
+      "sha256_scrubbed": "27bb6e727eb10196a48603365e214fe10caddc2b5dd609d8be419980655a8eea"
+    },
+    {
+      "path": "reports/thor/cosmos2b_video_60_schema.json",
+      "sha256_as_measured": "9453402e86fa21b0f60fe73ec2066c13a3d9549849f443dfb218556a1ea106ac",
+      "sha256_scrubbed": "eba978d7b13ffdaed5f518362bfcba4e86d7515e0769feb1f7b091f194f21c0c"
+    },
+    {
+      "path": "reports/thor/cosmos2b_video_60_schema_v1prompt.json",
+      "sha256_as_measured": "b74340ecd74f041994467a08b1f30874b1804b933be6b33427b21c22f0a0587d",
+      "sha256_scrubbed": "f8cba1a3092ab3f50b71a8164445a711cc9ba7db774e1a22019d4d44a0e4f0c5"
+    },
+    {
+      "path": "reports/thor/cosmos8b_video_60_nothink.json",
+      "sha256_as_measured": "4b8cdd6210d666b2b2ac12c6e2db28e7317cf605414a11b8d3a13fe1df602410",
+      "sha256_scrubbed": "016d25866db14aa9f349436fd0be9ee3d079ebdc1d6e6bd79e0f688e5640dc03"
+    },
+    {
+      "path": "reports/thor/cosmos8b_video_60_schema.json",
+      "sha256_as_measured": "9a1000fd148a7494a678b63eff85d59358399866f7fcdc6da1a02afa59c0f7a3",
+      "sha256_scrubbed": "5abacc5e9bcc88c2abcec0ed3b38891a37bbca25185c7f25b177594d6efb2975"
+    },
+    {
+      "path": "reports/thor/mock_30fps_backend.json",
+      "sha256_as_measured": "7feb052094b79d6a08e3d648c027052dee3a01170240ed9f580087358a77f301",
+      "sha256_scrubbed": "333c6e223219182d0b75a4a9de41ba368aa710d2131b2fc0174c9614e0beff4f"
+    },
+    {
+      "path": "reports/thor/mock_30fps_backend_batched.json",
+      "sha256_as_measured": "85f8a41c2615f16606b8ad00bab9769d888c7c8652d62c6fac0d9fefa023b471",
+      "sha256_scrubbed": "712b259913a3e86282feca85d4f7799281ab16bb4a6e252527764d0bdf47cdc9"
+    },
+    {
+      "path": "reports/thor/mock_30fps_no_post.json",
+      "sha256_as_measured": "7a4a4e3249cc933cd01b005bfa1061b63cf0b36d98139acbe4ace47df9c70fdd",
+      "sha256_scrubbed": "f393bdafa7b1efda2c1755ddd7faa549edb007c272a31b6045b622f4885ad4c6"
+    },
+    {
+      "path": "reports/thor/mock_no_post.json",
+      "sha256_as_measured": "f61af1c3ac47d15de33d96975bfda30a4f9da6f7c0adc33549190570a0a66de2",
+      "sha256_scrubbed": "6017e4a4852618df262ba49a5731423d0b501d71580ed5317a9c6c78cd051983"
+    }
+  ]
+}
