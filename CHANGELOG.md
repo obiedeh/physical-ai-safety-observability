@@ -7,6 +7,7 @@ monthly batches. A number named here is read from a committed record under
 
 ## Unreleased
 
+- 2026-11-03: Evidence pages and their theme name the lab EmbodiedEdge; the retired EmbodiedEdge Labs name is removed.
 - 2026-11-03: Machine names and a home path in 12 committed records replaced with board labels and <home>, with the as-measured hashes kept in reports/thor/SCRUB_2026-11-03.json; a committed handoff note removed (handoff notes live outside repositories).
 - `docs/safety/hazard_analysis.md`: the observability rules read in SOTIF and
   ISO 26262 vocabulary (item, hazard table, triggering conditions, acceptance
