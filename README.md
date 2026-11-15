@@ -22,12 +22,12 @@ This repository is the open core: the edge worker and model adapters, the safety
 | Operator UI and configuration | Implemented | Web console served by the API: Live, Cameras, Model, Runs, Events. Cameras, model endpoint and inference cadence are set in the UI, stored in SQLite and applied without a restart | A committed live-camera run through it |
 | Safety policy engine | Implemented | PPE, restricted zone, proximity risk and unsafe-event rules over structured detections; zones drawn per camera in the UI | Zone geometry from camera calibration |
 | Live pipeline | Implemented | One capture thread per camera at native frame rate, an inference worker on its own cadence, and an asynchronous event poster; file and synthetic sources through the `edge.worker` CLI | Its capture rate and packet-to-event latency measured on the Thor |
-| Model adapters | **Measured** (inference cost), 2026-09-09, Jetson AGX Thor, Cosmos-Reason2 2B and 8B via vLLM | Deterministic mock adapter; chat-completions and Cosmos-Reason2 adapters run against a local vLLM server on device | Any detection-quality measurement (no ground truth) |
+| Model adapters | **Measured** (inference cost), 2026-09-09, Jetson AGX Thor, Cosmos-Reason2 2B and 8B via vLLM | Deterministic mock adapter; chat-completions and Cosmos-Reason2 adapters run against a local vLLM server on device | Detection quality on real-world footage. Results on labeled simulation pictures, measured in the full build, are [below](#labeled-simulation-results-2026-10-17-and-2026-11-14) |
 | Constrained-mode guard | **Measured**, 2026-10-02, Jetson AGX Thor | Settings validation plus a live canary request that proves the server enforces the JSON schema before any worker uses it | n/a |
 | Telemetry | **Measured**, 2026-09-09, Jetson AGX Thor | Run artifacts under `reports/thor/` with device provenance, per-frame timings, event counts, process RSS and tegrastats, for the mock and the real models | Sustained-runtime measurement |
 | Evidence chain | Implemented | Frame hashing and evidence records on every event; the inference frame behind an event is kept and shown in the Events page | Incident export |
 
-Nothing in this repository measures detection quality. Every run artifact carries device, date, inputs and hashes.
+The code in this repository does not measure detection quality. Results on labeled simulation pictures, measured with the full build's scorer, are reported [below](#labeled-simulation-results-2026-10-17-and-2026-11-14). Every run artifact carries device, date, inputs and hashes.
 
 ## What it does today
 
@@ -166,6 +166,82 @@ Reproduce on a Jetson:
 python -m edge.worker --source examples/synthetic_30fps_source.json --adapter mock --no-post --once --report reports/thor/run.json
 ```
 
+## Labeled simulation results, 2026-10-17 and 2026-11-14
+
+**Labeled simulation scenes; not real-world footage.** These results were measured on `jetson-agx-thor` with the labeled scorer of the full build of this project, which is not public. The scorer, the 60 labeled pictures and the Cosmos 3 Edge backend are not part of this repository. The summary reports are committed here so every number can be read from a record.
+
+The 60 pictures are Isaac Sim renders at 1280 x 720 in four conditions of 15 pictures each: a worker with a hard hat and vest, a worker with neither, a worker with both inside a restricted zone, and an empty scene. One stylized worker and one background, with strongly correlated poses within each condition.
+
+### Baseline: Cosmos Reason 2 (2B), and the required protective-gear fields, 2026-10-17
+
+The only change to the model request made `hard_hat` and `vest` required for every person detection. Before the change the model could leave them out, and the rule read a missing answer as missing gear. Same weights, container, prompt and pictures on both sides ([before](reports/thor/model_accuracy_coordinate_v1_2026-10-17.json), [after](reports/thor/model_accuracy_ppe_v1_2026-10-17.json)).
+
+| Measure | Before (true / false / missed) | After (true / false / missed) |
+|---|---|---|
+| Missing protective gear | 15 / 11 / 0 | 15 / 0 / 0 |
+| Restricted-zone entry | 9 / 0 / 6 | 9 / 0 / 6 |
+| Human too close to the robot | 0 / 16 / 0 | 0 / 16 / 0 |
+| Person found (of 45) | 29 | 29 |
+
+False protective-gear alarms went from 11 to 0 and all 15 real ones stayed. The change did not touch what the model sees: it still missed the person in 16 of 45 pictures, missed 6 of 15 zone entries and raised 16 false proximity alarms. This is the baseline the Cosmos 3 Edge comparison below starts from.
+
+### Cosmos Reason 2 (2B) against Cosmos 3 Edge (4B), 2026-11-14
+
+Both models answered the same request: same prompt, same JSON schema, same no-think switch, same 512-token cap. Three runs per model on the 60 pictures, in mixed order with 120 s of rest between runs. Each cell is the median of three runs with the three runs in brackets.
+
+| Server | Reason 2 (2B) | Cosmos 3 Edge (4B) |
+|---|---|---|
+| Image | `ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04` | `vllm/vllm-openai:cosmos3`, digest `sha256:db0bb920b0b54e82ea96a98659bbd21921f87d0dcfc86feffdafa2db3f08be55` |
+| vLLM | 0.14.0 | 0.23.1rc1.dev1306+gbfee6a802 |
+| Weights | Cosmos-Reason2-2B, BF16 | `nvidia/Cosmos3-Edge` revision `6afc1256321c3a8e623d89be3bc5117a1e90f96b`, BF16 |
+
+| Measure | Reason 2 (2B) | Cosmos 3 Edge (4B), whitespace-free grammar | Cosmos 3 Edge (4B), model card launch |
+|---|---|---|---|
+| False protective-gear alarms | **0** (0, 0, 0) | **3** (3, 3, 1) | **0** (0, 0, 0) |
+| Real gear alarms kept (of 15) | **15** (15, 14, 15) | **13** (12, 13, 13) | **0** (0, 0, 0) |
+| Person found (of 45) | **29** (29, 28, 30) | **44** (45, 44, 44) | **1** (3, 1, 1) |
+| False persons on the 15 empty pictures | **0** (0, 0, 0) | **0** (0, 0, 0) | **0** (0, 0, 0) |
+| Restricted-zone events found (of 15) | **9** (9, 9, 9) | **14** (15, 14, 14) | **1** (1, 1, 0) |
+| False "too close to the robot" alarms | **16** (16, 15, 16) | **0** (0, 0, 0) | **0** (0, 0, 0) |
+| Off-list labels | **0** (0, 0, 0) | **0** (0, 0, 0) | **0** (0, 0, 0) |
+| Pictures with no usable answer (of 60) | **0** (0, 0, 0) | **0** (0, 0, 0) | **39** (38, 41, 39) |
+| Answer time, median (s) | **1.54** (1.80, 1.54, 1.53) | **1.83** (2.01, 1.83, 1.81) | **7.78** (7.95, 7.78, 7.78) |
+| Answer time, slowest 1 in 20 (s) | **4.00** (4.01, 4.00, 3.99) | **2.71** (2.92, 2.71, 2.71) | **7.79** (12.85, 7.79, 7.79) |
+| Board input power during the run, median (W) | **61.5** (60.2, 61.5, 61.5) | **58.2** (58.1, 58.2, 58.4) | **69.1** (67.9, 69.3, 69.1) |
+
+The first two columns are the second session ([comparison](reports/thor/reasoner_comparison_2026-11-14-compact-grammar.json), [session record](reports/thor/reasoner_comparison_2026-11-14-compact-grammar_session.json)). The third column is the first session, where the Cosmos 3 Edge server ran the model card's command as written ([comparison](reports/thor/reasoner_comparison_2026-11-14.json), [session record](reports/thor/reasoner_comparison_2026-11-14_session.json)). Both servers stayed loaded for the whole session, so memory and idle power describe the pair ([memory readings](reports/thor/reasoner_comparison_2026-11-14_memory.json)).
+
+**What the table says.** With the whitespace-free grammar, Cosmos 3 Edge found the person in 44 of 45 pictures against 29, found 14 of 15 zone entries against 9, and raised none of the 16 false proximity alarms. Those alarms need a `robot` detection and the pictures hold no robot: Reason 2 returned 32 or 33 `robot` labels a run, Cosmos 3 Edge returned only `person` and `box`. It was worse at the protective-gear read: it kept 13 of the 15 real alarms and raised 3 false ones, where Reason 2 kept 15 and raised none on the people it did find. Run as the model card writes the command, Cosmos 3 Edge was not usable with this schema: about two answers in three ran to the token cap.
+
+**Friction points.**
+
+| What broke | What fixed it | What NVIDIA could change |
+|---|---|---|
+| Under the JSON schema, 39 of 60 Cosmos 3 Edge answers were a few tokens of JSON followed by whitespace up to the 512-token cap: no usable answer and 7.8 s a picture. The schema was enforced; the grammar allows any amount of whitespace. | Start the server with `--structured-outputs-config '{"backend": "xgrammar", "disable_any_whitespace": true}'`. Failed reads went from 39 to 0 and the median answer from 7.78 s to 1.83 s. | Put the flag in the model card's vLLM command, or state that schema-constrained output needs it. |
+| `--structured-outputs-config '{"disable_any_whitespace": true}'` alone stops the server at start: the option is "only supported for xgrammar and guidance backends" while the default backend is `auto`. | Name the backend in the same option. | Let `auto` resolve to a backend that supports the option, or say in the error which value to add. |
+| The second start failed with "Error in memory profiling. Initial free memory 44.27 GiB, current free memory 46.95 GiB". On unified memory the page cache shrank while the server measured free memory. | `sync`, drop the page cache, start again. | Tolerate free memory rising during start-up profiling on unified-memory boards, or add the cache drop to the Jetson notes. |
+| The model card names an image tag only, with no vLLM version or digest. | Recorded the version and digest above. | Publish the vLLM version and image digest on the card. |
+| The model card does not state a box coordinate convention for the reasoner. | Observed boxes follow the same 0 to 1000 convention as Reason 2. One first-session answer held a negative coordinate and was counted as a failed read. | Document the box convention on the card. |
+
+Cosmos 3 Edge launch command, second session (the first session is the same without the last flag):
+
+```bash
+vllm serve nvidia/Cosmos3-Edge --revision 6afc1256321c3a8e623d89be3bc5117a1e90f96b \
+  --host 0.0.0.0 --port 8001 --max-model-len 131072 --allowed-local-media-path / \
+  --mm-processor-kwargs '{"do_resize": true, "min_pixels": 4096, "max_pixels": 16777216}' \
+  --media-io-kwargs '{"video": {"num_frames": 256}}' \
+  --gpu-memory-utilization 0.30 \
+  --structured-outputs-config '{"backend": "xgrammar", "disable_any_whitespace": true}'
+```
+
+**Limits.**
+
+- 60 labeled simulated pictures: a signal, not an accuracy rate.
+- One board, one evening, three runs per model in each of two back-to-back sessions. The second session exists only because the first exposed the whitespace failure; no run was dropped and no best run was picked.
+- Cosmos 3 Edge is BF16, the only precision NVIDIA lists as tested.
+- The grammar canary passed on each server before every run. No reasoning parser flag was used.
+- The per-run records with every request and answer are kept in the full build; the summaries here carry their hashes.
+
 ## Architecture
 
 The three loops and why they never wait on each other are summarised in the [showcase](https://obiedeh.github.io/physical-ai-safety-observability/docs/showcase/#flow-h).
@@ -272,7 +348,7 @@ Live cameras are decoded with PyAV, a core dependency. The `edge.worker` CLI rea
 The system runs end to end on the device, but none of the following has a committed measurement.
 
 - **Live-camera latency and power on the Thor.** Every real-model run above used simulation footage read from a file. No run through a live camera has been committed, so capture rate, dropped frames, packet-to-event latency and board power with a camera attached are unknown. The asynchronous poster's effect on throughput is likewise unmeasured.
-- **Rule accuracy against known scenes.** There is no labelled ground truth, so no precision or recall for any rule. The constrained 2B run reported people in people-free footage; only ground truth can turn that into a rate.
+- **Rule accuracy on real-world footage.** The only scored results are on 60 labeled simulation pictures [above](#labeled-simulation-results-2026-10-17-and-2026-11-14), measured in the full build. This repository holds no labeled set and no scorer, and nothing has been scored on real footage.
 - **Calibration error.** Zones are drawn by hand on a snapshot and the proximity rule uses a fixed pixel distance. Neither is derived from camera calibration, and the error this introduces has not been characterised. This system does not estimate speed.
 - **Long-run stability.** The committed runs last 60 to 390 seconds. Behaviour over hours or days (reconnects, memory, store growth) has not been measured.
 
@@ -282,7 +358,7 @@ Not built or not run yet:
 
 - A live-camera evidence run on the Thor, committed under `reports/thor/` in the existing run-report format
 - Cosmos-Reason2-8B on live video
-- Simulated scenes with ground truth for people, PPE and zone states, giving per-rule precision and recall. These results will be labelled simulation.
+- The labeled scorer and a labeled simulation set in this repository, so the per-rule results above can be rebuilt here. These results will be labelled simulation.
 
 ## Safety analysis
 

@@ -1,0 +1,5267 @@
+{
+  "schema": "run-report-v1",
+  "status": "complete",
+  "error": null,
+  "note": "labeled simulation scenes; not real-world footage.",
+  "started_at": "2026-10-17T22:34:36.407163+00:00",
+  "finished_at": "2026-10-17T22:36:30.939839+00:00",
+  "elapsed_s": 114.532,
+  "device": {
+    "host": "jetson-agx-thor",
+    "machine": "aarch64",
+    "kernel": "6.8.12-tegra",
+    "soc": "tegra264",
+    "is_jetson": true,
+    "l4t_release": "# R38 (release), REVISION: 4.0, GCID: 43443517, BOARD: generic, EABI: aarch64, DATE: Wed Dec 31 00:15:19 UTC 2025",
+    "nvpmodel": "NV Power Mode: 120W 1",
+    "cpu_count": 14,
+    "mem_total_gb": 122.82,
+    "loadavg_1m_at_start": 1.98974609375,
+    "loadavg_5m_at_start": 1.14501953125,
+    "python": "3.12.3",
+    "git_sha": "ebe3a32"
+  },
+  "adapter": {
+    "name": "cosmos_reason2",
+    "model_version": "nvidia/cosmos-reason2-2b"
+  },
+  "config": {
+    "think": false,
+    "json_schema": true,
+    "max_tokens": 512
+  },
+  "source": {
+    "source_kind": "uploaded_generated",
+    "label": "labeled simulation scenes; not real-world footage.",
+    "path": "reports/accuracy/simulation_2026-10-17/ground_truth.json",
+    "sha256": "6fe444e7b3d64b61f6833ce8c730f2e70567424d47550e00fdffb4490836b42f"
+  },
+  "frames_processed": 60,
+  "frames_per_second": 0.524,
+  "latency": {
+    "inference": {
+      "n": 60,
+      "unit": "ms",
+      "p50": 1804.1096,
+      "p95": 4016.6183,
+      "p99": 4308.2907,
+      "min": 254.7206,
+      "max": 4338.9851,
+      "mean": 1886.3602
+    },
+    "rule_eval": {
+      "n": 60,
+      "unit": "ms",
+      "p50": 0.3939,
+      "p95": 0.7677,
+      "p99": 1.0225,
+      "min": 0.1971,
+      "max": 1.1217,
+      "mean": 0.4275
+    },
+    "backend_post": {
+      "n": 0
+    },
+    "capture_to_result": {
+      "n": 0
+    },
+    "packet_to_event": {
+      "n": 0
+    }
+  },
+  "model_tokens": {
+    "prompt": {
+      "n": 60,
+      "unit": "count",
+      "p50": 1001,
+      "p95": 1001,
+      "p99": 1001,
+      "min": 1001,
+      "max": 1001,
+      "mean": 1001.0
+    },
+    "completion": {
+      "n": 60,
+      "unit": "count",
+      "p50": 77,
+      "p95": 174,
+      "p99": 188,
+      "min": 9,
+      "max": 188,
+      "mean": 80.6667
+    },
+    "note": "Present only when the adapter returns an OpenAI-style usage block."
+  },
+  "detections_per_frame": {
+    "n": 60,
+    "unit": "count",
+    "p50": 1,
+    "p95": 4,
+    "p99": 4,
+    "min": 0,
+    "max": 4,
+    "mean": 1.5
+  },
+  "detections_by_label": {
+    "box": 12,
+    "cart": 12,
+    "pallet": 5,
+    "person": 29,
+    "robot": 32
+  },
+  "events": {
+    "total": 40,
+    "by_rule": {
+      "HUMAN_ROBOT_PROXIMITY": 16,
+      "PPE_MISSING": 15,
+      "RESTRICTED_ZONE_ENTRY": 9
+    },
+    "by_severity": {
+      "critical": 9,
+      "high": 31
+    }
+  },
+  "memory": {
+    "process_peak_rss_gb": 0.0606
+  },
+  "tegrastats": {
+    "n_samples": 114,
+    "rails_mw": {
+      "VDD_GPU": {
+        "p50": 13753.0,
+        "peak": 14146,
+        "min": 11788
+      },
+      "VDD_CPU_SOC_MSS": {
+        "p50": 15718.0,
+        "peak": 16504,
+        "min": 13753
+      },
+      "VIN_SYS_5V0": {
+        "p50": 15924.0,
+        "peak": 16128,
+        "min": 13759
+      },
+      "VIN": {
+        "p50": 56220.0,
+        "peak": 59172,
+        "min": 24838
+      }
+    },
+    "temps_c": {
+      "cpu": {
+        "p50": 45.843,
+        "peak": 48.468
+      },
+      "tj": {
+        "p50": 46.906,
+        "peak": 48.843
+      },
+      "soc012": {
+        "p50": 44.437,
+        "peak": 48.156
+      },
+      "gpu": {
+        "p50": 46.281,
+        "peak": 48.312
+      },
+      "soc345": {
+        "p50": 46.906,
+        "peak": 48.812
+      }
+    },
+    "board_ram_used_mb": {
+      "p50": 34676.0,
+      "peak": 34711
+    }
+  },
+  "capture": null,
+  "transport": null,
+  "server": {
+    "server_check": {
+      "ok": true,
+      "stage": "ok",
+      "message": "server reachable",
+      "served_models": [
+        "nvidia/cosmos-reason2-2b"
+      ],
+      "constrained_enforced": null
+    },
+    "guard": {
+      "ok": true,
+      "stage": "ok",
+      "message": "json_schema enforced by server",
+      "served_models": [],
+      "constrained_enforced": true
+    },
+    "reasoning_parser": false
+  },
+  "per_frame": [
+    {
+      "frame_id": "frame-000000",
+      "t": 1.9128456059843302,
+      "inference_ms": 1877.0546,
+      "rule_ms": 0.3008,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000001",
+      "t": 3.729703810007777,
+      "inference_ms": 1793.9122,
+      "rule_ms": 0.2967,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000002",
+      "t": 5.549148659978528,
+      "inference_ms": 1796.6279,
+      "rule_ms": 0.2654,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000003",
+      "t": 9.579086574027315,
+      "inference_ms": 4007.2682,
+      "rule_ms": 0.2126,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 174,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000004",
+      "t": 11.287849149026442,
+      "inference_ms": 1686.5608,
+      "rule_ms": 0.2374,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 72,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000005",
+      "t": 14.42581257497659,
+      "inference_ms": 3115.675,
+      "rule_ms": 0.2786,
+      "post_ms": null,
+      "events": 0,
+      "detections": 3,
+      "prompt_tokens": 1001,
+      "completion_tokens": 135,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000006",
+      "t": 18.466396360017825,
+      "inference_ms": 4018.3461,
+      "rule_ms": 0.2143,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 174,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000007",
+      "t": 22.49082901800284,
+      "inference_ms": 4000.7368,
+      "rule_ms": 0.2728,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 174,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000008",
+      "t": 26.526404200994875,
+      "inference_ms": 4012.9743,
+      "rule_ms": 0.2795,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 174,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000009",
+      "t": 30.566696872992907,
+      "inference_ms": 4016.6183,
+      "rule_ms": 0.1971,
+      "post_ms": null,
+      "events": 0,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 174,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000010",
+      "t": 34.55678956297925,
+      "inference_ms": 3973.2673,
+      "rule_ms": 0.3972,
+      "post_ms": null,
+      "events": 1,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 173,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000011",
+      "t": 36.36910405702656,
+      "inference_ms": 1795.4561,
+      "rule_ms": 0.2884,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000012",
+      "t": 39.528166018018965,
+      "inference_ms": 3136.3728,
+      "rule_ms": 0.2397,
+      "post_ms": null,
+      "events": 0,
+      "detections": 3,
+      "prompt_tokens": 1001,
+      "completion_tokens": 135,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000013",
+      "t": 42.66353273100685,
+      "inference_ms": 3113.9929,
+      "rule_ms": 0.2407,
+      "post_ms": null,
+      "events": 0,
+      "detections": 3,
+      "prompt_tokens": 1001,
+      "completion_tokens": 135,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000014",
+      "t": 45.800433052005246,
+      "inference_ms": 3115.0118,
+      "rule_ms": 0.2377,
+      "post_ms": null,
+      "events": 0,
+      "detections": 3,
+      "prompt_tokens": 1001,
+      "completion_tokens": 135,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000015",
+      "t": 48.07592963799834,
+      "inference_ms": 2253.092,
+      "rule_ms": 0.5246,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000016",
+      "t": 50.36544457898708,
+      "inference_ms": 2266.3565,
+      "rule_ms": 0.5463,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000017",
+      "t": 52.640860500978306,
+      "inference_ms": 2252.2367,
+      "rule_ms": 0.3742,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000018",
+      "t": 54.91468532400904,
+      "inference_ms": 2250.5872,
+      "rule_ms": 0.5003,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000019",
+      "t": 57.19592979497975,
+      "inference_ms": 2258.2545,
+      "rule_ms": 0.3939,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000020",
+      "t": 59.46921619301429,
+      "inference_ms": 2250.7956,
+      "rule_ms": 0.5884,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000021",
+      "t": 61.7589888300281,
+      "inference_ms": 2263.5282,
+      "rule_ms": 0.7284,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000022",
+      "t": 64.03209890797734,
+      "inference_ms": 2249.1859,
+      "rule_ms": 0.4676,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000023",
+      "t": 66.30609666497912,
+      "inference_ms": 2250.6796,
+      "rule_ms": 0.6677,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000024",
+      "t": 68.57933643501019,
+      "inference_ms": 2250.1184,
+      "rule_ms": 0.6825,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000025",
+      "t": 72.94139803602593,
+      "inference_ms": 4338.9851,
+      "rule_ms": 0.5471,
+      "post_ms": null,
+      "events": 2,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 188,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000026",
+      "t": 75.2114222330274,
+      "inference_ms": 2248.1926,
+      "rule_ms": 0.4113,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000027",
+      "t": 79.54184824699769,
+      "inference_ms": 4308.2907,
+      "rule_ms": 0.5174,
+      "post_ms": null,
+      "events": 2,
+      "detections": 4,
+      "prompt_tokens": 1001,
+      "completion_tokens": 188,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000028",
+      "t": 81.81553021201398,
+      "inference_ms": 2250.9647,
+      "rule_ms": 0.4447,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000029",
+      "t": 84.10814999102149,
+      "inference_ms": 2269.7824,
+      "rule_ms": 0.6579,
+      "post_ms": null,
+      "events": 2,
+      "detections": 2,
+      "prompt_tokens": 1001,
+      "completion_tokens": 97,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000030",
+      "t": 85.93588870600797,
+      "inference_ms": 1803.8767,
+      "rule_ms": 0.6317,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000031",
+      "t": 87.75678460497875,
+      "inference_ms": 1798.5892,
+      "rule_ms": 0.6992,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000032",
+      "t": 89.57792113599135,
+      "inference_ms": 1798.1208,
+      "rule_ms": 0.7746,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000033",
+      "t": 91.40192188502988,
+      "inference_ms": 1800.5538,
+      "rule_ms": 1.1217,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000034",
+      "t": 93.24298936402192,
+      "inference_ms": 1818.0527,
+      "rule_ms": 0.6559,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000035",
+      "t": 95.06397470500087,
+      "inference_ms": 1798.2917,
+      "rule_ms": 0.5969,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000036",
+      "t": 96.88754965102999,
+      "inference_ms": 1800.045,
+      "rule_ms": 0.6482,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000037",
+      "t": 98.76055791100953,
+      "inference_ms": 1849.4337,
+      "rule_ms": 0.7677,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 79,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000038",
+      "t": 100.5818685980048,
+      "inference_ms": 1798.6029,
+      "rule_ms": 1.0225,
+      "post_ms": null,
+      "events": 1,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000039",
+      "t": 101.92530150298262,
+      "inference_ms": 1321.0518,
+      "rule_ms": 0.3173,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 56,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000040",
+      "t": 103.6361488350085,
+      "inference_ms": 1688.3927,
+      "rule_ms": 0.2359,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 72,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000041",
+      "t": 104.98748634400545,
+      "inference_ms": 1329.1427,
+      "rule_ms": 0.2531,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 56,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000042",
+      "t": 106.81581618700875,
+      "inference_ms": 1805.1648,
+      "rule_ms": 0.5135,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000043",
+      "t": 108.52456364198588,
+      "inference_ms": 1685.9322,
+      "rule_ms": 0.3642,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 72,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000044",
+      "t": 110.35170284699416,
+      "inference_ms": 1804.1096,
+      "rule_ms": 0.415,
+      "post_ms": null,
+      "events": 0,
+      "detections": 1,
+      "prompt_tokens": 1001,
+      "completion_tokens": 77,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000045",
+      "t": 110.62769740301883,
+      "inference_ms": 255.5802,
+      "rule_ms": 0.4413,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000046",
+      "t": 110.90320323698688,
+      "inference_ms": 254.7206,
+      "rule_ms": 0.4278,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000047",
+      "t": 111.17910024302546,
+      "inference_ms": 254.8829,
+      "rule_ms": 0.4436,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000048",
+      "t": 111.45608106302097,
+      "inference_ms": 255.7472,
+      "rule_ms": 0.2357,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000049",
+      "t": 111.73590355599299,
+      "inference_ms": 255.737,
+      "rule_ms": 0.2719,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000050",
+      "t": 112.01332490000641,
+      "inference_ms": 256.6488,
+      "rule_ms": 0.2213,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000051",
+      "t": 112.28993895900203,
+      "inference_ms": 255.7009,
+      "rule_ms": 0.4084,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000052",
+      "t": 112.57335708697792,
+      "inference_ms": 262.6249,
+      "rule_ms": 0.3043,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000053",
+      "t": 112.8530805039918,
+      "inference_ms": 258.3584,
+      "rule_ms": 0.292,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000054",
+      "t": 113.13018664100673,
+      "inference_ms": 257.4997,
+      "rule_ms": 0.2848,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000055",
+      "t": 113.40648487297585,
+      "inference_ms": 256.3624,
+      "rule_ms": 0.2025,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000056",
+      "t": 113.68439771898557,
+      "inference_ms": 257.048,
+      "rule_ms": 0.2729,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000057",
+      "t": 113.96368475997588,
+      "inference_ms": 258.1636,
+      "rule_ms": 0.3168,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000058",
+      "t": 114.24356138001895,
+      "inference_ms": 258.5977,
+      "rule_ms": 0.2717,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    },
+    {
+      "frame_id": "frame-000059",
+      "t": 114.52862339798594,
+      "inference_ms": 263.6531,
+      "rule_ms": 0.2249,
+      "post_ms": null,
+      "events": 0,
+      "detections": 0,
+      "prompt_tokens": 1001,
+      "completion_tokens": 9,
+      "capture_to_result_ms": null,
+      "frame_age_ms": null
+    }
+  ],
+  "label": "labeled simulation scenes; not real-world footage.",
+  "measured_source_commit": "ebe3a32cdfd109d2e77f74c76dd2388b76c01b90",
+  "raw_evidence": {
+    "directory": "model_accuracy_ppe_v1_2026-10-17.frames",
+    "frames": [
+      {
+        "frame_id": "frame-000000",
+        "response": "000000.json",
+        "response_sha256": "17a4db4eaab490e4635961bcfbc84f153a61d78a97a9ebffd6e98d191f123088",
+        "image": "000000.jpg",
+        "image_sha256": "c0d160c283bb83786544b6c92ff656ffaa141ba0902d460ff2958db9840d275d",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000001",
+        "response": "000001.json",
+        "response_sha256": "b1ccdf7b31c61f3bfd65af431c1ad2496e38d5abb5af5516cdeb379abf1b8779",
+        "image": "000001.jpg",
+        "image_sha256": "998fb0f7e4d5e25803f0f21bb0c25266e3e2c2b97c7795940a0344f8889f12b1",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000002",
+        "response": "000002.json",
+        "response_sha256": "a6be51b41ffa8fe152449727687c330c35005ca700ea7d16cb7d7f14ea043f1d",
+        "image": "000002.jpg",
+        "image_sha256": "d74d1cd2103662a1b0163310302fa943030521668db7d3027d9d5a62458e8ddb",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000003",
+        "response": "000003.json",
+        "response_sha256": "ead36350f4c61df4c7f7ff256fe8af8ee1196b36abf7bcc295cec32112f81ecc",
+        "image": "000003.jpg",
+        "image_sha256": "98521dff2735b7e452e32b9a348730546272e8579a36be3071c3a21d74d043ae",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000004",
+        "response": "000004.json",
+        "response_sha256": "582cad933f0c433783ec0a278747f271ff129a4cdbe8a3a77c553e20e7ff7f68",
+        "image": "000004.jpg",
+        "image_sha256": "df2cb0ad2ae4fe882797eebe34b4e7cc31460d9fda927f8296edafb7c4a6e313",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000005",
+        "response": "000005.json",
+        "response_sha256": "9985f2bad3ba9e59f5f83f21887f0cfe735660a543daa9702671a54c08020fa9",
+        "image": "000005.jpg",
+        "image_sha256": "70a9c99e0bfbbff69c503d32018299e596f32fccfaca278bd92be4924c8736de",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000006",
+        "response": "000006.json",
+        "response_sha256": "51f6a91ed3d7090d5f3e1e17cf14ec33b26cb3c0e2b06165d50b0eb9af25f0e3",
+        "image": "000006.jpg",
+        "image_sha256": "a03a057824fa188efd0214f1b80c95772c7930d3f40845903f5502687177ec20",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000007",
+        "response": "000007.json",
+        "response_sha256": "74c4e0b0fde4eb36453e8a221a7dcd78c9c8488a8e6e4b3d648b89e989fed06a",
+        "image": "000007.jpg",
+        "image_sha256": "c35f531a1dd8b1c9c59d14d27e4cb556c8364ba73a3ebf47241e81f2ad6b24c9",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000008",
+        "response": "000008.json",
+        "response_sha256": "b4055f2c3ecda762c693c847f9346ff138225c39ffd54364772a5d30f454c4ea",
+        "image": "000008.jpg",
+        "image_sha256": "6b37cb4277995d30033ddaf5e49264eb52f397467253465aab4ac23166376f1c",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000009",
+        "response": "000009.json",
+        "response_sha256": "87e7cbd703b386a983361d2f7fd55feafd97402de1456e505ef020b76faf1f96",
+        "image": "000009.jpg",
+        "image_sha256": "1788d46206c64c6277ec3b293d4e41a6f8f94b61b98a6b906539cc06cbf41269",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000010",
+        "response": "000010.json",
+        "response_sha256": "1dea8a1acbdddcd081cd67b1706e260662cf29de3b8a96ce07f756ba384af1e7",
+        "image": "000010.jpg",
+        "image_sha256": "675da3074dc8f1404d2796612a005fed1edc0aab3fee56570acb91c7aeef14e2",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000011",
+        "response": "000011.json",
+        "response_sha256": "c9541840931a3cd9675a709d3eb58925f89f02b46e81ed120e5aeeaf1507cede",
+        "image": "000011.jpg",
+        "image_sha256": "aada5daf790180777a77f2d8e49d39e7a3fb33c707624539cc7e53034e18ea18",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000012",
+        "response": "000012.json",
+        "response_sha256": "99dc99b1ed5162bf40dc57d0ab222210bc76af956cdf6dcd0cbab1547d7f441a",
+        "image": "000012.jpg",
+        "image_sha256": "b589dd1a88d4f7732b5cc4a08545fb34110833dfede73d766426e967b7e4648e",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000013",
+        "response": "000013.json",
+        "response_sha256": "d5a07fef6c6db4956574ed67855cb28a5132c1c53fa4040aaa51f38ea0e26f71",
+        "image": "000013.jpg",
+        "image_sha256": "739c9436e5c57b0c232bcac8b86fc7f2b556b069072a45ad2eeedf12a8b26f4f",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000014",
+        "response": "000014.json",
+        "response_sha256": "80f5227e79b9ea408eaeff9f8d2f992c0b1597c4ecd69cc3f756c7bab613f708",
+        "image": "000014.jpg",
+        "image_sha256": "a6fe3f412d8b0b00ba341ff97fa620813058952d14850369d0717d1936c4f03f",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000015",
+        "response": "000015.json",
+        "response_sha256": "9f44747547d7c3e20a33bdefd8734287dbc84fe18a1bda55c0e3013b5c1905a8",
+        "image": "000015.jpg",
+        "image_sha256": "4a7929eb93fb6218371e9feec0cbeb70ca1647fa76dc5db497123a95c59e7d20",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000016",
+        "response": "000016.json",
+        "response_sha256": "60cb354416e240ef802415366d44db9cd90b6467d6f0eb9203069a9cc8d1619f",
+        "image": "000016.jpg",
+        "image_sha256": "6d94b7e940eefcdaaf265212c08e489fe6bdbb42e2c1f80fbfe9ec41cf0fe8bf",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000017",
+        "response": "000017.json",
+        "response_sha256": "b5e4f8359d7b3097afdcc50652bff69bddaed8458bd989e08869bd6077824e41",
+        "image": "000017.jpg",
+        "image_sha256": "b7e99efda35f8b750937c09ea8323af90087985fe63025d6d141a744409edd36",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000018",
+        "response": "000018.json",
+        "response_sha256": "a8228c0583bed778b266bb9ab1c987f01261fc9462a0fc718a6b4a75ffaa4e3b",
+        "image": "000018.jpg",
+        "image_sha256": "1898ab1002dc3c501d7db47c2fbeace3dc5fc1a4040fd23f5ce202a28691cb18",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000019",
+        "response": "000019.json",
+        "response_sha256": "d2488c92c9a376a6d31817fa9acda5c1aa5b0f4980f89a0314aa4952c3a2b858",
+        "image": "000019.jpg",
+        "image_sha256": "64f81188d2c8f8d2fcac4908901988790b55cb51e2fddf04eed590dc023fc3ea",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000020",
+        "response": "000020.json",
+        "response_sha256": "db2537d21ec8c27d72bd5d7bbd27febb6ad3f19709a0c935fdea2b4d7bd9ff3b",
+        "image": "000020.jpg",
+        "image_sha256": "cccde2a9ab78604f4a9cdb052598f6cf0626e0432c7186c98a7fc940d13d6126",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000021",
+        "response": "000021.json",
+        "response_sha256": "9814bce95bf2a85fbaccbf592f34de4fc0b6948f0ca79d5e110e120fc4e9d1bb",
+        "image": "000021.jpg",
+        "image_sha256": "fdbd350a54a1e9e3d67f3aa1d08d79bdd04a4371631834fce3189c4e99835cf1",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000022",
+        "response": "000022.json",
+        "response_sha256": "f82d1939ef41203071ab664855c9dde0cdf7514eb55f8adb9e9a5af430525b09",
+        "image": "000022.jpg",
+        "image_sha256": "2a292feea4f4f18dbfcd08f4dd0adf518bd000ff060cbeafd181dbe0b7ab74f7",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000023",
+        "response": "000023.json",
+        "response_sha256": "4c0cb479abb8ff8ac7b571bdbfbc505f8d9fc6d67a557a2c181e86556c6f1dac",
+        "image": "000023.jpg",
+        "image_sha256": "b83ed4ea0867bc5b800cd011f33174c7b7c63d9d9b48c7bd90d74cc6b823bb02",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000024",
+        "response": "000024.json",
+        "response_sha256": "238e94aba2a15c14bf594c935c9d203cf7eb493a9a34cc0404c80029e0584dab",
+        "image": "000024.jpg",
+        "image_sha256": "77295284bf58de17392ea879e9aec7f7e465b9bc2ae1bd8abad9a308e7cebf91",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000025",
+        "response": "000025.json",
+        "response_sha256": "cbb92de8e7cfb65be6d8ff212c9e0675193c324e47ccf95c5a161fd206231737",
+        "image": "000025.jpg",
+        "image_sha256": "c41a9efb6cc93349b80db0759eb745f74c42eb5705f511c3ff4e59d8359b0b7c",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000026",
+        "response": "000026.json",
+        "response_sha256": "c4b8317a69e2ca634558473683d27c2a4e3deb405f9433605671cc3d66373f4d",
+        "image": "000026.jpg",
+        "image_sha256": "eb0821e1e03854c6b70697652de6a2672ba602d4a591aa207d2f01067ad7f185",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000027",
+        "response": "000027.json",
+        "response_sha256": "c5fc1541b3d3b68f4fe62e503ff8a318fccf81850cf73f5e8cd10afa65dcb88a",
+        "image": "000027.jpg",
+        "image_sha256": "528f805c22c02611e721b151e602978289a67885dd510dd957b9002584ceb850",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000028",
+        "response": "000028.json",
+        "response_sha256": "b2b66c2639f8606bb27163711bf3f9104455395ab5adca22635318adade578b6",
+        "image": "000028.jpg",
+        "image_sha256": "bbe5c341dd36be550db4d12dbbc4301df8778bc5ef78e655a910ef3ba06188ff",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000029",
+        "response": "000029.json",
+        "response_sha256": "e6a88e62ff03eace645b05e6eeb15fd7a346b181cd1203eabeb0e7b203086c8f",
+        "image": "000029.jpg",
+        "image_sha256": "2e807a75afd387d69d1b05edcfd326e559195e23f1d9dafe799160611bcc18ee",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000030",
+        "response": "000030.json",
+        "response_sha256": "08dbc6418b7c51c0705424c546a2e32dd8f168f707c0069b29118fb89723847f",
+        "image": "000030.jpg",
+        "image_sha256": "b35b1fb8f51d7f0da76e78bb58dfb9d7c2bb2ddef8dc6e60f3e0cf8bca7bf0d4",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000031",
+        "response": "000031.json",
+        "response_sha256": "618e561a13b9bbb473479eb6783f47925ab30def996b31e2db313f8f3854b03d",
+        "image": "000031.jpg",
+        "image_sha256": "3a4903bb232608b036cea7107daa36b9bc47ea4c292e93ce02fe1bf9769e9696",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000032",
+        "response": "000032.json",
+        "response_sha256": "aca5d68d455b7ed0ced78e711ee3d472c80868b8956a40268f10a04cbfe8d7c8",
+        "image": "000032.jpg",
+        "image_sha256": "408fd4efd2c1eed7374766a48b6ca9e4ebc9a3629d4851b3c28d0cd38887f2bd",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000033",
+        "response": "000033.json",
+        "response_sha256": "19dd052cb5b7c8ad01c8635e057de0d81f43726537d241d59f67984954a5348f",
+        "image": "000033.jpg",
+        "image_sha256": "416c87408f594ed49b94c715571628b241101ae4551831ebbbf47a853039062c",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000034",
+        "response": "000034.json",
+        "response_sha256": "5d0eceb7fc0de864f4cea5930933ac8a6a96ccfde0780930c2cebbdc71423821",
+        "image": "000034.jpg",
+        "image_sha256": "0a36309cecfdd11f238736dcd699aa7ce262537dded8f02671524f8d3e76df4b",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000035",
+        "response": "000035.json",
+        "response_sha256": "93e422e38687b69b99fbeca6d3dd86e5e8f5ed3350388e4d355674a4c52ed59d",
+        "image": "000035.jpg",
+        "image_sha256": "353fefbefa5c510b1f72d0173d29968f759673edb36bdb95fe4b5967af3bc084",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000036",
+        "response": "000036.json",
+        "response_sha256": "874c719710bfba2d3b291e0847b7e8ce2335e47d66cc9945b3143ff73c83109a",
+        "image": "000036.jpg",
+        "image_sha256": "000b4c3c97263e8b890565ef04fb3f3e1d90a7ad39d50bad73c3a40ae170d5bd",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000037",
+        "response": "000037.json",
+        "response_sha256": "1d30af24bc34b9eaa39b89dd4af3ea97adc59dcd81d8ba01de23180217c1f6c5",
+        "image": "000037.jpg",
+        "image_sha256": "d54735d930a5065193d8aee8f38140fbac91dde3bd3a06cbf784e97b46d02022",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000038",
+        "response": "000038.json",
+        "response_sha256": "c5ca3c08d08a92501b01c1f2a1d33098f8da86aeb2e725dfefbda537ca94ee48",
+        "image": "000038.jpg",
+        "image_sha256": "469a58cbf71e9a397fedac5f251c40913ab66877d4dc536e35795a72d6aa75ec",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000039",
+        "response": "000039.json",
+        "response_sha256": "0d37d9b72aae3b37c75ce714e526d092241e5e855862e54516e5db78c1a81c04",
+        "image": "000039.jpg",
+        "image_sha256": "643c2d73f1b200bde2cc8e7df2f017dc6d4cdeeae07c4bbe5a700983987a7e15",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000040",
+        "response": "000040.json",
+        "response_sha256": "e030db8541564f5a1c55bcc406053b8828d030e7cb6939e40b983432cdd5308a",
+        "image": "000040.jpg",
+        "image_sha256": "6f0e940d6df037a22f571a2ced1aac5b697560fd4429f4b7e8f2d68cdc5a9442",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000041",
+        "response": "000041.json",
+        "response_sha256": "2974098442f581d6ac4cbb3a897e881a951adba4b28444db2f64b5607f5dea36",
+        "image": "000041.jpg",
+        "image_sha256": "b9bd2427d5c2d59283d8722a5890ac7f36abf8ec331b9ab460263b3a6497dd36",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000042",
+        "response": "000042.json",
+        "response_sha256": "b4217c80330b45b77ddb7c07a0d2aa24dcd81491fad551adf1d928a3c548a638",
+        "image": "000042.jpg",
+        "image_sha256": "4e297cc152562133529e09cebb2d84344199842f536295e19f72c45d6089b556",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000043",
+        "response": "000043.json",
+        "response_sha256": "4aac5581dc8f9b40b15f0204924ea45e88f721f85944246df9424a9243a08e3d",
+        "image": "000043.jpg",
+        "image_sha256": "88d73595b7622bc9e544054227d202bb1c6c1c45221d9998a051ae22fc2e9f30",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000044",
+        "response": "000044.json",
+        "response_sha256": "ede2aba4eead10e19aacda7a094d9ef72a717306d65a20fd4532ccc903900748",
+        "image": "000044.jpg",
+        "image_sha256": "ac8f3a48b7ea74878d063d0c447728d2f4854d5f3014b3044a4f99d3ec0071d3",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000045",
+        "response": "000045.json",
+        "response_sha256": "fd82a8038c8ca5525048feb8206ca087ead47973d8a096b0a33d7f3b2c5bdd3e",
+        "image": "000045.jpg",
+        "image_sha256": "88064829a7277f3c700e603b47640498f0684d924ee009709181f46749dca150",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000046",
+        "response": "000046.json",
+        "response_sha256": "436e8f0b29bc3a7a7c60f3d8600fd39dc06659508afcecb8f2de6e9d3b13aeb1",
+        "image": "000046.jpg",
+        "image_sha256": "ac06131e513fad7225d61dc991a8902e42fae0134012b96913210a1ce535fcb6",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000047",
+        "response": "000047.json",
+        "response_sha256": "a9d0f68bfbc3802bd9e077260847d5fd16296ae2a6564bc50045c42a913fee09",
+        "image": "000047.jpg",
+        "image_sha256": "93ec4f2dffbd7c41f74cf38feae42e839d3dd496850a8249079555fc62edd590",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000048",
+        "response": "000048.json",
+        "response_sha256": "6887aa46ebb8562662152d2da61e63e24bc47b7eae3532b794a398d481817557",
+        "image": "000048.jpg",
+        "image_sha256": "ee6b81d2ac395ec04788bf1095190c469b468d6bdbffd7a1b5191d6585024917",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000049",
+        "response": "000049.json",
+        "response_sha256": "eca962001fb72317d21b50dd06f607dc8c5989d69bc918db62e3c020fd3bc5c3",
+        "image": "000049.jpg",
+        "image_sha256": "c0348f50f8c2418afdf350e3d6fd7c5d9bc36bbeeef336bc4318456602b4c2b4",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000050",
+        "response": "000050.json",
+        "response_sha256": "de2fd48fa5012c89448b1f0f7344cd58970de5021209d07080e85694e3d95800",
+        "image": "000050.jpg",
+        "image_sha256": "0733542a261237e36bf41b6ab72ab42d3bbe7adf8648434e40e2eccc30ac203b",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000051",
+        "response": "000051.json",
+        "response_sha256": "17daacaa7a8b451a1747acc0cf46b1b3246cde903427bbdf7555327a31184e9b",
+        "image": "000051.jpg",
+        "image_sha256": "ca3cd24c505d7dcc088f5421c0404bc6399954016c641f0e79d6e5bde75a275a",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000052",
+        "response": "000052.json",
+        "response_sha256": "ef61f83b0329ddaa3323a6b3a51be673d7c9638ed7973bbbe65dd359bb623a59",
+        "image": "000052.jpg",
+        "image_sha256": "31c041cdcf1a4c329c68ae9bec64fcef7f4031121ad84e664c288785fed43a51",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000053",
+        "response": "000053.json",
+        "response_sha256": "adac1a07688e98c04e220ee58182da581f247f9a81035663fba9e0c0d3da50bb",
+        "image": "000053.jpg",
+        "image_sha256": "4d70353a5791ec80ea35babd87665a2a1fa5e26a02d25492366f2c87d585fea1",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000054",
+        "response": "000054.json",
+        "response_sha256": "ba5999fb5399388612c966f47d2bb2ff9063d59c6bf03b0ad601f39d4f4b89e8",
+        "image": "000054.jpg",
+        "image_sha256": "fd320d5bbf330d01e30fe3d2e88df331a3e39a00c65a1091d6dc41e16384f7bc",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000055",
+        "response": "000055.json",
+        "response_sha256": "422269ab3b2dfb94025a7caae656422675f915581b5f8f5359ff6e54c1250245",
+        "image": "000055.jpg",
+        "image_sha256": "abb3a1b5df7038af8ddc30cb8145af67922ec6e33ea066b96291450d3539ca23",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000056",
+        "response": "000056.json",
+        "response_sha256": "0da8972fd98c8b58024bfd9b02454ffb05630113b74e974d0e2075c63ff91328",
+        "image": "000056.jpg",
+        "image_sha256": "529bdc7f434ea359b81b9f3dcf447d2de01210de7375be5d6d00ddbfd91d3012",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000057",
+        "response": "000057.json",
+        "response_sha256": "5ed0d38180663ef0c826737d41c270bf930e8624fc8655baa038b25e750816a1",
+        "image": "000057.jpg",
+        "image_sha256": "070600bdbf5647e2e0ae072a5b0b12c108fce6874020e4ba7e203b21fc40fcd3",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000058",
+        "response": "000058.json",
+        "response_sha256": "1323aa237153c9ff785f1444d0613e261feec9e4737d24ecea4b7148fff7491b",
+        "image": "000058.jpg",
+        "image_sha256": "a93dc366a99a7d690783a2239a46a6667fecfdf9c1c19abeef980ced2e852b82",
+        "status": "complete"
+      },
+      {
+        "frame_id": "frame-000059",
+        "response": "000059.json",
+        "response_sha256": "11910fc9e3fefd8b733e995680f7248b26649263b74f7caf18c8b4eb2970697c",
+        "image": "000059.jpg",
+        "image_sha256": "431bfb5422e4a9175ecbfba7a5e622659de5ec9939628b80e8e675a9810878d2",
+        "status": "complete"
+      }
+    ],
+    "scope": "Exact adapter JPEG inputs, complete raw responses and normalized detections; ground truth is joined only after production inference and rule evaluation."
+  },
+  "generation_provenance": {
+    "renderer": "Isaac Sim RGB and tight semantic boxes",
+    "generated_at": "2026-10-17T03:02:34.296722+00:00",
+    "device": {
+      "host": "rtx-5090-workstation",
+      "machine": "x86_64"
+    },
+    "scene_sha256": "f174e2a47846a49f2ac5f31b934dda0cd515cbcff36f2dbd8ce5ccc2fb9557bf",
+    "scene_author": "simulation/author_construction_entry_compliant.py",
+    "worker_author": "simulation/omniverse_ppe_world.py",
+    "measured_source_commit": "24990fb559792f4a4c0e5ab9a7b6d1884f63c929",
+    "renderer_version": "5.1.0-rc.19+release.26219.9c81211b.gl",
+    "execution_mode": "Local headless GPU rendering on rtx-5090-workstation; no inference"
+  },
+  "manifest_sha256": "6fe444e7b3d64b61f6833ce8c730f2e70567424d47550e00fdffb4490836b42f",
+  "review": {
+    "approved_by": "local visual inspection",
+    "reviewed_at": "2026-10-17T03:03:32.779514+00:00",
+    "reviewed_frame_ids": [
+      "compliant_000",
+      "compliant_001",
+      "compliant_002",
+      "compliant_003",
+      "compliant_004",
+      "compliant_005",
+      "compliant_006",
+      "compliant_007",
+      "compliant_008",
+      "compliant_009",
+      "compliant_010",
+      "compliant_011",
+      "compliant_012",
+      "compliant_013",
+      "compliant_014",
+      "missing-ppe_000",
+      "missing-ppe_001",
+      "missing-ppe_002",
+      "missing-ppe_003",
+      "missing-ppe_004",
+      "missing-ppe_005",
+      "missing-ppe_006",
+      "missing-ppe_007",
+      "missing-ppe_008",
+      "missing-ppe_009",
+      "missing-ppe_010",
+      "missing-ppe_011",
+      "missing-ppe_012",
+      "missing-ppe_013",
+      "missing-ppe_014",
+      "restricted-entry_000",
+      "restricted-entry_001",
+      "restricted-entry_002",
+      "restricted-entry_003",
+      "restricted-entry_004",
+      "restricted-entry_005",
+      "restricted-entry_006",
+      "restricted-entry_007",
+      "restricted-entry_008",
+      "restricted-entry_009",
+      "restricted-entry_010",
+      "restricted-entry_011",
+      "restricted-entry_012",
+      "restricted-entry_013",
+      "restricted-entry_014",
+      "empty_000",
+      "empty_001",
+      "empty_002",
+      "empty_003",
+      "empty_004",
+      "empty_005",
+      "empty_006",
+      "empty_007",
+      "empty_008",
+      "empty_009",
+      "empty_010",
+      "empty_011",
+      "empty_012",
+      "empty_013",
+      "empty_014"
+    ],
+    "method": "Every frame inspected in four indexed contact sheets. Confirmed visible person, hard hat and vest for compliant/restricted frames; no helmet/vest for missing-PPE; no people for empty frames. Checked head/feet clipping and side of the fixed image-space restricted zone. Tight rendered semantic bounds independently verify person and PPE visibility. Raw frames have no zone overlay; the red contact-sheet line is review-only.",
+    "contact_sheets": [
+      {
+        "path": "review_compliant.png",
+        "sha256": "fe2bb99accceb295cf9960c18d95ff12f5aa1f20e58f5d9246212668868afc48"
+      },
+      {
+        "path": "review_missing-ppe.png",
+        "sha256": "baf80d5e347f9197af48997a742c8c4116c4813d710e0f30119794b4b6a1187e"
+      },
+      {
+        "path": "review_restricted-entry.png",
+        "sha256": "8f931bd35e61ec216a481b938daeadf53bb656281c839a775e3493c9fcba35a4"
+      },
+      {
+        "path": "review_empty.png",
+        "sha256": "e5e163e54b3a93972eddf02c2063a0e71d69bd6a75426dd2615707f1ac4dd970"
+      }
+    ]
+  },
+  "accuracy": {
+    "per_rule": {
+      "PPE_MISSING": {
+        "tp": 15,
+        "fp": 0,
+        "fn": 0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0
+      },
+      "RESTRICTED_ZONE_ENTRY": {
+        "tp": 9,
+        "fp": 0,
+        "fn": 6,
+        "precision": 1.0,
+        "recall": 0.6,
+        "f1": 0.75
+      },
+      "HUMAN_ROBOT_PROXIMITY": {
+        "tp": 0,
+        "fp": 16,
+        "fn": 0,
+        "precision": 0.0,
+        "recall": null,
+        "f1": 0.0
+      },
+      "BLOCKED_EMERGENCY_PATH": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      },
+      "UNSAFE_EVENT_SUMMARY": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 0,
+        "precision": null,
+        "recall": null,
+        "f1": null
+      }
+    },
+    "micro": {
+      "tp": 24,
+      "fp": 16,
+      "fn": 6,
+      "precision": 0.6,
+      "recall": 0.8,
+      "f1": 0.6857142857142857
+    },
+    "errors": [
+      {
+        "scenario_id": "compliant",
+        "frame_id": "frame-000010",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000015",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000016",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000017",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000018",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000019",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000020",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000021",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000022",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000023",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000024",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000025",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000026",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000027",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000028",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "missing-ppe",
+        "frame_id": "frame-000029",
+        "event": "HUMAN_ROBOT_PROXIMITY",
+        "kind": "false_alarm"
+      },
+      {
+        "scenario_id": "restricted-entry",
+        "frame_id": "frame-000039",
+        "event": "RESTRICTED_ZONE_ENTRY:restricted",
+        "kind": "miss"
+      },
+      {
+        "scenario_id": "restricted-entry",
+        "frame_id": "frame-000040",
+        "event": "RESTRICTED_ZONE_ENTRY:restricted",
+        "kind": "miss"
+      },
+      {
+        "scenario_id": "restricted-entry",
+        "frame_id": "frame-000041",
+        "event": "RESTRICTED_ZONE_ENTRY:restricted",
+        "kind": "miss"
+      },
+      {
+        "scenario_id": "restricted-entry",
+        "frame_id": "frame-000042",
+        "event": "RESTRICTED_ZONE_ENTRY:restricted",
+        "kind": "miss"
+      },
+      {
+        "scenario_id": "restricted-entry",
+        "frame_id": "frame-000043",
+        "event": "RESTRICTED_ZONE_ENTRY:restricted",
+        "kind": "miss"
+      },
+      {
+        "scenario_id": "restricted-entry",
+        "frame_id": "frame-000044",
+        "event": "RESTRICTED_ZONE_ENTRY:restricted",
+        "kind": "miss"
+      }
+    ],
+    "per_frame": [
+      {
+        "frame_id": "frame-000000",
+        "emitted": [],
+        "people_detected": 1,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "49cfdf07f454ab20bf153c1a49b8d7c17e694f4938bee4ed8ed82709e4f7e338",
+        "label_frame_id": "compliant_000",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000001",
+        "emitted": [],
+        "people_detected": 1,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "a9e36a97f911598c80a91309f5f331ab65773ccf62d72d3ffe60fd53915e563d",
+        "label_frame_id": "compliant_001",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000002",
+        "emitted": [],
+        "people_detected": 1,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "df1a7d6e8006e8ebf7452553af5790a2d5d621ae834222afe5bdfce1872629fb",
+        "label_frame_id": "compliant_002",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000003",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "9aa3a5e9b1e0db88f41ba19e561f8929f48319aac8ea9ee5ca7ca95f03ef6c49",
+        "label_frame_id": "compliant_003",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000004",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "a118ba3e48ccd12f20c213c9dd4fc8044cbfee72666a673b22b89390dfa4830b",
+        "label_frame_id": "compliant_004",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000005",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "90b92e040f4e543f6980a28f46559f27137d9d520ea1fa580e04bfb1103270f3",
+        "label_frame_id": "compliant_005",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000006",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "562aaee3836a3b05bee6f83fc693c0cf0331bf78a8c511990f657a6cb9c63739",
+        "label_frame_id": "compliant_006",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000007",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "9e2cea497d12e33100504dd94eaf59d216f657d5644795a0ad6767c3117dcc4b",
+        "label_frame_id": "compliant_007",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000008",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "db4cc49276ba31b3cf104dbeca4837e9381732afc26f94c41e6ad009771ce2e4",
+        "label_frame_id": "compliant_008",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000009",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "1bbe58d13c7c7e4478c0fd7aa1c8c67d16aa53e02286b54216dab744ccfb4253",
+        "label_frame_id": "compliant_009",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000010",
+        "emitted": [
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "e5948e84-843f-411c-a85b-c74f576f74bc",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:06.989805Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 11,
+              "latency_ms": 3973.464423965197,
+              "latency_p95_ms": 4018.3460880070925,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2884301068749916,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "675da3074dc8f1404d2796612a005fed1edc0aab3fee56570acb91c7aeef14e2",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:06.989805Z",
+              "telemetry_snapshot": {
+                "frames_processed": 11,
+                "latency_ms": 3973.464423965197,
+                "latency_p95_ms": 4018.3460880070925,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2884301068749916,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    275.2,
+                    141.12,
+                    401.92,
+                    559.44
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    275.2,
+                    141.12,
+                    401.92,
+                    559.44
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "d82f0bb2b6c61d7c897083e728916a341cff7ab916032802ccdcc8bc3dd2cfac",
+        "label_frame_id": "compliant_010",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000011",
+        "emitted": [],
+        "people_detected": 1,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "ed39b9c85efa3fd053075f40f0345252fc7c15635ea8122c59eb105cd3323f0a",
+        "label_frame_id": "compliant_011",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000012",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "cfd924cc0f6bd7fd6ea82e075b3d1ba43d5d84955c9f326694ca3aafee66c715",
+        "label_frame_id": "compliant_012",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000013",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "1b8077f94e3bfbfccb6e9a394aacea59aa462bbc595012d348da8fa85bac3584",
+        "label_frame_id": "compliant_013",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000014",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "compliant",
+        "expected": [],
+        "image_sha256": "966a71608725a8e996099b9533093dac2d94b42da9137447e8f6104dd828becb",
+        "label_frame_id": "compliant_014",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000015",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "b5de1fcb-74ae-45ef-ac53-9b1b9b7bd795",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:22.229059Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 16,
+              "latency_ms": 2253.329728031531,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28858418705066224,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "4a7929eb93fb6218371e9feec0cbeb70ca1647fa76dc5db497123a95c59e7d20",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:22.229059Z",
+              "telemetry_snapshot": {
+                "frames_processed": 16,
+                "latency_ms": 2253.329728031531,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28858418705066224,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    224.0,
+                    161.28,
+                    423.68,
+                    578.16
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "9b05b517-a3ed-427a-9bfb-dcbca52e3cea",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:22.229059Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 16,
+              "latency_ms": 2253.329728031531,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28858418705066224,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "4a7929eb93fb6218371e9feec0cbeb70ca1647fa76dc5db497123a95c59e7d20",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:22.229059Z",
+              "telemetry_snapshot": {
+                "frames_processed": 16,
+                "latency_ms": 2253.329728031531,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28858418705066224,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    224.0,
+                    161.28,
+                    423.68,
+                    578.16
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    224.0,
+                    161.28,
+                    423.68,
+                    578.16
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "1622e3b763d5f89672a1c0838edabfabbe60555b69831b80983192f3759d9868",
+        "label_frame_id": "missing-ppe_000",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000016",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "b6b3db64-e622-4172-b47d-5fd0205334b3",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:24.505245Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 17,
+              "latency_ms": 2266.881112998817,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887209677589173,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "6d94b7e940eefcdaaf265212c08e489fe6bdbb42e2c1f80fbfe9ec41cf0fe8bf",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:24.505245Z",
+              "telemetry_snapshot": {
+                "frames_processed": 17,
+                "latency_ms": 2266.881112998817,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887209677589173,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    240.64,
+                    159.84,
+                    372.48,
+                    576.72
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "ee14b46a-aa8a-4482-a135-e21fb4e0880e",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:24.505245Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 17,
+              "latency_ms": 2266.881112998817,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887209677589173,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "6d94b7e940eefcdaaf265212c08e489fe6bdbb42e2c1f80fbfe9ec41cf0fe8bf",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:24.505245Z",
+              "telemetry_snapshot": {
+                "frames_processed": 17,
+                "latency_ms": 2266.881112998817,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887209677589173,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    240.64,
+                    159.84,
+                    372.48,
+                    576.72
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    240.64,
+                    159.84,
+                    372.48,
+                    576.72
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "b5b67f1e70c9fcef15ce2a8c94a22793df388ddb24c83888c0a29cf82c2ad311",
+        "label_frame_id": "missing-ppe_001",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000017",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "7f1a0cbe-369c-4f0e-9f18-89642b85f44c",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:26.794839Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 18,
+              "latency_ms": 2252.783000061754,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887020222021427,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "b7e99efda35f8b750937c09ea8323af90087985fe63025d6d141a744409edd36",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:26.794839Z",
+              "telemetry_snapshot": {
+                "frames_processed": 18,
+                "latency_ms": 2252.783000061754,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887020222021427,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    236.8,
+                    161.28,
+                    424.96,
+                    572.4
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "5d249bb1-e79c-443f-82f3-cdd61942dd47",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:26.794839Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 18,
+              "latency_ms": 2252.783000061754,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887020222021427,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "b7e99efda35f8b750937c09ea8323af90087985fe63025d6d141a744409edd36",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:26.794839Z",
+              "telemetry_snapshot": {
+                "frames_processed": 18,
+                "latency_ms": 2252.783000061754,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887020222021427,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    236.8,
+                    161.28,
+                    424.96,
+                    572.4
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    236.8,
+                    161.28,
+                    424.96,
+                    572.4
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "c54e71cda001080c0d36ecd45252359950a3de9dcc8110f2ed96b9957c8d5de3",
+        "label_frame_id": "missing-ppe_002",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000018",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "2feb2db7-36af-4ac1-8c7c-de7fb05d7f2c",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:29.070212Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 19,
+              "latency_ms": 2250.961389974691,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2886645659046505,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "1898ab1002dc3c501d7db47c2fbeace3dc5fc1a4040fd23f5ce202a28691cb18",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:29.070212Z",
+              "telemetry_snapshot": {
+                "frames_processed": 19,
+                "latency_ms": 2250.961389974691,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2886645659046505,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    224.0,
+                    159.84,
+                    423.68,
+                    572.4
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "ab61e160-0449-4a81-8275-cbedd0d734d9",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:29.070212Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 19,
+              "latency_ms": 2250.961389974691,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2886645659046505,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "1898ab1002dc3c501d7db47c2fbeace3dc5fc1a4040fd23f5ce202a28691cb18",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:29.070212Z",
+              "telemetry_snapshot": {
+                "frames_processed": 19,
+                "latency_ms": 2250.961389974691,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2886645659046505,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    224.0,
+                    159.84,
+                    423.68,
+                    572.4
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    224.0,
+                    159.84,
+                    423.68,
+                    572.4
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "fc429a8ce37ae4a3a22b9860c36b153bae18d8f59ec633c0168443f950dcbdfb",
+        "label_frame_id": "missing-ppe_003",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000019",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "03a8dc49-cb2f-4c60-a54e-7950dc6dccdf",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:31.343955Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 20,
+              "latency_ms": 2258.7547450093552,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28866009351092003,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "64f81188d2c8f8d2fcac4908901988790b55cb51e2fddf04eed590dc023fc3ea",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:31.343955Z",
+              "telemetry_snapshot": {
+                "frames_processed": 20,
+                "latency_ms": 2258.7547450093552,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28866009351092003,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    249.6,
+                    161.28,
+                    382.72,
+                    568.8
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "e8773b25-4865-4ea5-9fa6-ea3b7b3c7f6d",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:31.343955Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 20,
+              "latency_ms": 2258.7547450093552,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28866009351092003,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "64f81188d2c8f8d2fcac4908901988790b55cb51e2fddf04eed590dc023fc3ea",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:31.343955Z",
+              "telemetry_snapshot": {
+                "frames_processed": 20,
+                "latency_ms": 2258.7547450093552,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28866009351092003,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    249.6,
+                    161.28,
+                    382.72,
+                    568.8
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    249.6,
+                    161.28,
+                    382.72,
+                    568.8
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "bd8337d81dec63e1063bf5bb8b86b4a337a53b2e38dbcf0991bc769c0539604f",
+        "label_frame_id": "missing-ppe_004",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000020",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "af52f6bc-079b-4dcb-b065-6ab2ede47e73",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:33.624575Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 21,
+              "latency_ms": 2251.1894859489985,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28865034120792454,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "cccde2a9ab78604f4a9cdb052598f6cf0626e0432c7186c98a7fc940d13d6126",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:33.624575Z",
+              "telemetry_snapshot": {
+                "frames_processed": 21,
+                "latency_ms": 2251.1894859489985,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28865034120792454,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    253.44,
+                    156.24,
+                    437.76,
+                    567.36
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "52258cc6-7d4b-4070-af72-e60999a2fed3",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:33.624575Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 21,
+              "latency_ms": 2251.1894859489985,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28865034120792454,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "cccde2a9ab78604f4a9cdb052598f6cf0626e0432c7186c98a7fc940d13d6126",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:33.624575Z",
+              "telemetry_snapshot": {
+                "frames_processed": 21,
+                "latency_ms": 2251.1894859489985,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28865034120792454,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    253.44,
+                    156.24,
+                    437.76,
+                    567.36
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    253.44,
+                    156.24,
+                    437.76,
+                    567.36
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "e7ca5bea7f26ca1467b3a70f1568c61cb7e43868031fa06de177f74262fde60e",
+        "label_frame_id": "missing-ppe_005",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000021",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "b8212afc-3c16-49a6-9eab-31ecf0fe0726",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:35.901286Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 22,
+              "latency_ms": 2264.11658100551,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28870416522413855,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "fdbd350a54a1e9e3d67f3aa1d08d79bdd04a4371631834fce3189c4e99835cf1",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:35.901286Z",
+              "telemetry_snapshot": {
+                "frames_processed": 22,
+                "latency_ms": 2264.11658100551,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28870416522413855,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    381.44,
+                    567.36
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "a8f34b95-2ae3-4da3-8632-c22f5b60e1eb",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:35.901286Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 22,
+              "latency_ms": 2264.11658100551,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28870416522413855,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "fdbd350a54a1e9e3d67f3aa1d08d79bdd04a4371631834fce3189c4e99835cf1",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:35.901286Z",
+              "telemetry_snapshot": {
+                "frames_processed": 22,
+                "latency_ms": 2264.11658100551,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28870416522413855,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    381.44,
+                    567.36
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    381.44,
+                    567.36
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "d5d03a559ff1b70a5bb7f8584328f9727fd3141597251cbca8cc1d72841c009d",
+        "label_frame_id": "missing-ppe_006",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000022",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "e7fd9903-2d26-4d1f-9523-e5806f98c9ec",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:38.189104Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 23,
+              "latency_ms": 2249.9142860178836,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2886713987284053,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "2a292feea4f4f18dbfcd08f4dd0adf518bd000ff060cbeafd181dbe0b7ab74f7",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:38.189104Z",
+              "telemetry_snapshot": {
+                "frames_processed": 23,
+                "latency_ms": 2249.9142860178836,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2886713987284053,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    253.44,
+                    156.24,
+                    449.28,
+                    567.36
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "fadfad57-92d7-4763-a6df-89b864974cff",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:38.189104Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 23,
+              "latency_ms": 2249.9142860178836,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2886713987284053,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "2a292feea4f4f18dbfcd08f4dd0adf518bd000ff060cbeafd181dbe0b7ab74f7",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:38.189104Z",
+              "telemetry_snapshot": {
+                "frames_processed": 23,
+                "latency_ms": 2249.9142860178836,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2886713987284053,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    253.44,
+                    156.24,
+                    449.28,
+                    567.36
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    253.44,
+                    156.24,
+                    449.28,
+                    567.36
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "309869f02157960aaea5f62ec49ccbddd85bf73c6be848cca82bee2d90f534cc",
+        "label_frame_id": "missing-ppe_007",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000023",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "822957f9-81b1-4e80-85cd-c5c4e15e2985",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:40.461445Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 24,
+              "latency_ms": 2251.1472439509816,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2886509934320103,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "b83ed4ea0867bc5b800cd011f33174c7b7c63d9d9b48c7bd90d74cc6b823bb02",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:40.461445Z",
+              "telemetry_snapshot": {
+                "frames_processed": 24,
+                "latency_ms": 2251.1472439509816,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2886509934320103,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    249.6,
+                    158.4,
+                    456.96,
+                    564.48
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "0c2927ba-5a5f-4ffc-b3ab-18604ab9354b",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:40.461445Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 24,
+              "latency_ms": 2251.1472439509816,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2886509934320103,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "b83ed4ea0867bc5b800cd011f33174c7b7c63d9d9b48c7bd90d74cc6b823bb02",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:40.461445Z",
+              "telemetry_snapshot": {
+                "frames_processed": 24,
+                "latency_ms": 2251.1472439509816,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2886509934320103,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    249.6,
+                    158.4,
+                    456.96,
+                    564.48
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    249.6,
+                    158.4,
+                    456.96,
+                    564.48
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "cdda5e9647359ac1e8a34eb02eb9e5649d501d2d8f9986ed02b85a91b91a675c",
+        "label_frame_id": "missing-ppe_008",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000024",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "2af6daac-2243-494a-8b88-5e8619fbaf33",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:42.735276Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 25,
+              "latency_ms": 2250.7860899786465,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28864701797091663,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "77295284bf58de17392ea879e9aec7f7e465b9bc2ae1bd8abad9a308e7cebf91",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:42.735276Z",
+              "telemetry_snapshot": {
+                "frames_processed": 25,
+                "latency_ms": 2250.7860899786465,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28864701797091663,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    382.72,
+                    559.44
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "8451fafd-4ff3-4577-80e8-75271abd76e4",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:42.735276Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 25,
+              "latency_ms": 2250.7860899786465,
+              "latency_p95_ms": 4016.8154259445146,
+              "latency_p99_ms": 4018.56041199062,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28864701797091663,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "77295284bf58de17392ea879e9aec7f7e465b9bc2ae1bd8abad9a308e7cebf91",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:42.735276Z",
+              "telemetry_snapshot": {
+                "frames_processed": 25,
+                "latency_ms": 2250.7860899786465,
+                "latency_p95_ms": 4016.8154259445146,
+                "latency_p99_ms": 4018.56041199062,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28864701797091663,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    382.72,
+                    559.44
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    382.72,
+                    559.44
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "6cced082b737e44a57b1eb5bdc3b754db1a2eb957d24811b85afeeaf242c018f",
+        "label_frame_id": "missing-ppe_009",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000025",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "7d377c89-f637-404b-aa9d-2ab1a27e9877",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:45.008518Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 26,
+              "latency_ms": 4339.667588064913,
+              "latency_p95_ms": 4018.3460880070925,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887513427663364,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "c41a9efb6cc93349b80db0759eb745f74c42eb5705f511c3ff4e59d8359b0b7c",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:45.008518Z",
+              "telemetry_snapshot": {
+                "frames_processed": 26,
+                "latency_ms": 4339.667588064913,
+                "latency_p95_ms": 4018.3460880070925,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887513427663364,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    454.4,
+                    559.44
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "e876f89d-8873-4967-bf40-1ac458cd9093",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:45.008518Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 26,
+              "latency_ms": 4339.667588064913,
+              "latency_p95_ms": 4018.3460880070925,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887513427663364,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "c41a9efb6cc93349b80db0759eb745f74c42eb5705f511c3ff4e59d8359b0b7c",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:45.008518Z",
+              "telemetry_snapshot": {
+                "frames_processed": 26,
+                "latency_ms": 4339.667588064913,
+                "latency_p95_ms": 4018.3460880070925,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887513427663364,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    454.4,
+                    559.44
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    156.24,
+                    454.4,
+                    559.44
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "dfb799c67d458b483fb3ae4460fc6a73373dc5e701332b936d92621a5f6beeb4",
+        "label_frame_id": "missing-ppe_010",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000026",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "6f592945-5639-48a3-ab48-cb1398abb231",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:49.369286Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 27,
+              "latency_ms": 2248.739684931934,
+              "latency_p95_ms": 4018.3460880070925,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28872904291426393,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "eb0821e1e03854c6b70697652de6a2672ba602d4a591aa207d2f01067ad7f185",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:49.369286Z",
+              "telemetry_snapshot": {
+                "frames_processed": 27,
+                "latency_ms": 2248.739684931934,
+                "latency_p95_ms": 4018.3460880070925,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28872904291426393,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    262.4,
+                    156.24,
+                    382.72,
+                    556.56
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "349e137a-f1d4-4a57-8f20-9fc667d9c515",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:49.369286Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 27,
+              "latency_ms": 2248.739684931934,
+              "latency_p95_ms": 4018.3460880070925,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28872904291426393,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "eb0821e1e03854c6b70697652de6a2672ba602d4a591aa207d2f01067ad7f185",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:49.369286Z",
+              "telemetry_snapshot": {
+                "frames_processed": 27,
+                "latency_ms": 2248.739684931934,
+                "latency_p95_ms": 4018.3460880070925,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28872904291426393,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    262.4,
+                    156.24,
+                    382.72,
+                    556.56
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    262.4,
+                    156.24,
+                    382.72,
+                    556.56
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "557b8543760cbe376bac72f98bf17af15f0db3a06d1a40dbbee6364b54287b29",
+        "label_frame_id": "missing-ppe_011",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000027",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "ffd0ac56-7434-4625-852e-bccbec88eb71",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:51.639699Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 28,
+              "latency_ms": 4308.70201101061,
+              "latency_p95_ms": 4018.56041199062,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28869699075919597,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "528f805c22c02611e721b151e602978289a67885dd510dd957b9002584ceb850",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:51.639699Z",
+              "telemetry_snapshot": {
+                "frames_processed": 28,
+                "latency_ms": 4308.70201101061,
+                "latency_p95_ms": 4018.56041199062,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28869699075919597,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    154.8,
+                    458.24,
+                    556.56
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "8a8d017c-336f-43da-978b-71e0389b6975",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:51.639699Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 28,
+              "latency_ms": 4308.70201101061,
+              "latency_p95_ms": 4018.56041199062,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28869699075919597,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "528f805c22c02611e721b151e602978289a67885dd510dd957b9002584ceb850",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:51.639699Z",
+              "telemetry_snapshot": {
+                "frames_processed": 28,
+                "latency_ms": 4308.70201101061,
+                "latency_p95_ms": 4018.56041199062,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28869699075919597,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    154.8,
+                    458.24,
+                    556.56
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    266.24,
+                    154.8,
+                    458.24,
+                    556.56
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "d420a72d842d1793b85db4e2f53301d1869b321b40749d5a2e2de68854fc2fec",
+        "label_frame_id": "missing-ppe_012",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000028",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "67ae2197-e5dc-4a00-9ac5-e722c13f4af4",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:55.970864Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 29,
+              "latency_ms": 2251.482109015342,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28869528255325727,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "bbe5c341dd36be550db4d12dbbc4301df8778bc5ef78e655a910ef3ba06188ff",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:55.970864Z",
+              "telemetry_snapshot": {
+                "frames_processed": 29,
+                "latency_ms": 2251.482109015342,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28869528255325727,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    275.2,
+                    154.8,
+                    399.36,
+                    553.68
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "d6fb7297-9cb7-42cb-880f-daa1817a2858",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:55.970864Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 29,
+              "latency_ms": 2251.482109015342,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28869528255325727,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "bbe5c341dd36be550db4d12dbbc4301df8778bc5ef78e655a910ef3ba06188ff",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:55.970864Z",
+              "telemetry_snapshot": {
+                "frames_processed": 29,
+                "latency_ms": 2251.482109015342,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28869528255325727,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    275.2,
+                    154.8,
+                    399.36,
+                    553.68
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    275.2,
+                    154.8,
+                    399.36,
+                    553.68
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "7aeb45836d1c2b4db4ba7be0ed66df13ad51462a6545cbdfb53dfc808dd5f68f",
+        "label_frame_id": "missing-ppe_013",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000029",
+        "emitted": [
+          "PPE_MISSING",
+          "HUMAN_ROBOT_PROXIMITY"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "b6280e26-9c29-4326-9dbc-b4f03581a2e8",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:58.244395Z",
+            "rule_id": "PPE_MISSING",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 30,
+              "latency_ms": 2270.227068976965,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2888051667825503,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "2e807a75afd387d69d1b05edcfd326e559195e23f1d9dafe799160611bcc18ee",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:58.244395Z",
+              "telemetry_snapshot": {
+                "frames_processed": 30,
+                "latency_ms": 2270.227068976965,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2888051667825503,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    288.0,
+                    154.08,
+                    440.32,
+                    552.96
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                }
+              ]
+            },
+            "summary": "Person detected without required PPE.",
+            "incident_id": null
+          },
+          {
+            "event_id": "ba239f9b-e66e-48b4-98dd-dc149b0991c7",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:35:58.244395Z",
+            "rule_id": "HUMAN_ROBOT_PROXIMITY",
+            "severity": "high",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 30,
+              "latency_ms": 2270.227068976965,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2888051667825503,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "2e807a75afd387d69d1b05edcfd326e559195e23f1d9dafe799160611bcc18ee",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:35:58.244395Z",
+              "telemetry_snapshot": {
+                "frames_processed": 30,
+                "latency_ms": 2270.227068976965,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2888051667825503,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    288.0,
+                    154.08,
+                    440.32,
+                    552.96
+                  ],
+                  "ppe": {
+                    "hard_hat": false,
+                    "vest": false
+                  }
+                },
+                {
+                  "label": "robot",
+                  "confidence": 0.99,
+                  "bbox": [
+                    288.0,
+                    154.08,
+                    440.32,
+                    552.96
+                  ]
+                }
+              ]
+            },
+            "summary": "Human detected within unsafe proximity of robot.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "missing-ppe",
+        "expected": [
+          "PPE_MISSING"
+        ],
+        "image_sha256": "d2d6a251229871227107f57205f2db11898c7bc4c60c0f235b1f267019bc3c87",
+        "label_frame_id": "missing-ppe_014",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000030",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "56a0ff28-1ff5-410f-ba08-f5278ef507ed",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:00.537933Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 31,
+              "latency_ms": 1804.5346070430242,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887857553514287,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "b35b1fb8f51d7f0da76e78bb58dfb9d7c2bb2ddef8dc6e60f3e0cf8bca7bf0d4",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:00.537933Z",
+              "telemetry_snapshot": {
+                "frames_processed": 31,
+                "latency_ms": 1804.5346070430242,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887857553514287,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    857.6,
+                    142.56,
+                    1099.52,
+                    578.16
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "98497d10afd1d01fcc3da4e1200672f278ad51f3cc262759c0eae48a5652e831",
+        "label_frame_id": "restricted-entry_000",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000031",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "12d2f668-9710-4a01-964a-e134a037602a",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:02.364077Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 32,
+              "latency_ms": 1799.220903951209,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28875016255132424,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "3a4903bb232608b036cea7107daa36b9bc47ea4c292e93ce02fe1bf9769e9696",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:02.364077Z",
+              "telemetry_snapshot": {
+                "frames_processed": 32,
+                "latency_ms": 1799.220903951209,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28875016255132424,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    864.0,
+                    141.12,
+                    1107.2,
+                    576.72
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "e57773d57db4e24028ddab1ad94fbd99db8bb661d60a7c43b5c1173ea5f81445",
+        "label_frame_id": "restricted-entry_001",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000032",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "1f53e00d-591b-4267-a352-08d7b9af5f86",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:04.185654Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 33,
+              "latency_ms": 1798.820020048879,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2887182346294155,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "408fd4efd2c1eed7374766a48b6ca9e4ebc9a3629d4851b3c28d0cd38887f2bd",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:04.185654Z",
+              "telemetry_snapshot": {
+                "frames_processed": 33,
+                "latency_ms": 1798.820020048879,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2887182346294155,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    889.6,
+                    142.56,
+                    1107.2,
+                    576.72
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "aee9d41e890c1838a24e10174331ec0548f4b97e99ef804992c0605e44d52d2c",
+        "label_frame_id": "restricted-entry_002",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000033",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "2a7f9543-520d-4d7a-b81b-ce71262a2631",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:06.006851Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 34,
+              "latency_ms": 1801.3284389744513,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28869329482271044,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "416c87408f594ed49b94c715571628b241101ae4551831ebbbf47a853039062c",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:06.006851Z",
+              "telemetry_snapshot": {
+                "frames_processed": 34,
+                "latency_ms": 1801.3284389744513,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28869329482271044,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    889.6,
+                    140.4,
+                    1103.36,
+                    572.4
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "e398b80864fada9ebbcf81abafb2d09442c60fe141d27841ab8a745666c1b5b9",
+        "label_frame_id": "restricted-entry_003",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000034",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "336028ad-29c0-4686-88bb-b1897e4045f4",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:07.830995Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 35,
+              "latency_ms": 1819.1744280047715,
+              "latency_p95_ms": 4308.290695014875,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2889395560024912,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "0a36309cecfdd11f238736dcd699aa7ce262537dded8f02671524f8d3e76df4b",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:07.830995Z",
+              "telemetry_snapshot": {
+                "frames_processed": 35,
+                "latency_ms": 1819.1744280047715,
+                "latency_p95_ms": 4308.290695014875,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2889395560024912,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    876.8,
+                    137.52,
+                    1107.2,
+                    572.4
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "f560d2948b5f1bcdfdd8dc07219044c9efd0f1f7789ed0d97cda52045a1b9696",
+        "label_frame_id": "restricted-entry_004",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000035",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "e541f565-161c-4b3b-805d-2bcb12799eb4",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:09.671788Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 36,
+              "latency_ms": 1798.947595001664,
+              "latency_p95_ms": 4018.56041199062,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2889202377462391,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "353fefbefa5c510b1f72d0173d29968f759673edb36bdb95fe4b5967af3bc084",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:09.671788Z",
+              "telemetry_snapshot": {
+                "frames_processed": 36,
+                "latency_ms": 1798.947595001664,
+                "latency_p95_ms": 4018.56041199062,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2889202377462391,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    876.8,
+                    138.96,
+                    1107.2,
+                    570.24
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "3c2e1488fb2395d0182f814eaeb5f5abede27358b2227a96654fa1e0c38ca854",
+        "label_frame_id": "restricted-entry_005",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000036",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "e09339a4-7aeb-4eaf-ad81-e0dcd85c7033",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:11.493617Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 37,
+              "latency_ms": 1800.6418850272894,
+              "latency_p95_ms": 4018.56041199062,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28889713037863196,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "000b4c3c97263e8b890565ef04fb3f3e1d90a7ad39d50bad73c3a40ae170d5bd",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:11.493617Z",
+              "telemetry_snapshot": {
+                "frames_processed": 37,
+                "latency_ms": 1800.6418850272894,
+                "latency_p95_ms": 4018.56041199062,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28889713037863196,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    872.96,
+                    137.52,
+                    1107.2,
+                    570.24
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "08197651a784e8b8bf10e02d689fe1018ad14dffbfb6fcbb6619436ffcd7523f",
+        "label_frame_id": "restricted-entry_006",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000037",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "20a85213-331d-44c7-af22-1f5114951e37",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:13.317026Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 38,
+              "latency_ms": 1850.0818659667857,
+              "latency_p95_ms": 4018.56041199062,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.2888119064314357,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "d54735d930a5065193d8aee8f38140fbac91dde3bd3a06cbf784e97b46d02022",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:13.317026Z",
+              "telemetry_snapshot": {
+                "frames_processed": 38,
+                "latency_ms": 1850.0818659667857,
+                "latency_p95_ms": 4018.56041199062,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.2888119064314357,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    872.96,
+                    141.12,
+                    1109.76,
+                    568.8
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "1ca2add0d58f4330287b41c4896163fdf689a745253ae78ede5edd9c607037c2",
+        "label_frame_id": "restricted-entry_007",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000038",
+        "emitted": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "people_detected": 1,
+        "events": [
+          {
+            "event_id": "91726af5-c701-4012-b6d7-e115bd973b5e",
+            "camera_id": "simulation-accuracy",
+            "source_kind": "uploaded_generated",
+            "timestamp": "2026-10-17T22:36:15.188741Z",
+            "rule_id": "RESTRICTED_ZONE_ENTRY",
+            "severity": "critical",
+            "confidence": 0.99,
+            "human_review_required": true,
+            "runtime_context": {
+              "frames_processed": 39,
+              "latency_ms": 1799.3705730186775,
+              "latency_p95_ms": 4018.56041199062,
+              "latency_p99_ms": 4338.985068025067,
+              "queue_depth": 0,
+              "dropped_frames": 0,
+              "memory_pressure": 0.28880165719580353,
+              "gpu_memory_pressure": 0.0,
+              "thermal_pressure": 0.0,
+              "runtime_status": "nominal",
+              "notes": []
+            },
+            "evidence": {
+              "frame_hash": "469a58cbf71e9a397fedac5f251c40913ab66877d4dc536e35795a72d6aa75ec",
+              "source_uri": "simulation://labelled-frames",
+              "evidence_note": "GENERATED FOOTAGE - not a live camera",
+              "adapter_name": "cosmos_reason2",
+              "model_version": "nvidia/cosmos-reason2-2b",
+              "rule_version": "safety-policy-v1",
+              "captured_at": "2026-10-17T22:36:15.188741Z",
+              "telemetry_snapshot": {
+                "frames_processed": 39,
+                "latency_ms": 1799.3705730186775,
+                "latency_p95_ms": 4018.56041199062,
+                "latency_p99_ms": 4338.985068025067,
+                "queue_depth": 0,
+                "dropped_frames": 0,
+                "memory_pressure": 0.28880165719580353,
+                "gpu_memory_pressure": 0.0,
+                "thermal_pressure": 0.0,
+                "runtime_status": "nominal",
+                "notes": []
+              },
+              "detections": [
+                {
+                  "label": "person",
+                  "confidence": 0.99,
+                  "bbox": [
+                    872.96,
+                    137.52,
+                    1109.76,
+                    567.36
+                  ],
+                  "ppe": {
+                    "hard_hat": true,
+                    "vest": true
+                  }
+                }
+              ]
+            },
+            "summary": "Person entered restricted zone restricted.",
+            "incident_id": null
+          }
+        ],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "73f4cd75e77a584837495e78c678e3b01e7ba372f9cfdfb1a4b5b724374bd8d3",
+        "label_frame_id": "restricted-entry_008",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000039",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "c4f334b4feeeb62fdb1f8f622fcbb3b78fb1eb781d9db53324b971223c44fc0e",
+        "label_frame_id": "restricted-entry_009",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000040",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "9be8b1ae27c49df53de4f9a6e06f31af4afde8062453f3cfe913a227ae6a78cc",
+        "label_frame_id": "restricted-entry_010",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000041",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "9ea2140e652286ae0ae9869b3496254c562dbe33047230ea1eaa548fa96c94cb",
+        "label_frame_id": "restricted-entry_011",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000042",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "c60d60d9df8bb0edcd1298bd96c4c6f9cb0cee263ac792e6a178b2ac983ba366",
+        "label_frame_id": "restricted-entry_012",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000043",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "3c2eb1c2fb50a0d5ed39bebb6e22df3e562354fbb9c390dc500f0f18e00b5ff8",
+        "label_frame_id": "restricted-entry_013",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000044",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "restricted-entry",
+        "expected": [
+          "RESTRICTED_ZONE_ENTRY:restricted"
+        ],
+        "image_sha256": "1900f22d6832abc9214d087af299ed6f2e363c991341043623973fab2b1418a7",
+        "label_frame_id": "restricted-entry_014",
+        "person_present": true
+      },
+      {
+        "frame_id": "frame-000045",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "7ea1e0b42ace57af4b43b95d9ce09ce8691e00577446388b6434764a788b3020",
+        "label_frame_id": "empty_000",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000046",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "c11a45d8eaa1fbde4da95f2de9058f5ef64ba5d256f93fc01c5fbf75b049e4d4",
+        "label_frame_id": "empty_001",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000047",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "fa9a9e193e590dcf32ec70d2094123e2a50223107c5078f003e70a9fb04b6be7",
+        "label_frame_id": "empty_002",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000048",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "a1fbce687a241ae6b8bda4485dcc785b7ca06910696b7886464e86ace2373151",
+        "label_frame_id": "empty_003",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000049",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "f852223417dbaa4fa1fd2976f1eaa65f4212884dbdb3e616bbfd0d20bc3274ff",
+        "label_frame_id": "empty_004",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000050",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "fd5f715c7ee41b653678c294fb34727828dca59e384c50012a9dff9894a8abb6",
+        "label_frame_id": "empty_005",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000051",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "d633f5b30ee645a8c88662ac23603f71888f96d9fab0c90c6892b669db9898f7",
+        "label_frame_id": "empty_006",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000052",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "80332578f9329b96fe30f30425abfd13eb62ca74e3873153612e59180d134720",
+        "label_frame_id": "empty_007",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000053",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "1e4547e8e3a17f85b891145b685d281381956749c2a84acbd61460ca579bd2aa",
+        "label_frame_id": "empty_008",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000054",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "0104ee433b40525776e59cad640338802fff82a5bccf4eb1c83230c25adfa50d",
+        "label_frame_id": "empty_009",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000055",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "3012eb257a7166ae8b3f98f1ef26ef8844d16e7990a46665f425843edefffa88",
+        "label_frame_id": "empty_010",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000056",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "95761e9202e21ffb3483170274ca371436da52b0fa5e23932650ccc2d9123f01",
+        "label_frame_id": "empty_011",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000057",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "ab56c046e0ed4d88fed8195ccd3b82823a506901a79d0dcfb21d4ffb00dd1bbd",
+        "label_frame_id": "empty_012",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000058",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "cced526ab04d4f521e9f2cd16146913d188595f7c63a806a395ba6ad592d67a3",
+        "label_frame_id": "empty_013",
+        "person_present": false
+      },
+      {
+        "frame_id": "frame-000059",
+        "emitted": [],
+        "people_detected": 0,
+        "events": [],
+        "scenario_id": "empty",
+        "expected": [],
+        "image_sha256": "8b64a5b7eb1ff62e1606348ed9c68da5895084d3ce89eb6cbc854956f5284972",
+        "label_frame_id": "empty_014",
+        "person_present": false
+      }
+    ],
+    "person_presence": {
+      "tp": 29,
+      "fp": 0,
+      "fn": 16,
+      "precision": 1.0,
+      "recall": 0.6444444444444445,
+      "f1": 0.7837837837837838
+    },
+    "false_person_detections_on_empty_frames": 0,
+    "empty_frames": 15,
+    "empty_frames_with_false_person": 0,
+    "matching": "Exact frame, rule and zone IDs; multiset; zero tolerance. End-to-end rule precision/recall includes perception errors. Person presence is a separate binary frame metric."
+  }
+}
