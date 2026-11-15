@@ -234,6 +234,23 @@ vllm serve nvidia/Cosmos3-Edge --revision 6afc1256321c3a8e623d89be3bc5117a1e90f9
   --structured-outputs-config '{"backend": "xgrammar", "disable_any_whitespace": true}'
 ```
 
+### Other Cosmos 3 work in the full build, 2026-11-15
+
+**Generated test clips and model redraws of them; not field evidence.** The full build also has an access gate that checks a worker's protective gear before letting them in. Its reader scored 15 of 15 on five daylight test clips on 2026-11-06. Cosmos3-Nano-Sim-Transfer, run on `jetson-agx-thor` with NVIDIA's command unchanged, redrew those five clips as daylight, dusk and night, keeping each worker's position and gear. The gate's own check then scored every version three times ([summary](reports/thor/gate_lighting_transfer_2026-11-15_summary.json), [generation record](reports/thor/gate_lighting_transfer_2026-11-15_generation.json)).
+
+![Original, daylight redraw, dusk and night for the five gate clips](reports/thor/gate_lighting_transfer_2026-11-15_grid.jpg)
+
+| Version | Mean brightness (0 to 255) | Open or denied decision right (of 15) | Workers without gear let through | Safety-glasses reads right (of 45) |
+|---|---|---|---|---|
+| Original, resized to 832 x 480 | 141 to 145 | 15, 15, 15 | 0 | 45 |
+| Daylight redraw | 132 to 140 | 15, 15, 15 | 0 | 39 |
+| Dusk | 84 to 91 | 15, 15, 15 | 0 | 38 |
+| Night | 54 to 72 | 15, 15, 15 | 0 | 27 |
+
+With Cosmos Reason 2 as the reader, the decision held in every version and no worker without gear was let through. Hard hat, vest and boots were read correctly throughout. The safety glasses, the smallest and faintest item, were the read that degraded, and glasses only raise a warning at this gate. Part of the loss comes from the redraw itself: the daylight redraw, with no darkening, already lost 6 of 45 glasses reads. The night prompt produced a dim evening at about half the original brightness, not a dark yard. Each clip took 148 to 156 s and 3.5 to 3.8 Wh to generate on the board.
+
+Cosmos 3 Edge, put behind the same gate with nothing else changed, denied every compliant worker in every version, the untouched originals included: under the gate's second question wording it answered that the hard hat and vest were absent. The gate's wordings were written and checked against Cosmos Reason 2, so Cosmos 3 Edge is not a drop-in reader there.
+
 **Limits.**
 
 - 60 labeled simulated pictures: a signal, not an accuracy rate.
