@@ -12,7 +12,7 @@ The goal is operational review, not demo object detection. Nothing here acts aut
 
 This repository is the open core: the edge worker and model adapters, the safety rules engine, the evidence chain, operator review and the runtime cost measured on Jetson AGX Thor.
 
-**Physical AI Safety Pro** is developed privately on top of this core. It adds video feed connectors (RTSP links, USB cameras, browser and phone cameras, and uploaded footage) with a source label on every frame and event, plus upload and playback controls on the Live view. [See Physical AI Safety Pro](https://obiedeh.github.io/physical-ai-safety-observability-pro.html). Source available on request.
+**The full build** is developed privately on top of this core. It adds video feed connectors (RTSP links, USB cameras, browser and phone cameras, and uploaded footage) with a source label on every frame and event, an access gate that checks a worker's protective gear, a labeled scorer, Cosmos 3 Edge as a second reasoner, and the Cosmos Transfer runs reported below. [See the full build report](https://obiedeh.github.io/physical-ai-safety-observability-full-build.html). Source available on request.
 
 ## Status at a Glance
 
