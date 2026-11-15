@@ -1,0 +1,16 @@
+{
+  "date": "2026-11-15",
+  "note": "A machine name in each of these records was replaced with a board label before its first commit in this repository. sha256_as_measured is the file as measured; reversing the substitution reproduces it exactly.",
+  "files": [
+    {
+      "path": "reports/thor/model_accuracy_coordinate_v1_2026-10-17.json",
+      "sha256_as_measured": "30fc4eefa03ca738f2dc79c5ca2fe633334452881c34688dfb51384cb8de9dde",
+      "sha256_scrubbed": "95af8ab1ff7adbf35d2bb5cbd4ce8b05f8d681805b1824ec2d2cb38e1a690635"
+    },
+    {
+      "path": "reports/thor/model_accuracy_ppe_v1_2026-10-17.json",
+      "sha256_as_measured": "de7d6034902e7eed319f9e46d4b83674f9ca2ddd63d129d2c7ca1ec1b6807af7",
+      "sha256_scrubbed": "a30617882c12004309b6333b1d3f5df5b916be5f89b5a2bfc10fe341fad87900"
+    }
+  ]
+}

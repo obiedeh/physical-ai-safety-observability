@@ -1,0 +1,586 @@
+{
+  "schema": "reasoner-backend-comparison-v1",
+  "label": "labeled simulation scenes; not real-world footage.",
+  "session": "reasoner_comparison_2026-11-14_session.json",
+  "started_at": "2026-11-14T05:42:08.832289+00:00",
+  "finished_at": "2026-11-14T06:16:29.807162+00:00",
+  "order": [
+    "cosmos-reason2",
+    "cosmos3-edge",
+    "cosmos3-edge",
+    "cosmos-reason2",
+    "cosmos-reason2",
+    "cosmos3-edge"
+  ],
+  "cooldown_seconds": 120.0,
+  "servers": {
+    "cosmos-reason2": {
+      "image": "ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04",
+      "vllm_version": "0.14.0",
+      "port": 8000,
+      "weights": "Cosmos-Reason2-2B, bf16, local directory",
+      "command": "vllm serve /models/cosmos-reason2-2b --served-model-name nvidia/cosmos-reason2-2b --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.25 --max-model-len 8192 --media-io-kwargs '{\"video\": {\"num_frames\": -1}}'",
+      "reasoning_parser": null,
+      "canary": "grammar_ok"
+    },
+    "cosmos3-edge": {
+      "image": "vllm/vllm-openai:cosmos3",
+      "image_digest": "sha256:db0bb920b0b54e82ea96a98659bbd21921f87d0dcfc86feffdafa2db3f08be55",
+      "vllm_version": "0.23.1rc1.dev1306+gbfee6a802",
+      "torch_version": "2.11.0+cu130",
+      "transformers_version": "5.14.1",
+      "port": 8001,
+      "weights": "nvidia/Cosmos3-Edge, bf16",
+      "checkpoint_revision": "6afc1256321c3a8e623d89be3bc5117a1e90f96b",
+      "command": "vllm serve nvidia/Cosmos3-Edge --revision 6afc1256321c3a8e623d89be3bc5117a1e90f96b --host 0.0.0.0 --port 8001 --max-model-len 131072 --allowed-local-media-path / --mm-processor-kwargs '{\"do_resize\": true, \"min_pixels\": 4096, \"max_pixels\": 16777216}' --media-io-kwargs '{\"video\": {\"num_frames\": 256}}' --gpu-memory-utilization 0.30",
+      "differences_from_model_card": [
+        "port 8001 instead of 8000",
+        "--revision pinned",
+        "--gpu-memory-utilization 0.30 added so both servers fit",
+        "HF_HUB_OFFLINE=1 with the weights pre-downloaded"
+      ],
+      "reasoning_parser": null,
+      "thinking_switch": "chat_template_kwargs.enable_thinking=false (same name as Reason 2)",
+      "canary": "grammar_ok"
+    }
+  },
+  "idle_board_power_w_p50": 21.674,
+  "idle_board_ram_mb_p50": 82489.0,
+  "backends": {
+    "cosmos-reason2": {
+      "model": "nvidia/cosmos-reason2-2b",
+      "completed_runs": 3,
+      "failed_runs": [],
+      "per_run": [
+        {
+          "run": 1,
+          "report": "reasoner_comparison_2026-11-14_cosmos-reason2_run1.json",
+          "false_gear_alarms": 0,
+          "real_gear_alarms_kept": 15,
+          "real_gear_alarms_total": 15,
+          "person_found": 28,
+          "person_total": 45,
+          "false_persons_on_empty_frames": 0,
+          "zone_events_found": 9,
+          "zone_events_total": 15,
+          "false_zone_alarms": 0,
+          "false_proximity_alarms": 16,
+          "failed_reads": 0,
+          "off_list_labels": 0,
+          "detections_by_label": {
+            "box": 12,
+            "cart": 12,
+            "pallet": 7,
+            "person": 28,
+            "robot": 33
+          },
+          "answer_ms_p50": 1959.3595,
+          "answer_ms_p95": 4258.9113,
+          "answer_ms_max": 4433.6104,
+          "completion_tokens_p50": 77,
+          "board_power_w_p50": 60.076,
+          "board_power_w_peak": 114.428,
+          "board_ram_peak_mb": 83359,
+          "frames": 60,
+          "measured_source_commit": "76182cc3297bda0a0370d3bf0afb6688d48ed470",
+          "nvpmodel": "NV Power Mode: MAXN 0"
+        },
+        {
+          "run": 2,
+          "report": "reasoner_comparison_2026-11-14_cosmos-reason2_run2.json",
+          "false_gear_alarms": 0,
+          "real_gear_alarms_kept": 15,
+          "real_gear_alarms_total": 15,
+          "person_found": 30,
+          "person_total": 45,
+          "false_persons_on_empty_frames": 0,
+          "zone_events_found": 9,
+          "zone_events_total": 15,
+          "false_zone_alarms": 0,
+          "false_proximity_alarms": 16,
+          "failed_reads": 0,
+          "off_list_labels": 0,
+          "detections_by_label": {
+            "box": 12,
+            "cart": 12,
+            "pallet": 7,
+            "person": 30,
+            "robot": 32
+          },
+          "answer_ms_p50": 1239.1821,
+          "answer_ms_p95": 2815.4073,
+          "answer_ms_max": 3317.2284,
+          "completion_tokens_p50": 77,
+          "board_power_w_p50": 70.82,
+          "board_power_w_peak": 74.622,
+          "board_ram_peak_mb": 83598,
+          "frames": 60,
+          "measured_source_commit": "76182cc3297bda0a0370d3bf0afb6688d48ed470",
+          "nvpmodel": "NV Power Mode: MAXN 0"
+        },
+        {
+          "run": 3,
+          "report": "reasoner_comparison_2026-11-14_cosmos-reason2_run3.json",
+          "false_gear_alarms": 0,
+          "real_gear_alarms_kept": 15,
+          "real_gear_alarms_total": 15,
+          "person_found": 29,
+          "person_total": 45,
+          "false_persons_on_empty_frames": 0,
+          "zone_events_found": 9,
+          "zone_events_total": 15,
+          "false_zone_alarms": 0,
+          "false_proximity_alarms": 16,
+          "failed_reads": 0,
+          "off_list_labels": 0,
+          "detections_by_label": {
+            "box": 12,
+            "cart": 12,
+            "pallet": 6,
+            "person": 29,
+            "robot": 33
+          },
+          "answer_ms_p50": 1241.1416,
+          "answer_ms_p95": 2942.5624,
+          "answer_ms_max": 3991.8283,
+          "completion_tokens_p50": 77,
+          "board_power_w_p50": 70.104,
+          "board_power_w_peak": 73.486,
+          "board_ram_peak_mb": 83593,
+          "frames": 60,
+          "measured_source_commit": "76182cc3297bda0a0370d3bf0afb6688d48ed470",
+          "nvpmodel": "NV Power Mode: MAXN 0"
+        }
+      ],
+      "summary": {
+        "false_gear_alarms": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "real_gear_alarms_kept": {
+          "runs": [
+            15,
+            15,
+            15
+          ],
+          "median": 15
+        },
+        "real_gear_alarms_total": {
+          "runs": [
+            15,
+            15,
+            15
+          ],
+          "median": 15
+        },
+        "person_found": {
+          "runs": [
+            28,
+            30,
+            29
+          ],
+          "median": 29
+        },
+        "person_total": {
+          "runs": [
+            45,
+            45,
+            45
+          ],
+          "median": 45
+        },
+        "false_persons_on_empty_frames": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "zone_events_found": {
+          "runs": [
+            9,
+            9,
+            9
+          ],
+          "median": 9
+        },
+        "zone_events_total": {
+          "runs": [
+            15,
+            15,
+            15
+          ],
+          "median": 15
+        },
+        "false_zone_alarms": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "false_proximity_alarms": {
+          "runs": [
+            16,
+            16,
+            16
+          ],
+          "median": 16
+        },
+        "failed_reads": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "off_list_labels": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "answer_ms_p50": {
+          "runs": [
+            1959.3595,
+            1239.1821,
+            1241.1416
+          ],
+          "median": 1241.1416
+        },
+        "answer_ms_p95": {
+          "runs": [
+            4258.9113,
+            2815.4073,
+            2942.5624
+          ],
+          "median": 2942.5624
+        },
+        "answer_ms_max": {
+          "runs": [
+            4433.6104,
+            3317.2284,
+            3991.8283
+          ],
+          "median": 3991.8283
+        },
+        "completion_tokens_p50": {
+          "runs": [
+            77,
+            77,
+            77
+          ],
+          "median": 77
+        },
+        "board_power_w_p50": {
+          "runs": [
+            60.076,
+            70.82,
+            70.104
+          ],
+          "median": 70.104
+        },
+        "board_power_w_peak": {
+          "runs": [
+            114.428,
+            74.622,
+            73.486
+          ],
+          "median": 74.622
+        },
+        "board_ram_peak_mb": {
+          "runs": [
+            83359,
+            83598,
+            83593
+          ],
+          "median": 83593
+        },
+        "frames": {
+          "runs": [
+            60,
+            60,
+            60
+          ],
+          "median": 60
+        }
+      }
+    },
+    "cosmos3-edge": {
+      "model": "nvidia/Cosmos3-Edge",
+      "completed_runs": 3,
+      "failed_runs": [],
+      "per_run": [
+        {
+          "run": 1,
+          "report": "reasoner_comparison_2026-11-14_cosmos3-edge_run1.json",
+          "false_gear_alarms": 0,
+          "real_gear_alarms_kept": 0,
+          "real_gear_alarms_total": 15,
+          "person_found": 3,
+          "person_total": 45,
+          "false_persons_on_empty_frames": 0,
+          "zone_events_found": 1,
+          "zone_events_total": 15,
+          "false_zone_alarms": 0,
+          "false_proximity_alarms": 0,
+          "failed_reads": 38,
+          "off_list_labels": 0,
+          "detections_by_label": {
+            "box": 8,
+            "person": 3,
+            "robot": 3
+          },
+          "answer_ms_p50": 7951.3217,
+          "answer_ms_p95": 12850.1504,
+          "answer_ms_max": 13111.4693,
+          "completion_tokens_p50": 10,
+          "board_power_w_p50": 67.868,
+          "board_power_w_peak": 121.726,
+          "board_ram_peak_mb": 83608,
+          "frames": 60,
+          "measured_source_commit": "76182cc3297bda0a0370d3bf0afb6688d48ed470",
+          "nvpmodel": "NV Power Mode: MAXN 0"
+        },
+        {
+          "run": 2,
+          "report": "reasoner_comparison_2026-11-14_cosmos3-edge_run2.json",
+          "false_gear_alarms": 0,
+          "real_gear_alarms_kept": 0,
+          "real_gear_alarms_total": 15,
+          "person_found": 1,
+          "person_total": 45,
+          "false_persons_on_empty_frames": 0,
+          "zone_events_found": 1,
+          "zone_events_total": 15,
+          "false_zone_alarms": 0,
+          "false_proximity_alarms": 0,
+          "failed_reads": 41,
+          "off_list_labels": 0,
+          "detections_by_label": {
+            "box": 6,
+            "person": 1,
+            "robot": 1
+          },
+          "answer_ms_p50": 7780.7215,
+          "answer_ms_p95": 7789.7075,
+          "answer_ms_max": 12525.8937,
+          "completion_tokens_p50": 10,
+          "board_power_w_p50": 69.314,
+          "board_power_w_peak": 72.442,
+          "board_ram_peak_mb": 83606,
+          "frames": 60,
+          "measured_source_commit": "76182cc3297bda0a0370d3bf0afb6688d48ed470",
+          "nvpmodel": "NV Power Mode: MAXN 0"
+        },
+        {
+          "run": 3,
+          "report": "reasoner_comparison_2026-11-14_cosmos3-edge_run3.json",
+          "false_gear_alarms": 0,
+          "real_gear_alarms_kept": 0,
+          "real_gear_alarms_total": 15,
+          "person_found": 1,
+          "person_total": 45,
+          "false_persons_on_empty_frames": 0,
+          "zone_events_found": 0,
+          "zone_events_total": 15,
+          "false_zone_alarms": 0,
+          "false_proximity_alarms": 0,
+          "failed_reads": 39,
+          "off_list_labels": 0,
+          "detections_by_label": {
+            "box": 9,
+            "person": 1,
+            "robot": 3
+          },
+          "answer_ms_p50": 7778.9993,
+          "answer_ms_p95": 7792.488,
+          "answer_ms_max": 12512.2833,
+          "completion_tokens_p50": 10,
+          "board_power_w_p50": 69.118,
+          "board_power_w_peak": 72.236,
+          "board_ram_peak_mb": 83595,
+          "frames": 60,
+          "measured_source_commit": "76182cc3297bda0a0370d3bf0afb6688d48ed470",
+          "nvpmodel": "NV Power Mode: MAXN 0"
+        }
+      ],
+      "summary": {
+        "false_gear_alarms": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "real_gear_alarms_kept": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "real_gear_alarms_total": {
+          "runs": [
+            15,
+            15,
+            15
+          ],
+          "median": 15
+        },
+        "person_found": {
+          "runs": [
+            3,
+            1,
+            1
+          ],
+          "median": 1
+        },
+        "person_total": {
+          "runs": [
+            45,
+            45,
+            45
+          ],
+          "median": 45
+        },
+        "false_persons_on_empty_frames": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "zone_events_found": {
+          "runs": [
+            1,
+            1,
+            0
+          ],
+          "median": 1
+        },
+        "zone_events_total": {
+          "runs": [
+            15,
+            15,
+            15
+          ],
+          "median": 15
+        },
+        "false_zone_alarms": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "false_proximity_alarms": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "failed_reads": {
+          "runs": [
+            38,
+            41,
+            39
+          ],
+          "median": 39
+        },
+        "off_list_labels": {
+          "runs": [
+            0,
+            0,
+            0
+          ],
+          "median": 0
+        },
+        "answer_ms_p50": {
+          "runs": [
+            7951.3217,
+            7780.7215,
+            7778.9993
+          ],
+          "median": 7780.7215
+        },
+        "answer_ms_p95": {
+          "runs": [
+            12850.1504,
+            7789.7075,
+            7792.488
+          ],
+          "median": 7792.488
+        },
+        "answer_ms_max": {
+          "runs": [
+            13111.4693,
+            12525.8937,
+            12512.2833
+          ],
+          "median": 12525.8937
+        },
+        "completion_tokens_p50": {
+          "runs": [
+            10,
+            10,
+            10
+          ],
+          "median": 10
+        },
+        "board_power_w_p50": {
+          "runs": [
+            67.868,
+            69.314,
+            69.118
+          ],
+          "median": 69.118
+        },
+        "board_power_w_peak": {
+          "runs": [
+            121.726,
+            72.442,
+            72.236
+          ],
+          "median": 72.442
+        },
+        "board_ram_peak_mb": {
+          "runs": [
+            83608,
+            83606,
+            83595
+          ],
+          "median": 83606
+        },
+        "frames": {
+          "runs": [
+            60,
+            60,
+            60
+          ],
+          "median": 60
+        }
+      }
+    }
+  },
+  "limits": [
+    "60 labeled simulated pictures: a signal, not an accuracy rate.",
+    "One board, one session, three runs per backend.",
+    "Cosmos 3 Edge is BF16, the only precision NVIDIA lists as tested."
+  ]
+}

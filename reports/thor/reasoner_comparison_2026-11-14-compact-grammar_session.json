@@ -1,0 +1,219 @@
+{
+  "schema": "reasoner-backend-comparison-session-v1",
+  "tag": "2026-11-14-compact-grammar",
+  "started_at": "2026-11-14T06:29:51.219173+00:00",
+  "manifest": "reports/accuracy/simulation_2026-10-17/ground_truth.json",
+  "order": [
+    "cosmos-reason2",
+    "cosmos3-edge",
+    "cosmos3-edge",
+    "cosmos-reason2",
+    "cosmos-reason2",
+    "cosmos3-edge"
+  ],
+  "runs_per_backend": 3,
+  "cooldown_seconds": 120.0,
+  "endpoints": {
+    "cosmos-reason2": "http://127.0.0.1:8000/v1",
+    "cosmos3-edge": "http://127.0.0.1:8001/v1"
+  },
+  "models": {
+    "cosmos-reason2": "nvidia/cosmos-reason2-2b",
+    "cosmos3-edge": "nvidia/Cosmos3-Edge"
+  },
+  "servers": {
+    "cosmos-reason2": {
+      "image": "ghcr.io/nvidia-ai-iot/vllm:0.14.0-r38.3-arm64-sbsa-cu130-24.04",
+      "vllm_version": "0.14.0",
+      "port": 8000,
+      "weights": "Cosmos-Reason2-2B, bf16, local directory",
+      "command": "vllm serve /models/cosmos-reason2-2b --served-model-name nvidia/cosmos-reason2-2b --host 0.0.0.0 --port 8000 --gpu-memory-utilization 0.25 --max-model-len 8192 --media-io-kwargs '{\"video\": {\"num_frames\": -1}}'",
+      "reasoning_parser": null,
+      "canary": "grammar_ok"
+    },
+    "cosmos3-edge": {
+      "image": "vllm/vllm-openai:cosmos3",
+      "image_digest": "sha256:db0bb920b0b54e82ea96a98659bbd21921f87d0dcfc86feffdafa2db3f08be55",
+      "vllm_version": "0.23.1rc1.dev1306+gbfee6a802",
+      "torch_version": "2.11.0+cu130",
+      "transformers_version": "5.14.1",
+      "port": 8001,
+      "weights": "nvidia/Cosmos3-Edge, bf16",
+      "checkpoint_revision": "6afc1256321c3a8e623d89be3bc5117a1e90f96b",
+      "command": "vllm serve nvidia/Cosmos3-Edge --revision 6afc1256321c3a8e623d89be3bc5117a1e90f96b --host 0.0.0.0 --port 8001 --max-model-len 131072 --allowed-local-media-path / --mm-processor-kwargs '{\"do_resize\": true, \"min_pixels\": 4096, \"max_pixels\": 16777216}' --media-io-kwargs '{\"video\": {\"num_frames\": 256}}' --gpu-memory-utilization 0.30 --structured-outputs-config '{\"backend\": \"xgrammar\", \"disable_any_whitespace\": true}'",
+      "differences_from_model_card": [
+        "port 8001 instead of 8000",
+        "--revision pinned",
+        "--gpu-memory-utilization 0.30 added so both servers fit",
+        "HF_HUB_OFFLINE=1 with the weights pre-downloaded",
+        "--structured-outputs-config backend xgrammar with disable_any_whitespace, so the JSON grammar cannot emit runs of whitespace up to the token cap"
+      ],
+      "reasoning_parser": null,
+      "thinking_switch": "chat_template_kwargs.enable_thinking=false (same name as Reason 2)",
+      "canary": "grammar_ok",
+      "structured_outputs": {
+        "backend": "xgrammar",
+        "disable_any_whitespace": true
+      }
+    }
+  },
+  "idle_before": {
+    "n_samples": 59,
+    "rails_mw": {
+      "VDD_GPU": {
+        "p50": 1964.0,
+        "peak": 1965,
+        "min": 1964
+      },
+      "VDD_CPU_SOC_MSS": {
+        "p50": 5896.0,
+        "peak": 5896,
+        "min": 5896
+      },
+      "VIN_SYS_5V0": {
+        "p50": 5653.0,
+        "peak": 5754,
+        "min": 5653
+      },
+      "VIN": {
+        "p50": 21132.0,
+        "peak": 22550,
+        "min": 20218
+      }
+    },
+    "temps_c": {
+      "cpu": {
+        "p50": 40.343,
+        "peak": 41.531
+      },
+      "tj": {
+        "p50": 41.937,
+        "peak": 43.156
+      },
+      "soc012": {
+        "p50": 40.5,
+        "peak": 41.781
+      },
+      "gpu": {
+        "p50": 41.156,
+        "peak": 42.375
+      },
+      "soc345": {
+        "p50": 41.937,
+        "peak": 43.156
+      }
+    },
+    "board_ram_used_mb": {
+      "p50": 81732.0,
+      "peak": 81735
+    }
+  },
+  "runs": [
+    {
+      "position": 1,
+      "backend": "cosmos-reason2",
+      "run": 1,
+      "report": "reasoner_comparison_2026-11-14-compact-grammar_cosmos-reason2_run1.json",
+      "started_at": "2026-11-14T06:30:51.221756+00:00",
+      "status": "complete",
+      "finished_at": "2026-11-14T06:32:40.098807+00:00"
+    },
+    {
+      "position": 2,
+      "backend": "cosmos3-edge",
+      "run": 1,
+      "report": "reasoner_comparison_2026-11-14-compact-grammar_cosmos3-edge_run1.json",
+      "started_at": "2026-11-14T06:34:40.099034+00:00",
+      "status": "complete",
+      "finished_at": "2026-11-14T06:36:36.899423+00:00"
+    },
+    {
+      "position": 3,
+      "backend": "cosmos3-edge",
+      "run": 2,
+      "report": "reasoner_comparison_2026-11-14-compact-grammar_cosmos3-edge_run2.json",
+      "started_at": "2026-11-14T06:38:36.899822+00:00",
+      "status": "complete",
+      "finished_at": "2026-11-14T06:40:17.974070+00:00"
+    },
+    {
+      "position": 4,
+      "backend": "cosmos-reason2",
+      "run": 2,
+      "report": "reasoner_comparison_2026-11-14-compact-grammar_cosmos-reason2_run2.json",
+      "started_at": "2026-11-14T06:42:17.974295+00:00",
+      "status": "complete",
+      "finished_at": "2026-11-14T06:43:54.570982+00:00"
+    },
+    {
+      "position": 5,
+      "backend": "cosmos-reason2",
+      "run": 3,
+      "report": "reasoner_comparison_2026-11-14-compact-grammar_cosmos-reason2_run3.json",
+      "started_at": "2026-11-14T06:45:54.571228+00:00",
+      "status": "complete",
+      "finished_at": "2026-11-14T06:47:32.518882+00:00"
+    },
+    {
+      "position": 6,
+      "backend": "cosmos3-edge",
+      "run": 3,
+      "report": "reasoner_comparison_2026-11-14-compact-grammar_cosmos3-edge_run3.json",
+      "started_at": "2026-11-14T06:49:32.519267+00:00",
+      "status": "complete",
+      "finished_at": "2026-11-14T06:51:09.374032+00:00"
+    }
+  ],
+  "idle_after": {
+    "n_samples": 59,
+    "rails_mw": {
+      "VDD_GPU": {
+        "p50": 1964.0,
+        "peak": 5108,
+        "min": 1964
+      },
+      "VDD_CPU_SOC_MSS": {
+        "p50": 5894.0,
+        "peak": 7073,
+        "min": 5894
+      },
+      "VIN_SYS_5V0": {
+        "p50": 5754.0,
+        "peak": 6775,
+        "min": 5653
+      },
+      "VIN": {
+        "p50": 21356.0,
+        "peak": 24796,
+        "min": 20496
+      }
+    },
+    "temps_c": {
+      "cpu": {
+        "p50": 44.281,
+        "peak": 48.25
+      },
+      "tj": {
+        "p50": 46.0,
+        "peak": 50.0
+      },
+      "soc012": {
+        "p50": 44.718,
+        "peak": 48.5
+      },
+      "gpu": {
+        "p50": 45.187,
+        "peak": 49.312
+      },
+      "soc345": {
+        "p50": 46.0,
+        "peak": 49.968
+      }
+    },
+    "board_ram_used_mb": {
+      "p50": 82040.0,
+      "peak": 82042
+    }
+  },
+  "finished_at": "2026-11-14T06:52:09.376490+00:00"
+}

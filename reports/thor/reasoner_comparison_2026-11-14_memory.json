@@ -1,0 +1,20 @@
+{
+  "schema": "reasoner-backend-memory-readings-v1",
+  "board": "jetson-agx-thor",
+  "read_at": "2026-11-14, after the second comparison session, no request in flight",
+  "method": "tegrastats RAM used, one reading per state, servers stopped one at a time",
+  "board_ram_used_mb": {
+    "both_servers_loaded": 81986,
+    "reason2_server_only": 75695,
+    "no_model_server": 71371
+  },
+  "difference_mb": {
+    "cosmos3_edge_server": 6291,
+    "reason2_server": 4324
+  },
+  "server_reported_model_load_gib": {
+    "cosmos3_edge": 4.67,
+    "reason2_2b": 4.24
+  },
+  "note": "Both servers stayed loaded during every scored run, so the per-run peak board memory is the same for both backends. The differences above are single readings, not a controlled measurement. Other resident services on the board account for the no-server figure."
+}

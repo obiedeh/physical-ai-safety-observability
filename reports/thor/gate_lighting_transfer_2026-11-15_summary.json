@@ -1,0 +1,446 @@
+{
+  "schema": "gate-lighting-transfer-summary-v1",
+  "date": "2026-11-15",
+  "boards": {
+    "detector_pose_crop": "rtx-5090-workstation",
+    "primary_and_verifier": "jetson-agx-thor"
+  },
+  "check": "scripts/check_ppe_gate_reader.py, sample times 1.0, 2.5 and 4.0 s, three runs per condition",
+  "footage": "generated test clips and Cosmos Transfer redraws of them; not field evidence and not an accuracy claim",
+  "readers": {
+    "nvidia/cosmos-reason2-2b": {
+      "original": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 15,
+            "false_open": 0,
+            "false_glasses_warnings": 0,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 15,
+            "false_open": 0,
+            "false_glasses_warnings": 0,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 15,
+            "false_open": 0,
+            "false_glasses_warnings": 0,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 45,
+            "vest": 45,
+            "boots": 42
+          },
+          "verifier": {
+            "hard_hat": 45,
+            "glasses": 45,
+            "vest": 45,
+            "boots": 45
+          }
+        }
+      },
+      "original_832x480": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 15,
+            "false_open": 0,
+            "false_glasses_warnings": 0,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 15,
+            "false_open": 0,
+            "false_glasses_warnings": 0,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 15,
+            "false_open": 0,
+            "false_glasses_warnings": 0,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 45,
+            "vest": 45,
+            "boots": 45
+          },
+          "verifier": {
+            "hard_hat": 45,
+            "glasses": 45,
+            "vest": 45,
+            "boots": 45
+          }
+        }
+      },
+      "day": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 13,
+            "false_open": 0,
+            "false_glasses_warnings": 2,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 13,
+            "false_open": 0,
+            "false_glasses_warnings": 2,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 13,
+            "false_open": 0,
+            "false_glasses_warnings": 2,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 45,
+            "vest": 45,
+            "boots": 45
+          },
+          "verifier": {
+            "hard_hat": 45,
+            "glasses": 39,
+            "vest": 45,
+            "boots": 45
+          }
+        }
+      },
+      "dusk": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 12,
+            "false_open": 0,
+            "false_glasses_warnings": 3,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 13,
+            "false_open": 0,
+            "false_glasses_warnings": 2,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 13,
+            "false_open": 0,
+            "false_glasses_warnings": 2,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 45,
+            "vest": 45,
+            "boots": 45
+          },
+          "verifier": {
+            "hard_hat": 45,
+            "glasses": 38,
+            "vest": 45,
+            "boots": 45
+          }
+        }
+      },
+      "night": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 9,
+            "false_open": 0,
+            "false_glasses_warnings": 6,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 9,
+            "false_open": 0,
+            "false_glasses_warnings": 6,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 15,
+            "decision_and_warnings_right": 9,
+            "false_open": 0,
+            "false_glasses_warnings": 6,
+            "compliant_worker_denied": 0,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 45,
+            "vest": 45,
+            "boots": 42
+          },
+          "verifier": {
+            "hard_hat": 45,
+            "glasses": 27,
+            "vest": 45,
+            "boots": 45
+          }
+        }
+      }
+    },
+    "nvidia/Cosmos3-Edge": {
+      "original": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 0,
+            "false_open": 0,
+            "false_glasses_warnings": 12,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 1,
+            "false_open": 0,
+            "false_glasses_warnings": 10,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 0,
+            "false_open": 0,
+            "false_glasses_warnings": 11,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 12,
+            "vest": 45,
+            "boots": 36
+          },
+          "verifier": {
+            "hard_hat": 9,
+            "glasses": 45,
+            "vest": 9,
+            "boots": 45
+          }
+        }
+      },
+      "original_832x480": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 5,
+            "false_open": 0,
+            "false_glasses_warnings": 5,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 5,
+            "false_open": 0,
+            "false_glasses_warnings": 5,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 5,
+            "false_open": 0,
+            "false_glasses_warnings": 5,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 42,
+            "glasses": 30,
+            "vest": 45,
+            "boots": 36
+          },
+          "verifier": {
+            "hard_hat": 9,
+            "glasses": 45,
+            "vest": 9,
+            "boots": 45
+          }
+        }
+      },
+      "day": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 3,
+            "false_open": 0,
+            "false_glasses_warnings": 8,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 4,
+            "false_open": 0,
+            "false_glasses_warnings": 7,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 3,
+            "false_open": 0,
+            "false_glasses_warnings": 8,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 22,
+            "vest": 45,
+            "boots": 36
+          },
+          "verifier": {
+            "hard_hat": 9,
+            "glasses": 45,
+            "vest": 12,
+            "boots": 45
+          }
+        }
+      },
+      "dusk": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 2,
+            "false_open": 0,
+            "false_glasses_warnings": 8,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 2,
+            "false_open": 0,
+            "false_glasses_warnings": 8,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 2,
+            "false_open": 0,
+            "false_glasses_warnings": 8,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 21,
+            "vest": 45,
+            "boots": 36
+          },
+          "verifier": {
+            "hard_hat": 9,
+            "glasses": 45,
+            "vest": 9,
+            "boots": 45
+          }
+        }
+      },
+      "night": {
+        "samples_per_run": 15,
+        "runs": [
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 6,
+            "false_open": 0,
+            "false_glasses_warnings": 3,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 7,
+            "false_open": 0,
+            "false_glasses_warnings": 2,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          },
+          {
+            "decision_right": 9,
+            "decision_and_warnings_right": 6,
+            "false_open": 0,
+            "false_glasses_warnings": 3,
+            "compliant_worker_denied": 6,
+            "stage_failures": 0
+          }
+        ],
+        "item_reads_right_of_45": {
+          "primary": {
+            "hard_hat": 45,
+            "glasses": 37,
+            "vest": 45,
+            "boots": 36
+          },
+          "verifier": {
+            "hard_hat": 9,
+            "glasses": 45,
+            "vest": 9,
+            "boots": 45
+          }
+        }
+      }
+    }
+  }
+}
