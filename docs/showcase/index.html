@@ -164,9 +164,9 @@ body{margin:0}
   <p class="lede">Cameras watch a robot workcell. A vision-language model on the device reports who is in the frame and what they are wearing, safety rules turn that into structured events, and an operator reviews them. It measures what it costs to run, and it records what the model gets wrong.</p>
   <div class="spec">
     <div><span class="label">Device</span><b>Jetson AGX Thor</b><span>L4T R38.4.0, 120 W mode</span></div>
-    <div><span class="label">Model</span><b>Cosmos-Reason2 2B and 8B</b><span>served on device by vLLM 0.14</span></div>
+    <div><span class="label">Models</span><b>Cosmos-Reason2 2B and 8B, Cosmos 3 Edge</b><span>served on device by vLLM</span></div>
     <div><span class="label">Rules</span><b>5 safety rules</b><span>PPE, zone, proximity, path, summary</span></div>
-    <div><span class="label">Evidence</span><b>11 committed artifacts</b><span>under <code>reports/thor/</code></span></div>
+    <div><span class="label">Evidence</span><b>A committed record for every number</b><span>under <code>reports/thor/</code></span></div>
   </div>
 </header>
 
@@ -331,6 +331,25 @@ confidence = highest among those people</div>
   </div>
 </section>
 
+<section aria-labelledby="labeled-h">
+  <div class="head">
+    <span class="label">Labeled simulation pictures, 2026-10-17 and 2026-11-14</span>
+    <h2 id="labeled-h">Scored against known answers, then run through Cosmos 3</h2>
+    <p>60 Isaac Sim pictures in four conditions: a worker with a hard hat and vest, a worker with neither, a worker inside a restricted zone, and an empty scene. Measured on the Thor with the full build's labeled scorer, which is not part of this repository; the summary reports are committed under <code>reports/thor/</code>. Simulation, not real-world footage.</p>
+  </div>
+  <div class="tiles">
+    <div><span class="v">11 &#8594; 0</span><span class="l">False protective-gear alarms after <code>hard_hat</code> and <code>vest</code> became required fields. All 15 real ones kept</span><span class="src">model_accuracy_ppe_v1_2026-10-17.json</span></div>
+    <div><span class="v">29 &#8594; 44</span><span class="l">People found, of 45: Cosmos Reason 2 (2B) against Cosmos 3 Edge (4B), same request</span><span class="src">reasoner_comparison_2026-11-14-compact-grammar.json</span></div>
+    <div><span class="v">16 &#8594; 0</span><span class="l">False "too close to the robot" alarms, Reason 2 against Cosmos 3 Edge</span><span class="src">reasoner_comparison_2026-11-14-compact-grammar.json</span></div>
+    <div><span class="v">39 of 60</span><span class="l">Cosmos 3 Edge answers with nothing usable when launched as the model card writes it. One server setting took it to 0</span><span class="src">reasoner_comparison_2026-11-14.json</span></div>
+  </div>
+  <div class="findings">
+    <div class="find" style="--c:var(--safe)"><b>Cosmos 3 Edge found the people Reason 2 missed</b><p>It found the worker in 44 of 45 pictures against 29, found 14 of 15 zone entries against 9, and raised none of the false proximity alarms. Median answer time 1.83 s against 1.54 s.</p></div>
+    <div class="find" style="--c:var(--proh)"><b>It read protective gear worse</b><p>Cosmos 3 Edge kept 13 of 15 real gear alarms and raised 3 false ones, where Reason 2 kept 15 and raised none on the people it did find. It also needed <code>disable_any_whitespace</code> in the server's grammar settings to answer at all.</p></div>
+    <div class="find" style="--c:var(--safe)"><b>Darker scenes, redrawn with Cosmos Transfer</b><p>Cosmos3-Nano-Sim-Transfer redrew the full build's access-gate test clips as daylight, dusk and night on the Thor. The gate's decision held at 15 of 15 in every version. The safety-glasses read fell from 45 to 27 of 45 by night.</p></div>
+  </div>
+</section>
+
 <section aria-labelledby="console-h">
   <div class="head">
     <span class="label">Operator console</span>
@@ -361,7 +380,7 @@ confidence = highest among those people</div>
 
 <section aria-labelledby="status-h">
   <div class="head">
-    <span class="label">Status, October 2026</span>
+    <span class="label">Status, November 2026</span>
     <h2 id="status-h">What is proven, and what is next</h2>
   </div>
   <div class="ledger">
@@ -371,14 +390,15 @@ confidence = highest among those people</div>
         <li><span class="mk ok"></span><span><b>Runs end to end</b> from camera setup to events in the console, and is deployed on the Thor as a service.</span></li>
         <li><span class="mk ok"></span><span><b>Runtime cost measured</b>: pipeline overhead, model latency, power and temperature for 2B and 8B.</span></li>
         <li><span class="mk ok"></span><span><b>Constrained-mode guard measured</b> against the real containers.</span></li>
-        <li><span class="mk ok"></span><span><b>Tests and CI</b> on every push to main.</span></li>
+        <li><span class="mk ok"></span><span><b>Scored on labeled simulation pictures</b> with Cosmos Reason 2 and Cosmos 3 Edge, in the full build.</span></li>
+<li><span class="mk ok"></span><span><b>Tests and CI</b> on every push to main.</span></li>
       </ul>
     </div>
     <div class="col">
       <span class="label">Not yet measured</span>
       <ul>
         <li><span class="mk open"></span><span><b>No live-camera run</b> is committed. Capture rate, dropped frames, packet-to-event latency and power with a camera attached are unknown.</span></li>
-        <li><span class="mk open"></span><span><b>No rule accuracy.</b> With no labelled ground truth, false events are counted, not rated.</span></li>
+        <li><span class="mk open"></span><span><b>No rule accuracy on real footage.</b> Rules are rated only on 60 labeled simulation pictures, and that scorer is not in this repository.</span></li>
         <li><span class="mk open"></span><span><b>The asynchronous poster</b> has not been measured on the Thor.</span></li>
         <li><span class="mk open"></span><span><b>Long-run stability.</b> Committed runs last 60 to 390 seconds.</span></li>
       </ul>
@@ -389,7 +409,7 @@ confidence = highest among those people</div>
     <span class="first">Live-camera evidence run on the Thor</span>
     <span class="first">PPE check against known poses: vest, hat, both, neither</span>
     <span>Cosmos-Reason2-8B on live video</span>
-    <span>Simulated scenes with ground truth for per-rule precision and recall</span>
+    <span>The labeled scorer and simulation set in this repository</span>
     <span>Zones from camera calibration</span>
   </div>
   <p class="never"><b>Out of scope by design:</b> stopping machines or acting without a person. This is observability with a human in the loop.</p>
